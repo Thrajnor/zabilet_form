@@ -13,7 +13,7 @@ class SectionPills extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={[classes.section, 'formContent'].join(' ')}>
+      <div className={[classes.section, 'formBackground'].join(' ')}>
         <div className={classes.container}>
           <div id="navigation-pills">
             <div>
@@ -24,9 +24,20 @@ class SectionPills extends React.Component {
                     tabButton: "1",
                     tabContent: (
                       <span>
-                        <p>
-                          Collaboratively administrate empowered
-                        </p>
+                        <div className='slideContent'>
+                          <h2>Cześć! Za moment zajmiemy się Twoim problemem, narazie odpowiedz na te kilka pytań :)</h2>
+                          <h3>Skąd dokąd leciałeś/aś</h3>
+                          <span>
+                            <label>
+                              Skąd? :
+                              <input type='text' />
+                            </label>
+                            <label>
+                              Dokąd? :
+                              <input type='text' />
+                            </label>
+                          </span>
+                        </div>
                       </span>
                     )
                   },
