@@ -1,0 +1,39 @@
+
+.tabPanel {
+  position: absolute !important;
+  bottom: 20px !important;
+  left: 50%;
+  transform: translateX(-50%)
+}
+
+.tabButton {
+  border-radius: 50% !important;
+  min-width: 48px !important;
+  padding: 0 !important;
+}
+
+.nextButton {
+  bottom: 0px !important;
+  margin: 0 !important;
+  left: 50%;
+  width: 50%;
+  transform: translateX(-100%)
+}
+.prevButton {
+  bottom: 0px !important;
+  margin: 0 !important;
+  left: 0;
+  width: 50%;
+  height: 1rem
+}
+
+.formContent {
+  box-sizing: border-box !important;
+  height: 100%;
+  position: relative;
+}
+
+.paperSpace {
+  margin: 15px;
+  margin-bottom: 30px;
+}
