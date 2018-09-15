@@ -64,6 +64,7 @@ class Steps extends React.Component {
       [classes.flexContainer]: true,
       [classes.horizontalDisplay]: horizontal !== undefined
     });
+    const visibility = this.state.active === 0 ? 'display-none' : ''
     const tabButtons = (
       <Tabs
         classes={{
@@ -108,21 +109,25 @@ class Steps extends React.Component {
         >
           {tabs.map((prop, key) => {
             return (
-              <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')} key={key}>
-                {prop.tabContent}
-                <Button
-                  onClick={this.handlePrev}
-                  className={'prevButton'}
-                >
-                  {this.handlePrevName()}
-                </Button>
-                <Button
-                  onClick={this.handleNext}
-                  className={'nextButton'}
-                >
-                  {this.handleNextName()}
-                </Button>
-              </Paper>
+              <div key={key} className='veltically-center'>
+                <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
+                  {prop.tabContent}
+                </Paper>
+                <div className={'navBase'}>
+                  <Button
+                    onClick={this.handlePrev}
+                    className={[visibility, 'prevButton'].join(' ')}
+                  >
+                    {this.handlePrevName()}
+                  </Button>
+                  <Button
+                    onClick={this.handleNext}
+                    className={'nextButton'}
+                  >
+                    {this.handleNextName()}
+                  </Button>
+                </div>
+              </div>
             );
           })}
         </SwipeableViews>
