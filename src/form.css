@@ -1,4 +1,30 @@
+/* Base */
 
+.display-none {
+  visibility: hidden;
+}
+
+/* Form */
+
+
+.formBackground {
+  box-sizing: border-box !important;
+  height: 100%;
+  position: relative;
+  background-color: #E0EDFF;
+}
+
+.paperSpace {
+  margin: 15px;
+  margin-bottom: 30px;
+}
+
+/* Slides */
+.slideContent {
+  padding: 30px !important;
+  overflow: auto;
+  max-height: 300px;
+}
 .tabPanel {
   position: absolute !important;
   bottom: 20px !important;
@@ -12,28 +38,35 @@
   padding: 0 !important;
 }
 
+.navBase {
+  background-color: #006eee;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  border-radius: 3px
+}
+
 .nextButton {
+  background-color: #006eee !important;
   bottom: 0px !important;
   margin: 0 !important;
   left: 50%;
   width: 50%;
-  transform: translateX(-100%)
+  transform: translateX(-100%);
+  z-index: 100
 }
+.nextButton:hover {
+  z-index: 1000
+}
+
 .prevButton {
+  background-color: #006eee !important;
   bottom: 0px !important;
   margin: 0 !important;
   left: 0;
   width: 50%;
-  height: 1rem
+  z-index: 100
 }
-
-.formContent {
-  box-sizing: border-box !important;
-  height: 100%;
-  position: relative;
-}
-
-.paperSpace {
-  margin: 15px;
-  margin-bottom: 30px;
+.prevButton:hover {
+  z-index: 1000
 }
