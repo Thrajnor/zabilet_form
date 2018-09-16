@@ -9,13 +9,40 @@ import Choose from 'components/Choose/Choose'
 import pillsStyle from "assets/jss/material-kit-react/views/componentsSections/pillsStyle.jsx";
 
 import './form.css'
+import Input from "components/Input/Input";
+import Formsy from 'formsy-react';
 
 class SectionPills extends React.Component {
+  constructor(props) {
+    super(props);
+    this.disableButton = this.disableButton.bind(this);
+    this.enableButton = this.enableButton.bind(this);
+    this.state = { canSubmit: false };
+  }
+
+  disableButton() {
+    this.setState({ canSubmit: false });
+  }
+
+  enableButton() {
+    this.setState({ canSubmit: true });
+  }
+
+  submit(model) {
+    fetch('http://example.com/', {
+      method: 'post',
+      body: JSON.stringify(model)
+    });
+  }
   render() {
     const { classes } = this.props;
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
-        <div>
+
+        <Formsy onValidSubmit={this.submit}
+          onValid={this.enableButton}
+          onInvalid={this.disableButton}>
+
           <div id="navigation-pills">
             <div>
               <Steps
@@ -31,11 +58,21 @@ class SectionPills extends React.Component {
                           <span>
                             <label>
                               Skąd? :
-                              <input type='text' />
+                              <Input type='text'
+                                name='fromWhere'
+                                validations="isEmail"
+                                validationError="To nie jest poprawne miasto"
+                                placeholder='np. Wrocław, lub W-w'
+                                required />
                             </label>
                             <label>
                               Dokąd? :
-                              <input type='text' />
+                              <Input type='text'
+                                name='toWhere'
+                                validations="isEmail"
+                                validationError="To nie jest poprawne miasto"
+                                placeholder='np. Oslo'
+                                required />
                             </label>
                           </span>
                         </div>
@@ -63,11 +100,11 @@ class SectionPills extends React.Component {
                           <span>
                             <label>
                               Linia? :
-                              <input type='text' />
+                              <Input type='text' name='lane' />
                             </label>
                             <label>
                               lot? :
-                              <input type='text' />
+                              <Input type='text' name='flight' />
                             </label>
                           </span>
                         </div>
@@ -78,7 +115,7 @@ class SectionPills extends React.Component {
               />
             </div>
           </div>
-        </div>
+        </Formsy>
       </div>
     );
   }
