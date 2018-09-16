@@ -44,7 +44,7 @@ class Steps extends React.Component {
     this.setState({ active: active });
   };
   handleNextName = () => {
-    return this.props.tabs.length <= this.state.active + 1 ? 'Wyślij' : 'Następne =>'
+    return this.props.tabs.length <= this.state.active + 1 ? 'Odbierz!' : 'Następne =>'
   }
   handlePrevName = () => {
     return this.state.active === 0 ? '' : '<= Poprzednie'
