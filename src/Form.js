@@ -7,6 +7,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Steps from "components/Steps/Steps";
 import Choose from 'components/Choose/Choose'
 import pillsStyle from "assets/jss/material-kit-react/views/componentsSections/pillsStyle.jsx";
+import GridContainer from "components/Grid/GridContainer.jsx";
+import GridItem from "components/Grid/GridItem.jsx";
 
 import './form.css'
 import Input from "components/Input/Input";
@@ -17,7 +19,9 @@ class SectionPills extends React.Component {
     super(props);
     this.disableButton = this.disableButton.bind(this);
     this.enableButton = this.enableButton.bind(this);
-    this.state = { canSubmit: false };
+    this.state = {
+      canSubmit: false,
+    };
   }
 
   disableButton() {
@@ -29,17 +33,19 @@ class SectionPills extends React.Component {
   }
 
   submit(model) {
-    fetch('http://example.com/', {
-      method: 'post',
-      body: JSON.stringify(model)
-    });
+    console.log(JSON.stringify(model))
+    // fetch('http://localhost:3000/', {
+    //   method: 'post',
+    //   body: JSON.stringify(model)
+    // });
   }
   render() {
     const { classes } = this.props;
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
 
-        <Formsy onValidSubmit={this.submit}
+        <Formsy
+          onValidSubmit={this.submit}
           onValid={this.enableButton}
           onInvalid={this.disableButton}>
 
@@ -47,34 +53,31 @@ class SectionPills extends React.Component {
             <div>
               <Steps
                 color="primary"
+                canSubmit={this.state.canSubmit}
                 tabs={[
                   {
                     tabButton: "1",
                     tabContent: (
                       <span>
                         <div className='slideContent'>
-                          <h2>Cześć! Za moment zajmiemy się Twoim problemem, narazie odpowiedz na te kilka pytań :)</h2>
-                          <h3>Skąd dokąd leciałeś/aś</h3>
-                          <span>
-                            <label>
-                              Skąd? :
+                          <h3>Cześć!</h3>
+                          <h5>Za moment zajmiemy się Twoim odszkodowaniem, narazie odpowiedz na te kilka pytań dotyczących Twojego lotu :)</h5>
+                          <GridContainer spacing={16}>
+                            <GridItem xs={6}>
                               <Input type='text'
+                                label='Miejsce wylotu:'
                                 name='fromWhere'
-                                validations="isEmail"
-                                validationError="To nie jest poprawne miasto"
                                 placeholder='np. Wrocław, lub W-w'
                                 required />
-                            </label>
-                            <label>
-                              Dokąd? :
+                            </GridItem>
+                            <GridItem xs={6}>
                               <Input type='text'
+                                label='Miejsce przylotu:'
                                 name='toWhere'
-                                validations="isEmail"
-                                validationError="To nie jest poprawne miasto"
                                 placeholder='np. Oslo'
                                 required />
-                            </label>
-                          </span>
+                            </GridItem>
+                          </GridContainer>
                         </div>
                       </span>
                     )
@@ -84,7 +87,10 @@ class SectionPills extends React.Component {
                     tabContent: (
                       <span>
                         <div className='slideContent'>
-                          <h2>Co się stało ?</h2>
+                          <div className='mb-5'>
+                            <h3>Co się stało ?</h3>
+                            <small className="form-text text-muted">Linie lotnicze odpowiadają tylko za sytuacje nad którymi mają względną kontrolę, jednak każdy przypadek jest indywidualny i bardzo często ustalenie odpowiedzialności odbywa się z korzyścią dla klienta.</small>
+                          </div>
                           <Choose></Choose>
                         </div>
                       </span>
@@ -95,17 +101,20 @@ class SectionPills extends React.Component {
                     tabContent: (
                       <span>
                         <div className='slideContent'>
-                          <h2>Wygląda na to, że może Ci się należeć nawet XXXeuro !</h2>
+                          <h3>Wygląda na to, że może Ci się należeć nawet XXXeuro !</h3>
                           <h3>Podaj jeszcze:</h3>
                           <span>
-                            <label>
-                              Linia? :
-                              <Input type='text' name='lane' />
-                            </label>
-                            <label>
-                              lot? :
-                              <Input type='text' name='flight' />
-                            </label>
+                            <GridContainer spacing={16}>
+                              <GridItem xs={4}>
+                                <Input placeholder='np. Oslo' label='Linia: ' type='text' name='lane' required />
+                              </GridItem>
+                              <GridItem xs={4}>
+                                <Input label='Lot: ' type='text' name='flight' required />
+                              </GridItem>
+                              <GridItem xs={4}>
+                                <Input label='Data: ' type='text' name='data' required />
+                              </GridItem>
+                            </GridContainer>
                           </span>
                         </div>
                       </span>
