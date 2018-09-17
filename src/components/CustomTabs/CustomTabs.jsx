@@ -23,6 +23,13 @@ class CustomTabs extends React.Component {
 
   handleChange = (event, value) => {
     this.setState({ value });
+    if (value === 0) {
+      this.props.onClick(0)
+    } else if (value === 1) {
+      this.props.onClick(1)
+    } else if (value === 2) {
+      this.props.onClick(2)
+    }
   };
 
   render() {
@@ -60,8 +67,8 @@ class CustomTabs extends React.Component {
                     typeof prop.tabIcon === "string" ? (
                       <Icon>{prop.tabIcon}</Icon>
                     ) : (
-                      <prop.tabIcon />
-                    )
+                        <prop.tabIcon />
+                      )
                 };
               }
               return (
