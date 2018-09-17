@@ -22,18 +22,20 @@ class Steps extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: 0
+      active: 0,
+      submit: null
     };
   }
   handleChange = (event, active) => {
     this.setState({ active });
-    console.log(active)
   };
   handleNext = () => {
     if (this.props.tabs.length <= this.state.active + 1) {
       return
     }
+
     const active = this.state.active + 1
+
     this.setState({ active: active });
   };
   handlePrev = () => {
@@ -43,9 +45,6 @@ class Steps extends React.Component {
     const active = this.state.active - 1
     this.setState({ active: active });
   };
-  handleNextName = () => {
-    return this.props.tabs.length <= this.state.active + 1 ? 'Odbierz!' : 'Następne =>'
-  }
   handlePrevName = () => {
     return this.state.active === 0 ? '' : '<= Poprzednie'
   }
@@ -120,12 +119,26 @@ class Steps extends React.Component {
                   >
                     {this.handlePrevName()}
                   </Button>
-                  <Button
-                    onClick={this.handleNext}
-                    className={'nextButton'}
-                  >
-                    {this.handleNextName()}
-                  </Button>
+                  {this.props.tabs.length < this.state.active + 2 ?
+                    <Button
+                      disabled={!this.props.canSubmit}
+                      className={'nextButton'}
+                      type='submit'
+                    >
+                      {!this.props.canSubmit ?
+                        'Wszystkie pola są wymagane!'
+                        :
+                        'Odbierz odszkodowanie!'
+                      }
+                    </Button>
+                    :
+                    <Button
+                      onClick={this.handleNext}
+                      className={'nextButton'}
+                    >
+                      Następne =>
+                    </Button>
+                  }
                 </div>
               </div>
             );
