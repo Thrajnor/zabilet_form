@@ -46,12 +46,9 @@ class SectionPills extends React.Component {
   render() {
     const { classes } = this.props;
 
-<<<<<<< HEAD
     _.each(AirportDatabase, (airport) => {
       Airports.push(airport.code)
     })
-=======
->>>>>>> parent of ecd4179... make AutoComplete forms
 
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
