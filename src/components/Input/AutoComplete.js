@@ -53,12 +53,10 @@ class Autocomplete extends Component {
   disableField(e) {
     if (e.target.value === "") {
       this.setState({
-        fieldActive: false
+        fieldActive: false,
+        showSuggestions: false
       })
     }
-    this.setState({
-      showSuggestions: false
-    })
   }
   // to update the changes in the input and activate it
   updateInputValue(e) {
@@ -75,12 +73,42 @@ class Autocomplete extends Component {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
     this.changeValue(e)
+    let filteredSuggestions = []
     // Filter our suggestions that don't contain the user's input
-    const filteredSuggestions = suggestions.filter(
-      suggestion =>
-        suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-    );
-
+    if (typeof (suggestions[0]) === 'object') {
+      let filteredSuggestionsByCity = suggestions.filter(
+        suggestion =>
+          suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+      );
+      let filteredSuggestionsByName = suggestions.filter(
+        suggestion =>
+          suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+      )
+      let filteredSuggestionsByCode = suggestions.filter(
+        suggestion =>
+          suggestion.code.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+      )
+      let filteredSuggestionsByCountry = suggestions.filter(
+        suggestion =>
+          suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+      )
+      let filteredSuggestionsByIcao = suggestions.filter(
+        suggestion =>
+          suggestion.icao.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+      )
+      filteredSuggestions = filteredSuggestionsByCity
+        .concat(filteredSuggestionsByName)
+        .concat(filteredSuggestionsByCountry)
+        .concat(filteredSuggestionsByCode)
+        .concat(filteredSuggestionsByIcao)
+      filteredSuggestions = filteredSuggestions.slice(0, 40)
+      filteredSuggestions = [...new Set(filteredSuggestions)]
+    } else {
+      filteredSuggestions = suggestions.filter(
+        suggestion =>
+          suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+      );
+    }
     // Update the user input and filtered suggestions, reset the active
     // suggestion and make sure the suggestions are shown
     this.setState({
@@ -94,6 +122,7 @@ class Autocomplete extends Component {
   // Event fired when the user clicks on a suggestion
   onClick = e => {
     // Update the user input and reset the rest of the state
+    console.log(e.currentTarget)
     this.setState({
       activeSuggestion: 0,
       filteredSuggestions: [],
@@ -159,16 +188,31 @@ class Autocomplete extends Component {
               if (index === activeSuggestion) {
                 className = "suggestion-active";
               }
-
-              return (
-                <li
-                  className={className}
-                  key={suggestion}
-                  onClick={onClick}
-                >
-                  {suggestion}
-                </li>
-              );
+              if (typeof (suggestion) === 'object') {
+                return (
+                  <li
+                    className={className}
+                    key={suggestion.code + index}
+                    onClick={onClick}
+                    value={suggestion}
+                  >
+                    {suggestion.name}
+                    <span>
+                      <small className="form-text text-muted d-inline"> {suggestion.city}, {suggestion.country}</small>
+                    </span>
+                  </li>
+                )
+              } else {
+                return (
+                  <li
+                    className={className}
+                    key={suggestion}
+                    onClick={onClick}
+                  >
+                    {suggestion}
+                  </li>
+                )
+              }
             })}
           </ul>
         );
