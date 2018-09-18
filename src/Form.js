@@ -9,6 +9,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Steps from "components/Steps/Steps";
 import Choose from 'components/Choose/Choose'
 import AutoComplete from 'components/Input/AutoComplete'
+import Input from 'components/Input/Input'
 import pillsStyle from "assets/jss/material-kit-react/views/componentsSections/pillsStyle.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
@@ -58,7 +59,14 @@ class SectionPills extends React.Component {
     // 'icao' - code of airport only all Airports
 
     _.each(AirportDatabase, (airport) => {
-      Airports.push(airport.code)
+      let Airport = {
+        code: airport.code,
+        city: airport.city,
+        name: airport.name,
+        country: airport.country,
+        icao: airport.icao
+      }
+      Airports.push(Airport)
     })
 
     return (
@@ -93,7 +101,7 @@ class SectionPills extends React.Component {
                               <AutoComplete
                                 label='Miejsce wylotu:'
                                 name='fromWhere'
-                                placeholder='np. Wrocław, lub W-w'
+                                placeholder='np. Tokio, lub HND'
                                 required
                                 suggestions={Airports} />
                             </GridItem>
@@ -101,7 +109,7 @@ class SectionPills extends React.Component {
                               <AutoComplete
                                 label='Miejsce przylotu:'
                                 name='toWhere'
-                                placeholder='np. Oslo'
+                                placeholder='np. Poland, lub EPWR'
                                 required
                                 suggestions={[
                                   "Alligator",
@@ -144,7 +152,7 @@ class SectionPills extends React.Component {
                           <h3>Podaj jeszcze:</h3>
                           <span>
                             <GridContainer spacing={16}>
-                              <GridItem xs={4}>
+                              <GridItem xs={6}>
                                 <AutoComplete placeholder='np. Oslo' label='Linia: ' name='lane' required
                                   suggestions={[
                                     "Alligator",
@@ -159,8 +167,8 @@ class SectionPills extends React.Component {
                                     "Wetlands"
                                   ]} />
                               </GridItem>
-                              <GridItem xs={4}>
-                                <AutoComplete placeholder='np. Oslo' label='Lot: ' name='flight' required
+                              <GridItem xs={2}>
+                                <AutoComplete placeholder='np. 1234' label='Lot: ' name='flight' required
                                   suggestions={[
                                     "Alligator",
                                     "Bask",
@@ -175,19 +183,10 @@ class SectionPills extends React.Component {
                                   ]} />
                               </GridItem>
                               <GridItem xs={4}>
-                                <AutoComplete placeholder='np. Oslo' label='Data: ' name='data' required
-                                  suggestions={[
-                                    "Alligator",
-                                    "Bask",
-                                    "Crocodilian",
-                                    "Death Roll",
-                                    "Eggs",
-                                    "Jaws",
-                                    "Reptile",
-                                    "Solitary",
-                                    "Tail",
-                                    "Wetlands"
-                                  ]} />
+                                <Input type='date'
+                                  label='Data: '
+                                  name='date' required
+                                />
                               </GridItem>
                             </GridContainer>
                           </span>
