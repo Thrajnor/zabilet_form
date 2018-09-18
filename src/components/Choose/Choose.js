@@ -19,7 +19,8 @@ import Radio from 'components/Radio/Radio'
 class Choose extends React.Component {
   state = {
     tabClicked: false,
-    option: 'delay'
+    option: 'delay',
+    selectedOption: ''
   }
   selectHandler = (value) => {
     this.setState({ tabClicked: value }, function () {
@@ -57,7 +58,7 @@ class Choose extends React.Component {
                       <Radio label='Problemy Techniczne' value='techProblem' name='why'></Radio>
                     </GridItem>
                     <GridItem xs={6}>
-                      <Radio label='Wpływ innych lotów' value='otherFlights' name='why'></Radio>
+                      <Radio label='Wpływ innych lotów' value='otherFlights' name='why' checked='true'></Radio>
                     </GridItem>
                     <GridItem xs={6}>
                       <Radio label='Strajk' value='strike' name='why'></Radio>
