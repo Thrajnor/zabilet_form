@@ -24,13 +24,14 @@ button:focus {
 .paperSpace {
   margin: 15px;
   margin-bottom: 0px;
+  border-radius: 6px !important;
   border-bottom-right-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
 }
 
 /* Slides */
 .slideContent {
-  padding: 50px !important;
+  padding: 25px 50px !important;
   overflow: auto;
   max-height: 450px;
 }
@@ -67,13 +68,14 @@ box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.66);
   margin: 0 15px 30px;
   padding: 0;
   position: relative;
-  border-radius: 3px;
+  border-radius: 6px !important;
   border-top-right-radius: 0 !important;
   border-top-left-radius: 0 !important;
   box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
 }
 
 .nextButton {
+  border-radius: 6px !important;
   background-color: #006eee !important;
   bottom: 0px !important;
   margin: 0 !important;
@@ -91,6 +93,7 @@ box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.66);
 }
 
 .prevButton {
+  border-radius: 6px !important;
   background-color: #006eee !important;
   bottom: 0px !important;
   margin: 0 !important;
