@@ -21,6 +21,7 @@ class SectionPills extends React.Component {
     this.enableButton = this.enableButton.bind(this);
     this.state = {
       canSubmit: false,
+      formsy: ''
     };
   }
 
@@ -39,12 +40,18 @@ class SectionPills extends React.Component {
     //   body: JSON.stringify(model)
     // });
   }
+  componentDidMount() {
+    this.setState({formsy: this})
+  }
   render() {
     const { classes } = this.props;
+
+
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
 
         <Formsy
+          ref='form'
           onValidSubmit={this.submit}
           onValid={this.enableButton}
           onInvalid={this.disableButton}>
@@ -91,7 +98,7 @@ class SectionPills extends React.Component {
                             <h3>Co się stało ?</h3>
                             <small className="form-text text-muted">Linie lotnicze odpowiadają tylko za sytuacje nad którymi mają względną kontrolę, jednak każdy przypadek jest indywidualny i bardzo często ustalenie odpowiedzialności odbywa się z korzyścią dla klienta.</small>
                           </div>
-                          <Choose></Choose>
+                          <Choose formsy={this.state.formsy}></Choose>
                         </div>
                       </span>
                     )
