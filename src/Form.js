@@ -60,7 +60,6 @@ class SectionPills extends React.Component {
     _.each(AirportDatabase, (airport) => {
       Airports.push(airport.code)
     })
-    console.log(Airports)
 
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
