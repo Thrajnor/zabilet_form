@@ -1,18 +1,24 @@
 import React from "react";
 
+import _ from 'lodash'
+
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 
 // core components
 import Steps from "components/Steps/Steps";
 import Choose from 'components/Choose/Choose'
+import AutoComplete from 'components/Input/AutoComplete'
 import pillsStyle from "assets/jss/material-kit-react/views/componentsSections/pillsStyle.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 
 import './form.css'
-import Input from "components/Input/Input";
 import Formsy from 'formsy-react';
+// Airports Data
+import AirportDatabase from 'data/airports.json'
+
+
 
 class SectionPills extends React.Component {
   constructor(props) {
@@ -41,11 +47,20 @@ class SectionPills extends React.Component {
     // });
   }
   componentDidMount() {
-    this.setState({formsy: this})
+    this.setState({ formsy: this })
   }
   render() {
     const { classes } = this.props;
+    let Airports = []
+    // parse airports
+    // Airports legend
+    // - shortcut for airport allAirports = 'iata' Airports = 'code'
+    // 'icao' - code of airport only all Airports
 
+    _.each(AirportDatabase, (airport) => {
+      Airports.push(airport.code)
+    })
+    console.log(Airports)
 
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
@@ -71,18 +86,36 @@ class SectionPills extends React.Component {
                           <h5>Za moment zajmiemy się Twoim odszkodowaniem, narazie odpowiedz na te kilka pytań dotyczących Twojego lotu :)</h5>
                           <GridContainer spacing={16}>
                             <GridItem xs={6}>
-                              <Input type='text'
+                              {/* <Input type='text'
                                 label='Miejsce wylotu:'
                                 name='fromWhere'
                                 placeholder='np. Wrocław, lub W-w'
-                                required />
+                                required /> */}
+                              <AutoComplete
+                                label='Miejsce wylotu:'
+                                name='fromWhere'
+                                placeholder='np. Wrocław, lub W-w'
+                                required
+                                suggestions={Airports} />
                             </GridItem>
                             <GridItem xs={6}>
-                              <Input type='text'
+                              <AutoComplete
                                 label='Miejsce przylotu:'
                                 name='toWhere'
                                 placeholder='np. Oslo'
-                                required />
+                                required
+                                suggestions={[
+                                  "Alligator",
+                                  "Bask",
+                                  "Crocodilian",
+                                  "Death Roll",
+                                  "Eggs",
+                                  "Jaws",
+                                  "Reptile",
+                                  "Solitary",
+                                  "Tail",
+                                  "Wetlands"
+                                ]} />
                             </GridItem>
                           </GridContainer>
                         </div>
@@ -113,13 +146,49 @@ class SectionPills extends React.Component {
                           <span>
                             <GridContainer spacing={16}>
                               <GridItem xs={4}>
-                                <Input placeholder='np. Oslo' label='Linia: ' type='text' name='lane' required />
+                                <AutoComplete placeholder='np. Oslo' label='Linia: ' name='lane' required
+                                  suggestions={[
+                                    "Alligator",
+                                    "Bask",
+                                    "Crocodilian",
+                                    "Death Roll",
+                                    "Eggs",
+                                    "Jaws",
+                                    "Reptile",
+                                    "Solitary",
+                                    "Tail",
+                                    "Wetlands"
+                                  ]} />
                               </GridItem>
                               <GridItem xs={4}>
-                                <Input label='Lot: ' type='text' name='flight' required />
+                                <AutoComplete placeholder='np. Oslo' label='Lot: ' name='flight' required
+                                  suggestions={[
+                                    "Alligator",
+                                    "Bask",
+                                    "Crocodilian",
+                                    "Death Roll",
+                                    "Eggs",
+                                    "Jaws",
+                                    "Reptile",
+                                    "Solitary",
+                                    "Tail",
+                                    "Wetlands"
+                                  ]} />
                               </GridItem>
                               <GridItem xs={4}>
-                                <Input label='Data: ' type='text' name='data' required />
+                                <AutoComplete placeholder='np. Oslo' label='Data: ' name='data' required
+                                  suggestions={[
+                                    "Alligator",
+                                    "Bask",
+                                    "Crocodilian",
+                                    "Death Roll",
+                                    "Eggs",
+                                    "Jaws",
+                                    "Reptile",
+                                    "Solitary",
+                                    "Tail",
+                                    "Wetlands"
+                                  ]} />
                               </GridItem>
                             </GridContainer>
                           </span>
