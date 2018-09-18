@@ -9,7 +9,8 @@ class Radio extends React.Component {
     this.disableField = this.disableField.bind(this);
     this.changeValue = this.changeValue.bind(this);
     this.state = {
-      fieldActive: false
+      fieldActive: false,
+      fieldValue: ''
     };
   }
   // to activate the input field while typing
@@ -30,13 +31,10 @@ class Radio extends React.Component {
     // turn will validate it and the rest of the form
     // Important: Don't skip this step. This pattern is required
     // for Formsy to work.
-    console.log(event.currentTarget.value)
-    this.props.setValue(event.currentTarget.value);
+    this.setState({ fieldValue: event.currentTarget.value }, function () {
+      this.props.setValue(this.state.fieldValue);
+    })
     this.activateField()
-  }
-  checkedHandler(event) {
-    this.changeValue(event)
-    return 'checked'
   }
 
   render() {
@@ -48,12 +46,13 @@ class Radio extends React.Component {
         <input
           className="radio"
           id={this.props.getValue()}
-          onFocus={this.changeValue}
+          onChange={this.changeValue}
           type={this.props.type || 'radio'}
           name={this.props.name}
           value={this.props.getValue() || ''}
           onBlur={this.disableField}
           hidden={this.props.hidden}
+        // checked={this.props.checked === true? true : false}
         />
         <label htmlFor={this.props.getValue()} className='label-radio pl-3'>
           {this.props.label}
