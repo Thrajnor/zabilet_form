@@ -63,7 +63,7 @@ class Steps extends React.Component {
       [classes.flexContainer]: true,
       [classes.horizontalDisplay]: horizontal !== undefined
     });
-    const visibility = this.state.active === 0 ? 'display-none' : ''
+    const visibility = this.state.active === 0 ? 'visibility-hidden' : ''
     const tabButtons = (
       <Tabs
         classes={{
@@ -119,26 +119,23 @@ class Steps extends React.Component {
                   >
                     {this.handlePrevName()}
                   </Button>
-                  {this.props.tabs.length < this.state.active + 2 ?
-                    <Button
-                      disabled={!this.props.canSubmit}
-                      className={'nextButton'}
-                      type='submit'
-                    >
-                      {!this.props.canSubmit ?
-                        'Wszystkie pola są wymagane!'
-                        :
-                        'Odbierz odszkodowanie!'
-                      }
+                  <Button
+                    disabled={!this.props.canSubmit}
+                    className={['nextButton', this.props.tabs.length < this.state.active + 2 ? '' : 'display-none'].join(' ')}
+                    type='submit'
+                  >
+                    {!this.props.canSubmit ?
+                      'Wszystkie pola są wymagane!'
+                      :
+                      'Odbierz odszkodowanie!'
+                    }
+                  </Button>
+                  <Button
+                    onClick={this.handleNext}
+                    className={['nextButton', this.props.tabs.length < this.state.active + 2 ? 'display-none' : ''].join(' ')}
+                  >
+                    Następne =>
                     </Button>
-                    :
-                    <Button
-                      onClick={this.handleNext}
-                      className={'nextButton'}
-                    >
-                      Następne =>
-                    </Button>
-                  }
                 </div>
               </div>
             );
