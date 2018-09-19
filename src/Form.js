@@ -18,6 +18,7 @@ import './form.css'
 import Formsy from 'formsy-react';
 // Airports Data
 import AirportDatabase from 'data/airports.json'
+import AirlineDatabase from 'data/airlanes.json'
 
 
 
@@ -53,6 +54,7 @@ class SectionPills extends React.Component {
   render() {
     const { classes } = this.props;
     let Airports = []
+    let Airlanes = []
     // parse airports
     // Airports legend
     // - shortcut for airport allAirports = 'iata' Airports = 'code'
@@ -64,9 +66,15 @@ class SectionPills extends React.Component {
         city: airport.city,
         name: airport.name,
         country: airport.country,
-        icao: airport.icao
+        icao: airport.icao,
+        type: airport.type,
       }
-      Airports.push(Airport)
+      if (Airport.type !== "Railway Stations") {
+        Airports.push(Airport)
+      }
+    })
+    _.each(AirlineDatabase, (airlane) => {
+      Airlanes.push(airlane)
     })
 
     return (
@@ -93,11 +101,6 @@ class SectionPills extends React.Component {
                           <h5>Za moment zajmiemy się Twoim odszkodowaniem, narazie odpowiedz na te kilka pytań dotyczących Twojego lotu :)</h5>
                           <GridContainer spacing={16}>
                             <GridItem xs={6}>
-                              {/* <Input type='text'
-                                label='Miejsce wylotu:'
-                                name='fromWhere'
-                                placeholder='np. Wrocław, lub W-w'
-                                required /> */}
                               <AutoComplete
                                 label='Miejsce wylotu:'
                                 name='fromWhere'
@@ -111,18 +114,7 @@ class SectionPills extends React.Component {
                                 name='toWhere'
                                 placeholder='np. Poland, lub EPWR'
                                 required
-                                suggestions={[
-                                  "Alligator",
-                                  "Bask",
-                                  "Crocodilian",
-                                  "Death Roll",
-                                  "Eggs",
-                                  "Jaws",
-                                  "Reptile",
-                                  "Solitary",
-                                  "Tail",
-                                  "Wetlands"
-                                ]} />
+                                suggestions={Airports} />
                             </GridItem>
                           </GridContainer>
                         </div>
@@ -153,19 +145,8 @@ class SectionPills extends React.Component {
                           <span>
                             <GridContainer spacing={16}>
                               <GridItem xs={6}>
-                                <AutoComplete placeholder='np. Oslo' label='Linia: ' name='lane' required
-                                  suggestions={[
-                                    "Alligator",
-                                    "Bask",
-                                    "Crocodilian",
-                                    "Death Roll",
-                                    "Eggs",
-                                    "Jaws",
-                                    "Reptile",
-                                    "Solitary",
-                                    "Tail",
-                                    "Wetlands"
-                                  ]} />
+                                <AutoComplete placeholder='np. LOT Polish Airlines' label='Linia: ' name='lane' required
+                                  suggestions={Airlanes} />
                               </GridItem>
                               <GridItem xs={2}>
                                 <AutoComplete placeholder='np. 1234' label='Lot: ' name='flight' required
