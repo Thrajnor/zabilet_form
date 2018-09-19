@@ -10,6 +10,7 @@ import Steps from "components/Steps/Steps";
 import Choose from 'components/Choose/Choose'
 import AutoComplete from 'components/Input/AutoComplete'
 import Input from 'components/Input/Input'
+import Date from 'components/Input/Date'
 import pillsStyle from "assets/jss/material-kit-react/views/componentsSections/pillsStyle.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
@@ -149,22 +150,10 @@ class SectionPills extends React.Component {
                                   suggestions={Airlanes} />
                               </GridItem>
                               <GridItem xs={2}>
-                                <AutoComplete placeholder='np. 1234' label='Lot: ' name='flight' required
-                                  suggestions={[
-                                    "Alligator",
-                                    "Bask",
-                                    "Crocodilian",
-                                    "Death Roll",
-                                    "Eggs",
-                                    "Jaws",
-                                    "Reptile",
-                                    "Solitary",
-                                    "Tail",
-                                    "Wetlands"
-                                  ]} />
+                                <Input placeholder='np. 1234' label='Lot: ' name='flight' required />
                               </GridItem>
                               <GridItem xs={4}>
-                                <Input type='date'
+                                <Date type='date'
                                   label='Data: '
                                   name='date' required
                                 />
