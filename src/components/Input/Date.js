@@ -51,8 +51,8 @@ class Input extends React.Component {
     const errorMessage = this.props.getErrorMessage();
 
     return (
-      <div className={"form-group mt-4 position-relative"} >
-        <label htmlFor={this.props.name} className={this.state.fieldActive ? "field-active label" : "label"}>
+      <div className={["form-group mt-4 position-relative", this.props.type === 'date' ? 'date' : ''].join(' ')} >
+        <label htmlFor={this.props.name} className={[this.state.fieldActive ? "field-active" : "", this.props.type === 'date' ? '' : 'label'].join[' ']}>
           {this.props.label}
         </label>
         <input
@@ -65,8 +65,8 @@ class Input extends React.Component {
           hidden={this.props.hidden}
           onFocus={this.activateField}
           onBlur={this.disableField}
-          placeholder={this.state.fieldActive ? this.props.placeholder : null}
         />
+        <small className="form-text text-muted">{this.props.placeholder}</small>
         <span>{errorMessage}</span>
       </ div>
     );
