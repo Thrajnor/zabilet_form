@@ -75,7 +75,7 @@ class Autocomplete extends Component {
     this.changeValue(e)
     let filteredSuggestions = []
     // Filter our suggestions that don't contain the user's input
-    if (typeof (suggestions[0]) === 'object') {
+    if (suggestions[0].city !== undefined) {
       let filteredSuggestionsByCity = suggestions.filter(
         suggestion =>
           suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1
@@ -122,13 +122,31 @@ class Autocomplete extends Component {
   // Event fired when the user clicks on a suggestion
   onClick = e => {
     // Update the user input and reset the rest of the state
-    console.log(e.currentTarget)
-    this.setState({
-      activeSuggestion: 0,
-      filteredSuggestions: [],
-      showSuggestions: false,
-      userInput: e.currentTarget.innerText
-    });
+    if (e.currentTarget.getAttribute('name') !== '') {
+      this.setState({
+        activeSuggestion: 0,
+        filteredSuggestions: [],
+        showSuggestions: false,
+        userInput: e.currentTarget.getAttribute('name')
+      });
+      return
+    } else if (e.currentTarget.getAttribute('city') !== '') {
+      this.setState({
+        activeSuggestion: 0,
+        filteredSuggestions: [],
+        showSuggestions: false,
+        userInput: e.currentTarget.getAttribute('city')
+      });
+      return
+    } else if (e.currentTarget.getAttribute('country') !== '') {
+      this.setState({
+        activeSuggestion: 0,
+        filteredSuggestions: [],
+        showSuggestions: false,
+        userInput: e.currentTarget.getAttribute('country')
+      });
+      return
+    }
   };
 
   // Event fired when the user presses a key down
@@ -194,7 +212,9 @@ class Autocomplete extends Component {
                     className={className}
                     key={suggestion.code + index}
                     onClick={onClick}
-                    value={suggestion}
+                    name={suggestion.name}
+                    city={suggestion.city}
+                    country={suggestion.country}
                   >
                     {suggestion.name}
                     <span>
@@ -206,7 +226,7 @@ class Autocomplete extends Component {
                 return (
                   <li
                     className={className}
-                    key={suggestion}
+                    key={suggestion + index}
                     onClick={onClick}
                   >
                     {suggestion}
