@@ -1,5 +1,4 @@
 // Formsy.js
-import { withFormsy } from 'formsy-react';
 import React from 'react';
 
 class Input extends React.Component {
@@ -38,11 +37,6 @@ class Input extends React.Component {
   }
 
   changeValue(event) {
-    // setValue() will set the value of the component, which in
-    // turn will validate it and the rest of the form
-    // Important: Don't skip this step. This pattern is required
-    // for Formsy to work.
-    this.props.setValue(event.currentTarget.value);
     this.updateInputValue(event)
   }
 
@@ -73,4 +67,4 @@ class Input extends React.Component {
   }
 }
 
-export default withFormsy(Input);
+export default Input;

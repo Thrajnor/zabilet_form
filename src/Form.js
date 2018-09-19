@@ -2,6 +2,9 @@ import React from "react";
 
 import _ from 'lodash'
 
+import * as Yup from 'yup'
+import { withFormik } from 'formik'
+
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 
@@ -16,21 +19,44 @@ import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 
 import './form.css'
-import Formsy from 'formsy-react';
 // Airports Data
 import AirportDatabase from 'data/airports.json'
 import AirlineDatabase from 'data/airlanes.json'
 
+const formikEnhancer = withFormik({
+  validationSchema: Yup.object().shape({
+    airport: Yup.string()
+      .min(2, "C'mon, your name is longer than that")
+      .required('First name is required.'),
+    airlane: Yup.string()
+      .min(2, "C'mon, your name is longer than that")
+      .required('Last name is required.'),
+    flight: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required!'),
+    date: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required!'),
+  }),
+
+  mapPropsToValues: ({ user }) => ({
+    ...user,
+  }),
+  handleSubmit: (payload, { setSubmitting }) => {
+    alert(payload.email);
+    setSubmitting(false);
+  },
+  displayName: 'ZaBilet',
+});
 
 
-class SectionPills extends React.Component {
+
+class Form extends React.Component {
   constructor(props) {
     super(props);
     this.disableButton = this.disableButton.bind(this);
     this.enableButton = this.enableButton.bind(this);
     this.state = {
-      canSubmit: false,
-      formsy: ''
     };
   }
 
@@ -42,18 +68,19 @@ class SectionPills extends React.Component {
     this.setState({ canSubmit: true });
   }
 
-  submit(model) {
-    console.log(JSON.stringify(model))
-    // fetch('http://localhost:3000/', {
-    //   method: 'post',
-    //   body: JSON.stringify(model)
-    // });
-  }
-  componentDidMount() {
-    this.setState({ formsy: this })
-  }
   render() {
     const { classes } = this.props;
+    const {
+      values,
+      touched,
+      errors,
+      dirty,
+      handleChange,
+      handleBlur,
+      handleSubmit,
+      handleReset,
+      isSubmitting,
+    } = this.props;
     let Airports = []
     let Airlanes = []
     // parse airports
@@ -81,11 +108,9 @@ class SectionPills extends React.Component {
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
 
-        <Formsy
+        <form
           ref='form'
-          onValidSubmit={this.submit}
-          onValid={this.enableButton}
-          onInvalid={this.disableButton}>
+          onSubmit={handleSubmit}>
 
           <div id="navigation-pills">
             <div>
@@ -103,19 +128,27 @@ class SectionPills extends React.Component {
                           <GridContainer spacing={16}>
                             <GridItem xs={6}>
                               <AutoComplete
+                                id='fromWhere'
                                 label='Miejsce wylotu:'
                                 name='fromWhere'
                                 placeholder='np. Tokio, lub HND'
-                                required
-                                suggestions={Airports} />
+                                value={values.firstName}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                suggestions={Airports}
+                                error={touched.airport && errors.airport} />
                             </GridItem>
                             <GridItem xs={6}>
                               <AutoComplete
+                                id='toWhere'
                                 label='Miejsce przylotu:'
                                 name='toWhere'
                                 placeholder='np. Poland, lub EPWR'
-                                required
-                                suggestions={Airports} />
+                                value={values.firstName}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                suggestions={Airports}
+                                error={touched.airport && errors.airport} />
                             </GridItem>
                           </GridContainer>
                         </div>
@@ -146,16 +179,24 @@ class SectionPills extends React.Component {
                           <span>
                             <GridContainer spacing={16}>
                               <GridItem xs={6}>
-                                <AutoComplete placeholder='np. LOT Polish Airlines' label='Linia: ' name='lane' required
+                                <AutoComplete placeholder='np. LOT Polish Airlines'
+                                  label='Linia: '
+                                  name='lane'
+                                  value={values.firstName}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  error={touched.airlane && errors.airlane}
                                   suggestions={Airlanes} />
                               </GridItem>
                               <GridItem xs={2}>
-                                <Input placeholder='np. 1234' label='Lot: ' name='flight' required />
+                                <Input placeholder='np. 1234'
+                                  label='Lot: '
+                                  name='flight' />
                               </GridItem>
                               <GridItem xs={4}>
                                 <Date type='date'
                                   label='Data: '
-                                  name='date' required
+                                  name='date'
                                 />
                               </GridItem>
                             </GridContainer>
@@ -168,10 +209,10 @@ class SectionPills extends React.Component {
               />
             </div>
           </div>
-        </Formsy>
+        </form>
       </div>
     );
   }
 }
 
-export default withStyles(pillsStyle)(SectionPills);
+export default formikEnhancer(withStyles(pillsStyle)(Form));

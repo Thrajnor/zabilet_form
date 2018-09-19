@@ -5,12 +5,13 @@
   "dependencies": {
     "@material-ui/core": "^3.0.3",
     "@material-ui/icons": "^3.0.1",
-    "formsy-react": "^1.1.4",
+    "formik": "^1.3.0",
     "lodash": "^4.17.11",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-scripts": "1.1.5",
-    "react-swipeable-views": "^0.12.17"
+    "react-swipeable-views": "^0.12.17",
+    "yup": "^0.26.5"
   },
   "scripts": {
     "start": "react-scripts start",

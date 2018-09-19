@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import { withFormsy } from 'formsy-react';
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -34,11 +33,7 @@ class Autocomplete extends Component {
 
 
   changeValue(event) {
-    // setValue() will set the value of the component, which in
-    // turn will validate it and the rest of the form
-    // Important: Don't skip this step. This pattern is required
-    // for Formsy to work.
-    this.props.setValue(event.currentTarget.value);
+    this.props.onChange(event)
     this.updateInputValue(event)
   }
 
@@ -57,6 +52,7 @@ class Autocomplete extends Component {
         showSuggestions: false
       })
     }
+    this.props.handleBlur()
   }
   // to update the changes in the input and activate it
   updateInputValue(e) {
@@ -117,6 +113,7 @@ class Autocomplete extends Component {
       showSuggestions: true,
       userInput: e.currentTarget.value
     });
+    this.props.onChange(e)
   };
 
   // Event fired when the user clicks on a suggestion
@@ -257,7 +254,7 @@ class Autocomplete extends Component {
             name={this.props.name}
             type="text"
             hidden={this.props.hidden}
-            onChange={onChange}
+            onChange={this.changeValue}
             onKeyDown={onKeyDown}
             value={userInput}
             autoComplete='off'
@@ -273,4 +270,4 @@ class Autocomplete extends Component {
   }
 }
 
-export default withFormsy(Autocomplete);
+export default Autocomplete;

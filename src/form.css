@@ -141,6 +141,11 @@ box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.66);
  .date {
    transform: translateY(-32px)
  }
+::-webkit-datetime-edit-year-field:not([aria-valuenow]),
+::-webkit-datetime-edit-month-field:not([aria-valuenow]),
+::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
+    color: transparent;
+}
 /* Floating label Class */
 .label {
   display: inline-block;

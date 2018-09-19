@@ -1,5 +1,4 @@
 // Formsy.js
-import { withFormsy } from 'formsy-react';
 import React from 'react';
 
 class Radio extends React.Component {
@@ -31,9 +30,12 @@ class Radio extends React.Component {
     // turn will validate it and the rest of the form
     // Important: Don't skip this step. This pattern is required
     // for Formsy to work.
-    this.setState({ fieldValue: event.currentTarget.value }, function () {
-      this.props.setValue(this.state.fieldValue);
-    })
+    console.log(event.currentTarget.value)
+    this.props.setValue(event.currentTarget.value);
+    // this.setState({ fieldValue: event.currentTarget.value }, function () {
+    //   console.log(event.currentTarget.value)
+    //   console.log(this === This)
+    // })
     this.activateField()
   }
 
@@ -63,4 +65,4 @@ class Radio extends React.Component {
   }
 }
 
-export default withFormsy(Radio);
+export default Radio;
