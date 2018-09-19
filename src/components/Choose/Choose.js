@@ -37,8 +37,8 @@ class Choose extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <span>
-          <Input type='text' name='whatHappend' value={this.state.option} hidden='hidden' required></Input>
+        <span className='d-none'>
+          <Input type='text' name='whatHappend' value={this.state.option} class='d-none' hidden='hidden' required></Input>
         </span>
         <CustomTabs
           headerColor="primary"
