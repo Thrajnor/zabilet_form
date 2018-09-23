@@ -11,12 +11,22 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Paper from '@material-ui/core/Paper'
 
+//  @material-ui/icons components
+import ArrowForward from '@material-ui/icons/ArrowForward'
+import ArrowBack from '@material-ui/icons/ArrowBack'
+import Send from '@material-ui/icons/Send'
+
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import Button from "components/CustomButtons/Button.jsx"
 
 import navPillsStyle from "assets/jss/material-kit-react/components/navPillsStyle.jsx";
+
+
+const style = {
+  overflow: 'hidden visible',
+}
 
 class Steps extends React.Component {
   constructor(props) {
@@ -45,9 +55,6 @@ class Steps extends React.Component {
     const active = this.state.active - 1
     this.setState({ active: active });
   };
-  handlePrevName = () => {
-    return this.state.active === 0 ? '' : '<= Poprzednie'
-  }
   handleChangeIndex = index => {
     this.setState({ active: index });
   };
@@ -60,7 +67,6 @@ class Steps extends React.Component {
       horizontal
     } = this.props;
     const flexContainerClasses = classNames({
-      [classes.flexContainer]: true,
       [classes.horizontalDisplay]: horizontal !== undefined
     });
     const visibility = this.state.active === 0 ? 'visibility-hidden' : ''
@@ -83,6 +89,26 @@ class Steps extends React.Component {
             [classes.horizontalPills]: horizontal !== undefined,
             [classes.pillsWithIcons]: prop.tabIcon !== undefined
           });
+          let disabled = true
+          // HARDCODE #toRefactor ============================================================================================
+          if (prop.tabButton === '1') {
+            disabled = false
+          } else if (prop.tabButton === '2' &&
+            this.props.values.fromWhere !== undefined &&
+            this.props.values.toWhere !== undefined &&
+            this.props.errors.fromWhere === undefined &&
+            this.props.errors.toWhere === undefined) {
+            disabled = false
+          } else if (prop.tabButton === '3' &&
+            this.props.values.whatHappend !== undefined) {
+            disabled = false
+          } else if (prop.tabButton === '4' &&
+            this.props.values.why !== undefined) {
+            disabled = false
+          } else if (prop.tabButton === '5' &&
+            this.props.submitCount > 0) {
+            disabled = false
+          }
           return (
             <Tab
               label={prop.tabButton}
@@ -94,6 +120,7 @@ class Steps extends React.Component {
                 selected: classes[color]
               }}
               className='tabButton'
+              disabled={disabled}
             />
           );
         })}
@@ -105,37 +132,61 @@ class Steps extends React.Component {
           axis={direction === "rtl" ? "x-reverse" : "x"}
           index={this.state.active}
           onChangeIndex={this.handleChangeIndex}
+          className='swieableViews'
+          disabled={true}
+          animateHeight={false}
+          style={style}
+          slideStyle={style}
         >
           {tabs.map((prop, key) => {
+            let disabled = true
+            // HARDCODE #toRefactor ============================================================================================
+            if (prop.tabButton === '1' &&
+              this.props.values.fromWhere !== undefined &&
+              this.props.values.toWhere !== undefined &&
+              this.props.errors.fromWhere === undefined &&
+              this.props.errors.toWhere === undefined) {
+              disabled = false
+            } else if (prop.tabButton === '2' &&
+              this.props.values.whatHappend !== undefined) {
+              disabled = false
+            } else if (prop.tabButton === '3' &&
+              this.props.values.why !== undefined) {
+              disabled = false
+            } else if (prop.tabButton === '4' &&
+              this.props.didSubmit === false) {
+              disabled = false
+            }
             return (
-              <div key={key} className='veltically-center'>
-                <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
-                  {prop.tabContent}
-                </Paper>
-                <div className={'navBase'}>
-                  <Button
-                    onClick={this.handlePrev}
-                    className={[visibility, 'prevButton'].join(' ')}
-                  >
-                    {this.handlePrevName()}
-                  </Button>
-                  <Button
-                    disabled={!this.props.canSubmit}
-                    className={['nextButton', this.props.tabs.length < this.state.active + 2 ? '' : 'display-none'].join(' ')}
-                    type='submit'
-                  >
-                    {!this.props.canSubmit ?
-                      'Wszystkie pola są wymagane!'
-                      :
-                      'Odbierz odszkodowanie!'
-                    }
-                  </Button>
-                  <Button
-                    onClick={this.handleNext}
-                    className={['nextButton', this.props.tabs.length < this.state.active + 2 ? 'display-none' : ''].join(' ')}
-                  >
-                    Następne =>
-                    </Button>
+              <div className={'outer'} key={key}>
+                <div className={'middle'}>
+                  <div className={'inner'}>
+                    <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
+                      {prop.tabContent}
+                    </Paper>
+                    <div className={'navBase'}>
+                      <Button
+                        onClick={this.handlePrev}
+                        className={[visibility, this.props.tabs.length === this.state.active + 1 ? 'display-none' : '', 'prevButton'].join(' ')}
+                      >
+                        <ArrowBack /><span>Poprzednie</span>
+                      </Button>
+                      <Button
+                        disabled={disabled || this.props.isSubmitting}
+                        className={['nextButton', this.props.tabs.length === this.state.active + 2 ? '' : 'display-none'].join(' ')}
+                        type='submit'
+                      >
+                        <span className='pr-1'>Wyślij </span> <Send />
+                      </Button>
+                      <Button
+                        onClick={this.handleNext}
+                        className={['nextButton', this.props.tabs.length < this.state.active + 3 ? 'display-none' : ''].join(' ')}
+                        disabled={disabled}
+                      >
+                        <span className='pr-1'>Następne</span><ArrowForward />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
