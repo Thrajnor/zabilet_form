@@ -127,7 +127,7 @@ class Steps extends React.Component {
       </Tabs>
     );
     const tabContent = (
-      <div className={classes.contentWrapper}>
+      <div>
         <SwipeableViews
           axis={direction === "rtl" ? "x-reverse" : "x"}
           index={this.state.active}
