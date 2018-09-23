@@ -1,8 +1,8 @@
 // Formsy.js
 import React from 'react';
-import Select from 'react-select';
+import ReactSelect from 'react-select';
 
-class Input extends React.Component {
+class Select extends React.Component {
   constructor(props) {
     super(props);
     this.activateField = this.activateField.bind(this);
@@ -59,7 +59,7 @@ class Input extends React.Component {
         <label htmlFor={this.props.id} className={[errorText, this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
           {this.props.label}
         </label>
-        <Select
+        <ReactSelect
           onKeyDown={this.handleEnter}
           ref={this.props.name}
           className={[errorBorder, "floating-label form-control"].join(' ')}
@@ -79,4 +79,4 @@ class Input extends React.Component {
   }
 }
 
-export default Input;
+export default Select;
