@@ -17,6 +17,52 @@ import tabsStyle from "assets/jss/material-kit-react/views/componentsSections/ta
 
 import RadioGroup from 'components/Input/Radio/RadioGroup'
 
+let whyAnswers = [
+  {
+    label: 'Problemy Techniczne',
+    value: 'techProblem',
+  },
+  {
+    label: 'Wpływ innych lotów',
+    value: 'otherFlights',
+  },
+  {
+    label: 'Strajk',
+    value: 'strike',
+  },
+  {
+    label: 'Problemy na lotnisku',
+    value: 'airPortProblems',
+  },
+  {
+    label: 'Złe warunki pogodowe',
+    value: 'badWeather',
+  },
+  {
+    label: 'Nie podano powodu',
+    value: 'noCauseGiven',
+  },
+  {
+    label: 'Nie pamiętam',
+    value: 'dontRemember',
+  },
+  {
+    label: 'Inny',
+    value: 'Other',
+  }
+]
+
+let yesNoAnswer = [
+  {
+    label: 'Tak',
+    value: 'ownWill',
+  },
+  {
+    label: 'Nie',
+    value: 'forced',
+  }
+]
+
 
 class Choose extends React.Component {
   // delay
@@ -25,7 +71,7 @@ class Choose extends React.Component {
       <h4 className=''>Jaki był powód spóźnienia do miejsca docelowego?</h4>
       <small className="form-text text-muted pb-2 mb-3">
         Jeśli Twoj samolot spóźnił się więcej niż 3 godziny załugujesz na odszkodowanie!
-          </small>
+      </small>
       <RadioGroup
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
@@ -33,40 +79,7 @@ class Choose extends React.Component {
         name='why'
         grid={12}
         gridSM={6}
-        radios={[
-          {
-            label: 'Problemy Techniczne',
-            value: 'techProblem',
-          },
-          {
-            label: 'Wpływ innych lotów',
-            value: 'otherFlights',
-          },
-          {
-            label: 'Strajk',
-            value: 'strike',
-          },
-          {
-            label: 'Problemy na lotnisku',
-            value: 'airPortProblems',
-          },
-          {
-            label: 'Złe warunki pogodowe',
-            value: 'badWeather',
-          },
-          {
-            label: 'Nie podano powodu',
-            value: 'noCauseGiven',
-          },
-          {
-            label: 'Nie pamiętam',
-            value: 'dontRemember',
-          },
-          {
-            label: 'Inny',
-            value: 'Other',
-          }
-        ]} />
+        radios={whyAnswers} />
     </div>
   )
 
@@ -83,16 +96,7 @@ class Choose extends React.Component {
         compensation={this.props.compensation}
         grid={12}
         gridSM={6}
-        radios={[
-          {
-            label: 'Tak',
-            value: 'ownWill',
-          },
-          {
-            label: 'Nie',
-            value: 'forced',
-          }
-        ]} />
+        radios={yesNoAnswer} />
     </div>
   )
 
@@ -101,7 +105,7 @@ class Choose extends React.Component {
       <h4 className=''>Jaki był powód odwołania lotu?</h4>
       <small className="form-text text-muted pb-2 mb-3">
         Jeśli odwołanie nastąpiło mniej niż 14 dni przed wylotem zasługujesz do odszkodowanie!
-          </small>
+      </small>
       <RadioGroup
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
@@ -109,40 +113,7 @@ class Choose extends React.Component {
         compensation={this.props.compensation}
         grid={12}
         gridSM={6}
-        radios={[
-          {
-            label: 'Problemy Techniczne',
-            value: 'techProblem',
-          },
-          {
-            label: 'Wpływ innych lotów',
-            value: 'otherFlights',
-          },
-          {
-            label: 'Strajk',
-            value: 'strike',
-          },
-          {
-            label: 'Problemy na lotnisku',
-            value: 'airPortProblems',
-          },
-          {
-            label: 'Złe warunki pogodowe',
-            value: 'badWeather',
-          },
-          {
-            label: 'Nie podano powodu',
-            value: 'noCauseGiven',
-          },
-          {
-            label: 'Nie pamiętam',
-            value: 'dontRemember',
-          },
-          {
-            label: 'Inny',
-            value: 'Other',
-          }
-        ]} />
+        radios={whyAnswers} />
     </div>
   )
 
