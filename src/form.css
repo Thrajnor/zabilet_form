@@ -208,10 +208,10 @@ input[type="date"]:in-range::-webkit-datetime-edit-year-field, input[type="date"
  /* AutoComplete */
 
 .no-suggestions {
-  color: #999;
-  padding: 0.5rem;
+  color: hsl(0,0%,60%);
+  text-align: center;
+  padding: 8px 12px;
   font-size: .8rem;
-  position: absolute;
   border-top-width: 0;
   list-style: none;
   top: 100%;

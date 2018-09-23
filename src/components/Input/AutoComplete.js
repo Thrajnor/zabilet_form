@@ -247,10 +247,22 @@ class Autocomplete extends Component {
             })}
           </ul>
         );
+      } else if (this.props.toWhat === 'airport') {
+        suggestionsListComponent = (
+          <div className="no-suggestions suggestion-active">
+            <span>Nie takiego lotniska!</span>
+          </div>
+        );
+      } else if (this.props.toWhat === 'airlane') {
+        suggestionsListComponent = (
+          <div className="no-suggestions suggestion-active">
+            <span>Nie takiej lini lotniczej!</span>
+          </div>
+        );
       } else {
         suggestionsListComponent = (
           <div className="no-suggestions suggestion-active">
-            <em>No suggestions, you're on your own!</em>
+            <span>Nie ma podpowiedzi!</span>
           </div>
         );
       }
