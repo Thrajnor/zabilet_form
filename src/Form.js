@@ -162,6 +162,7 @@ class Form extends React.Component {
           <GridItem xs={12} sm={6}>
             <AutoComplete
               id='fromWhere'
+              toWhat='airport'
               label='Miejsce wylotu:'
               name='fromWhere'
               placeholder='np. Tokio, lub HND'
@@ -177,6 +178,7 @@ class Form extends React.Component {
           <GridItem xs={12} sm={6}>
             <AutoComplete
               id='toWhere'
+              toWhat='airport'
               label='Miejsce przylotu:'
               name='toWhere'
               placeholder='np. Poland, lub EPWR'
@@ -235,6 +237,7 @@ class Form extends React.Component {
           values={values}
           onBlur={handleBlur}
           onChange={handleChange}
+          setFieldValue={setFieldValue}
         // compensation={this.handleCompensation()}
         ></Choose>
       </div>
@@ -253,6 +256,7 @@ class Form extends React.Component {
                 label='Linia: '
                 name='airlane'
                 id='airlane'
+                toWhat='airlane'
                 value={values.airlane}
                 onChange={handleChange}
                 setFieldValue={setFieldValue}
