@@ -3,6 +3,10 @@ import React from 'react';
 import ReactSelect from 'react-select';
 
 const customStyles = {
+  noOptionsMessageCSS: (base) => ({
+    ...base,
+    height: 'auto'
+  }),
   menu: (base) => ({
     ...base,
     top: '100%',
@@ -19,7 +23,8 @@ const customStyles = {
   }),
   menuList: (base) => ({
     ...base,
-    height: '40vh',
+    height: 'auto',
+    maxHeight: '40vh',
     overflow: 'auto'
   }),
   option: (base) => ({
@@ -36,6 +41,7 @@ class Select extends React.Component {
     this.disableField = this.disableField.bind(this);
     this.changeValue = this.changeValue.bind(this);
     this.state = {
+      selectedOption: null,
       fieldActive: false
     };
   }
@@ -57,7 +63,9 @@ class Select extends React.Component {
 
   changeValue(e) {
     this.activateField(e)
-    this.props.onChange(e)
+    console.log(e.value)
+    this.setState({ selectedOption: e });
+    this.props.setFieldValue(this.props.id, e.value, true)
   }
 
   // handleEnter = (event) => {
@@ -86,12 +94,13 @@ class Select extends React.Component {
           onChange={this.changeValue}
           type={this.props.type || 'text'}
           name={this.props.id}
-          value={this.props.value || ''}
+          value={this.state.selectedOption}
           hidden={this.props.hidden}
           onFocus={this.activateField}
           onBlur={this.disableField}
           options={this.props.options}
           placeholder={this.state.fieldActive ? this.props.placeholder : null}
+          noOptionsMessage={() => ('Nie ma podpowiedzi!')}
         />
       </ div>
     );
