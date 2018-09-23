@@ -371,7 +371,6 @@ class Form extends React.Component {
                 .max(50, 'zbyt długa nazwa!')
                 .required('Numer lotu jest wymagany!'),
               date: Yup.date()
-                .max(50, 'zbyt długa data!')
                 .required('Data jest wymagana!'),
               email: Yup.string()
                 .max(50, 'zbyt długi email!')
