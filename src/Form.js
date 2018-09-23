@@ -23,7 +23,7 @@ import Date from 'components/Input/Date'
 import pillsStyle from "assets/jss/material-kit-react/views/componentsSections/pillsStyle.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
-import RadioGroup from 'components/Radio/RadioGroup'
+import RadioGroup from 'components/Input/Radio/RadioGroup'
 import Button from "components/CustomButtons/Button.jsx"
 
 import './form.css'

@@ -15,7 +15,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 // core components
 import tabsStyle from "assets/jss/material-kit-react/views/componentsSections/tabsStyle.jsx";
 
-import RadioGroup from 'components/Radio/RadioGroup'
+import RadioGroup from 'components/Input/Radio/RadioGroup'
 
 
 class Choose extends React.Component {

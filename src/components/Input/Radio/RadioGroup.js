@@ -1,7 +1,7 @@
 import React from 'react';
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
-import Radio from 'components/Radio/Radio'
+import Radio from './Radio'
 
 const RadioGroup = (props) => {
   const { radios } = props
