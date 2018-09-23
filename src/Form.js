@@ -57,6 +57,9 @@ class Form extends React.Component {
       compensation: 400
     };
   }
+  componentDidMount() {
+    document.getElementById("fromWhere").focus();
+  }
   // handleCompensation = (value) => {
   //   this.setState({compensation: value})
   // }
@@ -169,7 +172,7 @@ class Form extends React.Component {
               suggestions={this.airports()}
               error={touched.fromWhere && errors.fromWhere}
               touched={touched.fromWhere}
-              autofocus='autofocus' />
+            />
           </GridItem>
           <GridItem xs={12} sm={6}>
             <AutoComplete

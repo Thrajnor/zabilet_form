@@ -279,7 +279,6 @@ class Autocomplete extends Component {
             onBlur={this.disableField}
             required={this.props.required}
             placeholder={this.state.fieldActive ? this.props.placeholder : null}
-            autofocus={this.state.autofocus || ''}
           />
           {suggestionsListComponent}
           {this.props.error ? <div className={errorText}>{this.props.error}</div> : null}
