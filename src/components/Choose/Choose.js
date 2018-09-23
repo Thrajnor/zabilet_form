@@ -1,5 +1,7 @@
 import React from "react";
 
+import MediaQuery from 'react-responsive'
+
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 
@@ -16,6 +18,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import tabsStyle from "assets/jss/material-kit-react/views/componentsSections/tabsStyle.jsx";
 
 import RadioGroup from 'components/Input/Radio/RadioGroup'
+import Select from 'components/Input/Select'
 
 let whyAnswers = [
   {
@@ -117,15 +120,90 @@ class Choose extends React.Component {
     </div>
   )
 
+  // MOBILE
+
+  delayMobile = () => (
+    <div>
+      <h4 className=''>Czemu Twoj samolot się opóźnił?</h4>
+      <small className="form-text text-muted pb-2 mb-3">
+        Jeśli Twoj samolot spóźnił się więcej niż 3 godziny do miejsca docelowego załugujesz na odszkodowanie!
+      </small>
+      <Select
+        placeholder='Wybierz Przyczynę'
+        label='Co się stało?: '
+        name='why'
+        id='why'
+        onChange={this.props.onChange}
+        onBlur={this.props.onBlur}
+        options={whyAnswers}
+        setFieldValue={this.props.setFieldValue}
+      />
+    </div>
+  )
+  boardingRefusedMobile = () => (
+    <div>
+      <h4 className=''>Czemu Twoj samolot się opóźnił?</h4>
+      <small className="form-text text-muted pb-2 mb-3">
+        Jeśli Twoj samolot spóźnił się więcej niż 3 godziny do miejsca docelowego załugujesz na odszkodowanie!
+      </small>
+      <Select
+        placeholder='Wybierz Przyczynę'
+        label='Co się stało?: '
+        name='why'
+        id='why'
+        onChange={this.props.onChange}
+        onBlur={this.props.onBlur}
+        options={yesNoAnswer}
+        setFieldValue={this.props.setFieldValue}
+      />
+    </div>
+  )
+  dismissedMobile = () => (
+    <div>
+      <h4 className=''>Czemu Twoj samolot się opóźnił?</h4>
+      <small className="form-text text-muted pb-2 mb-3">
+        Jeśli Twoj samolot spóźnił się więcej niż 3 godziny do miejsca docelowego załugujesz na odszkodowanie!
+      </small>
+      <Select
+        placeholder='Wybierz Przyczynę'
+        label='Co się stało?: '
+        name='why'
+        id='why'
+        onChange={this.props.onChange}
+        onBlur={this.props.onBlur}
+        options={whyAnswers}
+        setFieldValue={this.props.setFieldValue}
+      />
+    </div>
+  )
+
 
 
   whichRadioGroup = () => {
     if (this.props.values.whatHappend === 'delay') {
-      return this.delay()
+      return (
+        <div>
+          <MediaQuery maxWidth={600}>
+            {this.delayMobile()}
+          </MediaQuery>
+          <MediaQuery minWidth={600}>
+            {this.delay()}
+          </MediaQuery>
+        </div>
+      )
     } else if (this.props.values.whatHappend === 'boardingRefused') {
       return this.boardingRefused()
     } else if (this.props.values.whatHappend === 'dismissed') {
-      return this.dismissed()
+      return (
+        <div>
+          <MediaQuery maxWidth={600}>
+            {this.dismissedMobile()}
+          </MediaQuery>
+          <MediaQuery minWidth={600}>
+            {this.dismissed()}
+          </MediaQuery>
+        </div>
+      )
     }
   }
   render() {
