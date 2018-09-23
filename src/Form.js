@@ -168,7 +168,8 @@ class Form extends React.Component {
               onBlur={handleBlur}
               suggestions={this.airports()}
               error={touched.fromWhere && errors.fromWhere}
-              touched={touched.fromWhere} />
+              touched={touched.fromWhere}
+              autofocus='autofocus' />
           </GridItem>
           <GridItem xs={12} sm={6}>
             <AutoComplete
