@@ -10,6 +10,7 @@
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-scripts": "1.1.5",
+    "react-select": "^2.0.0",
     "react-swipeable-views": "^0.12.17",
     "yup": "^0.26.5"
   },
