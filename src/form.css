@@ -77,12 +77,14 @@ input.valid-border:focus {
   bottom: 20px !important;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 0;
 }
 
 .tabButton {
   border-radius: 50% !important;
   min-width: 48px !important;
   padding: 0 !important;
+  z-index: 0;
 
 }
 .tabButton:focus {
@@ -117,7 +119,7 @@ box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.66);
   left: 50%;
   width: 50%;
   transform: translateX(-100%);
-  z-index: 100;
+  z-index: 1;
   border-top-right-radius: 0 !important;
 }
 .nextButton:hover {
@@ -134,7 +136,7 @@ box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.66);
   margin: 0 !important;
   left: 0;
   width: 50%;
-  z-index: 100;
+  z-index: 1;
   border-top-left-radius: 0 !important;
 }
 .prevButton:hover {
@@ -210,27 +212,44 @@ input[type="date"]:in-range::-webkit-datetime-edit-year-field, input[type="date"
   padding: 0.5rem;
   font-size: .8rem;
   position: absolute;
-  overflow-y: hidden;
-  z-index: 10000;
+  border-top-width: 0;
+  list-style: none;
+  top: 100%;
+  background-color: hsl(0,0%,100%);
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px hsla(0,0%,0%,0.1), 0 4px 11px hsla(0,0%,0%,0.1);
+  margin-bottom: 8px;
+  margin-top: 0px;
+  position: absolute;
   width: 100%;
+  z-index: 10000;
+  box-sizing: border-box;
+  overflow: auto;
 }
 
 .suggestions {
-  border: 1px solid #999;
-  background-color: #fff;
-  width: 100%;
-  border-top-width: 0;
-  list-style: none;
-  margin-top: 0;
-  max-height: 200px;
-  position: absolute;
   overflow-y: hidden;
+  border-top-width: 0;
   padding-left: 0;
+  list-style: none;
+  top: 100%;
+  background-color: hsl(0,0%,100%);
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px hsla(0,0%,0%,0.1), 0 4px 11px hsla(0,0%,0%,0.1);
+  margin-bottom: 8px;
+  margin-top: 0px;
+  position: absolute;
+  width: 100%;
   z-index: 10000;
+  box-sizing: border-box;
+  overflow: auto;
 }
 
 .suggestions li {
   padding: 0.35rem;
+}
+.suggestions li:not(:last-of-type) {
+  border-bottom: none !important;
 }
 
 .suggestion-active,
@@ -281,7 +300,6 @@ input[type="date"]:in-range::-webkit-datetime-edit-year-field, input[type="date"
 }
   .slideContent {
     padding: 25px 30px !important;
-    overflow: visible;
     max-height: auto;
   }
   .formBackground {

@@ -201,8 +201,8 @@ class Steps extends React.Component {
       </GridContainer>
     ) : (
         <div>
-          {tabContent}
           {tabButtons}
+          {tabContent}
         </div>
       );
   }
