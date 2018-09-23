@@ -19,47 +19,43 @@ class Radio extends React.Component {
     })
   }
   // to deactivate input only if it's empty
-  disableField() {
+  disableField(e) {
+    // if(this.props.values.$(this.props.id))
     this.setState({
       fieldActive: false
     })
+    this.props.onBlur(e)
   }
 
   changeValue(event) {
-    // setValue() will set the value of the component, which in
-    // turn will validate it and the rest of the form
-    // Important: Don't skip this step. This pattern is required
-    // for Formsy to work.
-    console.log(event.currentTarget.value)
-    this.props.setValue(event.currentTarget.value);
-    // this.setState({ fieldValue: event.currentTarget.value }, function () {
-    //   console.log(event.currentTarget.value)
-    //   console.log(this === This)
-    // })
     this.activateField()
+    this.props.onChange(event)
+    // , () => {
+    //   let value = 250
+    //   if (this.props.values.why) {
+
+    //   }
+    //   this.props.compensation(value)
+    // }
   }
 
   render() {
-    // An error message is returned only if the component is invalid
-    const errorMessage = this.props.getErrorMessage();
 
     return (
-      <label htmlFor={this.props.getValue()} className={[!this.state.fieldActive === false ? 'focus' : '', "radioBundle position-relative pb-1 form-control"].join(' ')}>
+      <label htmlFor={this.props.id} className={[!this.state.fieldActive === false ? 'focus' : '', "radioBundle position-relative pb-1 form-control"].join(' ')}>
         <input
+          ref={this.props.name}
           className="radio"
-          id={this.props.getValue()}
+          id={this.props.id}
           onChange={this.changeValue}
           type={this.props.type || 'radio'}
           name={this.props.name}
-          value={this.props.getValue() || ''}
+          value={this.props.value || ''}
           onBlur={this.disableField}
           hidden={this.props.hidden}
         // checked={this.props.checked === true? true : false}
         />
-        <label htmlFor={this.props.getValue()} className='label-radio pl-3'>
-          {this.props.label}
-        </label>
-        <span>{errorMessage}</span>
+        <span className='label-radio pl-3 pr-1'>{this.props.icon} {this.props.label}</span>
       </label>
     );
   }

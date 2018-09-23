@@ -12,9 +12,9 @@ class Autocomplete extends Component {
 
   constructor(props) {
     super(props);
-    this.updateInputValue = this.updateInputValue.bind(this);
     this.activateField = this.activateField.bind(this);
     this.disableField = this.disableField.bind(this);
+    this.changeValue = this.changeValue.bind(this);
 
     this.state = {
       // The active selection's index
@@ -32,9 +32,9 @@ class Autocomplete extends Component {
   // FLOATING FIELD !!!!!
 
 
-  changeValue(event) {
-    this.props.onChange(event)
-    this.updateInputValue(event)
+  changeValue(e) {
+    this.props.onChange(e)
+    this.activateField();
   }
 
   // to activate the input field while typing
@@ -52,15 +52,7 @@ class Autocomplete extends Component {
         showSuggestions: false
       })
     }
-    this.props.handleBlur()
-  }
-  // to update the changes in the input and activate it
-  updateInputValue(e) {
-    this.setState({
-      userInput: e.target.value,
-    });
-    this.activateField(e);
-    e.preventDefault();
+    this.props.onBlur(e)
   }
 
   // AUTOCOMPLETE
@@ -75,29 +67,29 @@ class Autocomplete extends Component {
       let filteredSuggestionsByCity = suggestions.filter(
         suggestion =>
           suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      );
+      ).slice(0, 4)
       let filteredSuggestionsByName = suggestions.filter(
         suggestion =>
           suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      )
+      ).slice(0, 4)
       let filteredSuggestionsByCode = suggestions.filter(
         suggestion =>
           suggestion.code.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      )
+      ).slice(0, 4)
       let filteredSuggestionsByCountry = suggestions.filter(
         suggestion =>
           suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      )
+      ).slice(0, 4)
       let filteredSuggestionsByIcao = suggestions.filter(
         suggestion =>
           suggestion.icao.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      )
+      ).slice(0, 4)
       filteredSuggestions = filteredSuggestionsByCity
         .concat(filteredSuggestionsByName)
         .concat(filteredSuggestionsByCountry)
         .concat(filteredSuggestionsByCode)
         .concat(filteredSuggestionsByIcao)
-      filteredSuggestions = filteredSuggestions.slice(0, 40)
+      filteredSuggestions = filteredSuggestions.slice(0, 4)
       filteredSuggestions = [...new Set(filteredSuggestions)]
     } else {
       filteredSuggestions = suggestions.filter(
@@ -119,45 +111,61 @@ class Autocomplete extends Component {
   // Event fired when the user clicks on a suggestion
   onClick = e => {
     // Update the user input and reset the rest of the state
-    if (e.currentTarget.getAttribute('name') !== '') {
-      this.setState({
-        activeSuggestion: 0,
-        filteredSuggestions: [],
-        showSuggestions: false,
-        userInput: e.currentTarget.getAttribute('name')
-      });
-      return
-    } else if (e.currentTarget.getAttribute('city') !== '') {
-      this.setState({
-        activeSuggestion: 0,
-        filteredSuggestions: [],
-        showSuggestions: false,
-        userInput: e.currentTarget.getAttribute('city')
-      });
-      return
-    } else if (e.currentTarget.getAttribute('country') !== '') {
-      this.setState({
-        activeSuggestion: 0,
-        filteredSuggestions: [],
-        showSuggestions: false,
-        userInput: e.currentTarget.getAttribute('country')
-      });
-      return
+    let value = ''
+    if (e.currentTarget.getAttribute('name') !== null && e.currentTarget.getAttribute('name') !== '') {
+      value = e.currentTarget.getAttribute('name')
+    } else if (e.currentTarget.getAttribute('name') !== null && e.currentTarget.getAttribute('city') !== '') {
+      value = e.currentTarget.getAttribute('city')
+    } else if (e.currentTarget.getAttribute('name') !== null && e.currentTarget.getAttribute('country') !== '') {
+      value = e.currentTarget.getAttribute('country')
+    } else {
+      value = e.currentTarget.innerText
     }
+    this.setState({
+      activeSuggestion: 0,
+      filteredSuggestions: [],
+      showSuggestions: false,
+      userInput: value
+    });
+    this.props.setFieldValue(this.props.id, value, true)
   };
+
+  handleEnter = (event) => {
+    if (event.keyCode === 13) {
+      const form = event.target.form;
+      const index = Array.prototype.indexOf.call(form, event.target);
+      form.elements[index + 1].focus();
+      event.preventDefault();
+    }
+  }
 
   // Event fired when the user presses a key down
   onKeyDown = e => {
     const { activeSuggestion, filteredSuggestions } = this.state;
+    let value = ''
+    this.handleEnter(e)
 
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e.keyCode === 13) {
+      if (typeof (filteredSuggestions[activeSuggestion]) === 'undefined') {
+        return
+      } else if (filteredSuggestions[activeSuggestion].name !== null && filteredSuggestions[activeSuggestion].name !== '') {
+        value = filteredSuggestions[activeSuggestion].name
+      } else if (filteredSuggestions[activeSuggestion].name !== null && filteredSuggestions[activeSuggestion].city !== '') {
+        value = filteredSuggestions[activeSuggestion].city
+      } else if (filteredSuggestions[activeSuggestion].name !== null && filteredSuggestions[activeSuggestion].country !== '') {
+        value = filteredSuggestions[activeSuggestion].country
+      } else {
+        value = filteredSuggestions[activeSuggestion]
+      }
       this.setState({
         activeSuggestion: 0,
+        filteredSuggestions: [],
         showSuggestions: false,
-        userInput: filteredSuggestions[activeSuggestion]
+        userInput: value
       });
+      this.props.setFieldValue(this.props.id, value, true)
     }
     // User pressed the up arrow, decrement the index
     else if (e.keyCode === 38) {
@@ -241,22 +249,31 @@ class Autocomplete extends Component {
         );
       }
     }
+    let errorText = ''
+    let errorBorder = ''
+    if (this.props.error) {
+      errorText = 'invalid-text'
+      errorBorder = 'invalid-border'
+    } else if (!this.props.error && this.props.touched) {
+      errorText = 'valid-text'
+      errorBorder = 'valid-border'
+    }
 
     return (
       <Fragment>
-        <div className="form-group mt-4 position-relative">
-          <label htmlFor={this.props.name} className={this.state.fieldActive ? "label field-active" : "label"}>
+        <div className={[errorBorder, "form-group mt-4 position-relative"].join(' ')}>
+          <label htmlFor={this.props.name} className={[errorText, this.state.fieldActive ? "label field-active" : "label"].join(' ')}>
             {this.props.label}
           </label>
           <input
-            className="floating-label form-control"
+            className={[errorBorder, "floating-label form-control"].join(' ')}
             id={this.props.name}
             name={this.props.name}
             type="text"
             hidden={this.props.hidden}
-            onChange={this.changeValue}
+            onChange={onChange}
             onKeyDown={onKeyDown}
-            value={userInput}
+            value={this.state.userInput}
             autoComplete='off'
             onFocus={this.activateField}
             onBlur={this.disableField}
@@ -264,6 +281,7 @@ class Autocomplete extends Component {
             placeholder={this.state.fieldActive ? this.props.placeholder : null}
           />
           {suggestionsListComponent}
+          {this.props.error ? <div className={errorText}>{this.props.error}</div> : null}
         </div>
       </Fragment>
     );

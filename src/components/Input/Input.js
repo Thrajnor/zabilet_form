@@ -4,17 +4,15 @@ import React from 'react';
 class Input extends React.Component {
   constructor(props) {
     super(props);
-    this.updateInputValue = this.updateInputValue.bind(this);
     this.activateField = this.activateField.bind(this);
     this.disableField = this.disableField.bind(this);
     this.changeValue = this.changeValue.bind(this);
     this.state = {
-      inputValue: '',
       fieldActive: false
     };
   }
   // to activate the input field while typing
-  activateField() {
+  activateField(e) {
     this.setState({
       fieldActive: true
     })
@@ -26,42 +24,55 @@ class Input extends React.Component {
         fieldActive: false
       })
     }
-  }
-  // to update the changes in the input and activate it
-  updateInputValue(e) {
-    this.setState({
-      inputValue: e.target.value,
-    });
-    this.activateField(e);
-    e.preventDefault();
+    this.props.onBlur(e)
   }
 
-  changeValue(event) {
-    this.updateInputValue(event)
+  changeValue(e) {
+    this.activateField(e)
+    this.props.onChange(e)
+  }
+
+  handleEnter = (event) => {
+    if (event.keyCode === 13) {
+      const form = event.target.form;
+      const index = Array.prototype.indexOf.call(form, event.target);
+      form.elements[index + 1].focus();
+      event.preventDefault();
+    }
   }
 
   render() {
-    // An error message is returned only if the component is invalid
-    const errorMessage = this.props.getErrorMessage();
+    let errorText = ''
+    let errorBorder = ''
+    if (this.props.error) {
+      errorText = 'invalid-text'
+      errorBorder = 'invalid-border'
+    } else if (!this.props.error && this.props.touched) {
+      errorText = 'valid-text'
+      errorBorder = 'valid-border'
+    }
+
 
     return (
-      <div className={"form-group mt-4 position-relative"} >
-        <label htmlFor={this.props.name} className={this.state.fieldActive ? "field-active label" : "label"}>
+      <div className={[errorBorder, "form-group mt-4 position-relative"].join(' ')} >
+        <label htmlFor={this.props.id} className={[errorText, this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
           {this.props.label}
         </label>
         <input
-          className="floating-label form-control"
-          id={this.props.name}
+          onKeyDown={this.handleEnter}
+          ref={this.props.name}
+          className={[errorBorder, "floating-label form-control"].join(' ')}
+          id={this.props.id}
           onChange={this.changeValue}
           type={this.props.type || 'text'}
-          name={this.props.name}
-          value={this.props.getValue() || ''}
+          name={this.props.id}
+          value={this.props.value || ''}
           hidden={this.props.hidden}
           onFocus={this.activateField}
           onBlur={this.disableField}
           placeholder={this.state.fieldActive ? this.props.placeholder : null}
         />
-        <span>{errorMessage}</span>
+        {this.props.error ? <div className={errorText}>{this.props.error}</div> : null}
       </ div>
     );
   }
