@@ -51,6 +51,12 @@ class Autocomplete extends Component {
         fieldActive: false,
         showSuggestions: false
       })
+    } else {
+      setTimeout(() => {
+        this.setState({
+          showSuggestions: false
+        })
+      }, 10);
     }
     this.props.onBlur(e)
   }
