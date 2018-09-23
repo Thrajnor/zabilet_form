@@ -1,8 +1,15 @@
 .container {
-  width: 764px;
+  max-width: 764px;
   height: 640px;
   margin: auto;
   margin-top: 30px;
   padding: 0;
-  border: black solid 2px
+  border: black solid 2px;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    height: auto;
+    margin-top: 0px;
+  }
 }
