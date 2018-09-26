@@ -42,6 +42,10 @@ class Input extends React.Component {
     this.props.setFieldValue(this.props.name, e.format(), true)
     // this.props.onChange(e)
   }
+  componentDidMount() {
+    this.props.setFieldValue(this.props.name, moment().format(), true)
+    this.props.setFieldValue('consent', false, true)
+  }
 
   // handleEnter = (event) => {
   //   if (event.keyCode === 13) {
