@@ -8,6 +8,7 @@ class Input extends React.Component {
     this.disableField = this.disableField.bind(this);
     this.changeValue = this.changeValue.bind(this);
     this.state = {
+      userInput: '',
       fieldActive: false
     };
   }
@@ -25,11 +26,14 @@ class Input extends React.Component {
       })
     }
     this.props.onBlur(e)
+    this.props.onChange(e)
   }
 
   changeValue(e) {
     this.activateField(e)
-    this.props.onChange(e)
+    this.setState({
+      userInput: e.currentTarget.value
+    });
   }
 
   handleEnter = (event) => {
@@ -66,7 +70,7 @@ class Input extends React.Component {
           onChange={this.changeValue}
           type={this.props.type || 'text'}
           name={this.props.id}
-          value={this.props.value || ''}
+          value={this.state.userInput}
           hidden={this.props.hidden}
           onFocus={this.activateField}
           onBlur={this.disableField}
