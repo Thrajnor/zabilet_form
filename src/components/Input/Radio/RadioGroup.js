@@ -11,7 +11,17 @@ const RadioGroup = (props) => {
       {radios.map((prop, key) => {
         return (
           <GridItem xs={Number(prop.grid) || props.grid} sm={Number(prop.gridSM) || props.gridSM} key={key}>
-            <Radio icon={prop.icon || ''} values={props.values} size={prop.size || props.size} onBlur={props.onBlur} onChange={prop.onchange || props.onChange} label={prop.label} value={prop.value} name={props.name}></Radio>
+            <Radio icon={prop.icon || ''}
+              labelType={prop.labelType}
+              type={prop.type}
+              values={props.values}
+              size={prop.size || props.size}
+              onBlur={props.onBlur}
+              onChange={prop.onchange || props.onChange}
+              label={prop.label}
+              value={prop.value}
+              name={props.name}
+              setFieldValue={props.setFieldValue}></Radio>
           </GridItem>
         )
       })}
