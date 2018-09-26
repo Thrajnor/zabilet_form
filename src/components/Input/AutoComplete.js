@@ -14,7 +14,6 @@ class Autocomplete extends Component {
     super(props);
     this.activateField = this.activateField.bind(this);
     this.disableField = this.disableField.bind(this);
-    this.changeValue = this.changeValue.bind(this);
 
     this.state = {
       // The active selection's index
@@ -32,10 +31,6 @@ class Autocomplete extends Component {
   // FLOATING FIELD !!!!!
 
 
-  changeValue(e) {
-    this.props.onChange(e)
-    this.activateField();
-  }
 
   // to activate the input field while typing
   activateField() {
@@ -66,7 +61,7 @@ class Autocomplete extends Component {
   onChange = e => {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
-    this.changeValue(e)
+    this.activateField();
     let filteredSuggestions = []
     // Filter our suggestions that don't contain the user's input
     if (suggestions[0].city !== undefined) {
@@ -95,8 +90,8 @@ class Autocomplete extends Component {
         .concat(filteredSuggestionsByCountry)
         .concat(filteredSuggestionsByCode)
         .concat(filteredSuggestionsByIcao)
-      filteredSuggestions = filteredSuggestions.slice(0, 4)
       filteredSuggestions = [...new Set(filteredSuggestions)]
+      filteredSuggestions = filteredSuggestions.slice(0, 4)
     } else {
       filteredSuggestions = suggestions.filter(
         suggestion =>
