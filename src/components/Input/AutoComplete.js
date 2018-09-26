@@ -41,6 +41,7 @@ class Autocomplete extends Component {
   }
   // to deactivate input only if it's empty
   disableField(e) {
+    e.persist()
     if (e.target.value === "") {
       this.setState({
         fieldActive: false,
@@ -51,7 +52,8 @@ class Autocomplete extends Component {
         this.setState({
           showSuggestions: false
         })
-      }, 10);
+      }, 200);
+      this.props.onChange(e)
     }
     this.props.onBlur(e)
   }
@@ -106,18 +108,17 @@ class Autocomplete extends Component {
       showSuggestions: true,
       userInput: userInput
     });
-    this.props.onChange(e)
   };
 
   // Event fired when the user clicks on a suggestion
   onClick = e => {
     // Update the user input and reset the rest of the state
     let value = ''
-    if (e.currentTarget.getAttribute('name') !== null && e.currentTarget.getAttribute('name') !== '') {
+    if (e.currentTarget.getAttribute('name')) {
       value = e.currentTarget.getAttribute('name')
-    } else if (e.currentTarget.getAttribute('name') !== null && e.currentTarget.getAttribute('city') !== '') {
+    } else if (e.currentTarget.getAttribute('city')) {
       value = e.currentTarget.getAttribute('city')
-    } else if (e.currentTarget.getAttribute('name') !== null && e.currentTarget.getAttribute('country') !== '') {
+    } else if (e.currentTarget.getAttribute('country')) {
       value = e.currentTarget.getAttribute('country')
     } else {
       value = e.currentTarget.innerText
