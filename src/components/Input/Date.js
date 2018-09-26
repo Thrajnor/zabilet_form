@@ -1,5 +1,11 @@
 // Formsy.js
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import windowSize from 'react-window-size';
+import moment from 'moment';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import 'moment/locale/pl';
 
 class Input extends React.Component {
   constructor(props) {
@@ -8,6 +14,7 @@ class Input extends React.Component {
     this.disableField = this.disableField.bind(this);
     this.changeValue = this.changeValue.bind(this);
     this.state = {
+      date: moment().format('LL'),
       fieldActive: false
     };
   }
@@ -28,8 +35,12 @@ class Input extends React.Component {
   }
 
   changeValue(e) {
+    this.setState({
+      date: e.format('LL')
+    });
     this.activateField(e)
-    this.props.onChange(e)
+    this.props.setFieldValue(this.props.name, e.format(), true)
+    // this.props.onChange(e)
   }
 
   // handleEnter = (event) => {
@@ -51,13 +62,28 @@ class Input extends React.Component {
       errorText = 'valid-text'
       errorBorder = 'valid-border'
     }
+    moment().locale('pl')
 
     return (
-      <div className={[errorBorder, "form-group mt-4 position-relative"].join(' ')} >
+      <div className={[errorBorder, "form-group mt-3 position-relative"].join(' ')} >
         <label htmlFor={this.props.name} className={[errorText, this.state.fieldActive ? "label field-active" : "label"].join(' ')}>
           {this.props.label}
         </label>
-        <input
+        <DatePicker
+          selected={this.state.startDate}
+          onKeyDown={this.handleEnter}
+          ref={this.props.name}
+          className={[errorBorder, "floating-label form-control"].join(' ')}
+          id={this.props.name}
+          onChange={this.changeValue}
+          type={this.props.type || 'date'}
+          name={this.props.name}
+          value={this.state.date || ''}
+          onFocus={this.activateField}
+          onBlur={this.disableField}
+          withPortal={this.props.windowWidth > 600 ? false : true}
+        />
+        {/* <input
           // onKeyDown={this.handleEnter}
           ref={this.props.name}
           className={[errorBorder, "floating-label form-control"].join(' ')}
@@ -70,12 +96,12 @@ class Input extends React.Component {
           onFocus={this.activateField}
           onBlur={this.disableField}
           placeholder={' '}
-        />
+        /> */}
         <small className="form-text text-muted">{this.props.placeholder}</small>
         {this.props.error ? <div className={errorText}>{this.props.error}</div> : null}
-      </ div>
+      </div>
     );
   }
 }
 
-export default Input;
+export default windowSize(Input);
