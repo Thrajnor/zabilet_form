@@ -24,6 +24,7 @@ import pillsStyle from "assets/jss/material-kit-react/views/componentsSections/p
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
 import RadioGroup from 'components/Input/Radio/RadioGroup'
+import Radio from 'components/Input/Radio/Radio'
 import Button from "components/CustomButtons/Button.jsx"
 
 import './form.css'
@@ -33,7 +34,7 @@ import AirlineDatabase from 'data/airlanes-small.json'
 
 // variables ==========================================================================
 let didSubmit = false
-let emailGiven = false
+let userConsent = false
 let ownWill = false
 // yup
 
@@ -110,7 +111,6 @@ class Form extends React.Component {
           onSubmit={(values, { setSubmitting }) => {
             console.log(values);
             didSubmit = true;
-            emailGiven = true
             setSubmitting(false);
             this.forceUpdate()
           }}
@@ -121,19 +121,25 @@ class Form extends React.Component {
                 onSubmit={handleSubmit}>
                 <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
                   <div className='slideContent'>
-                    <h3 className='justify-content-center'>Gratulacje!</h3>
+                    <h3 className='justify-content-center'>Niestety!</h3>
                     <h5>Przejrzeliśmy Twoją petycję, jednak nie możliwe będzie uzyskanie odszkodowanie, ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład</h5>
-                    <h5>Jednak może mimo to rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu starszych lub przyszłych biletów które zasługują na odszkodowanie?</h5>
-                    <Input
-                      placeholder='np. example@gmail.com'
-                      label='Twój Email: '
-                      name='email'
-                      id='email'
-                      value={values.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.email && errors.email}
-                      touched={touched.email} />
+                    {values.consent ?
+                      (<h5>Na szczęście zaufałeś\aś nam w sprawie beta testów i już niedługo możliwe, ze okaże się, ze któryś z poprzednich Twoich lotów będzie objęty odszkodowaniem</h5>)
+                      :
+                      (<div>
+                        <h5>Jednak może mimo to rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu starszych lub przyszłych biletów które zasługują na odszkodowanie?</h5>
+                        <Input
+                          placeholder='np. example@gmail.com'
+                          label='Twój Email: '
+                          name='email'
+                          id='email'
+                          value={values.email}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={touched.email && errors.email}
+                          touched={touched.email} />
+                      </div>)
+                    }
                   </div>
                 </Paper>
                 <div className={'navBase'}>
@@ -157,7 +163,7 @@ class Form extends React.Component {
     <span>
       <div className='slideContent'>
         <h3 className='justify-content-center'>Cześć!</h3>
-        <h5>Za moment zajmiemy się Twoim odszkodowaniem, narazie odpowiedz na te kilka pytań dotyczących Twojego lotu :)</h5>
+        <h6 className='form-text text-muted mb-3'>Za chwilę zajmiemy się Twoim odszkodowaniem, na razie odpowiedz na te kilka pytań dotyczących Twojego lotu.</h6>
         <GridContainer spacing={16}>
           <GridItem xs={12} sm={6}>
             <AutoComplete
@@ -165,7 +171,7 @@ class Form extends React.Component {
               toWhat='airport'
               label='Miejsce wylotu:'
               name='fromWhere'
-              placeholder='np. Tokio, lub HND'
+              placeholder='np. Tokio lub HND'
               value={values.formWhere}
               onChange={handleChange}
               setFieldValue={setFieldValue}
@@ -181,7 +187,7 @@ class Form extends React.Component {
               toWhat='airport'
               label='Miejsce przylotu:'
               name='toWhere'
-              placeholder='np. Poland, lub EPWR'
+              placeholder='np. Poland lub EPWR'
               value={values.toWhere}
               onChange={handleChange}
               setFieldValue={setFieldValue}
@@ -199,8 +205,8 @@ class Form extends React.Component {
     <span>
       <div className='slideContent'>
         <div className='pb-2 mb-3'>
-          <h3>Co się stało ?</h3>
-          <small className="form-text text-muted">Linie lotnicze odpowiadają tylko za sytuacje nad którymi mają względną kontrolę, jednak każdy przypadek jest indywidualny i bardzo często ustalenie odpowiedzialności odbywa się z korzyścią dla klienta.</small>
+          <h3>Co się stało?</h3>
+          <small className="form-text text-muted">Linie lotnicze odpowiadają tylko za sytuacje, nad którymi mają względną kontrolę, jednak każdy przypadek jest indywidualny i bardzo często ustalenie odpowiedzialności odbywa się z korzyścią dla klienta.</small>
         </div>
         <RadioGroup
           values={values}
@@ -217,12 +223,12 @@ class Form extends React.Component {
             },
             {
               icon: (<PanTool />),
-              label: 'Nie przyjęli mnie na pokład',
+              label: 'Niewpuszczenie na pokład',
               value: 'boardingRefused',
             },
             {
               icon: (<Cancel />),
-              label: 'Lot został Odwołany',
+              label: 'Lot został odwołany',
               value: 'dismissed',
             },
           ]} />
@@ -248,24 +254,25 @@ class Form extends React.Component {
     <span>
       <div className='slideContent'>
         <h4>Wygląda na to, że może Ci się należeć nawet {this.state.compensation}euro !</h4>
-        <h4>Podaj jeszcze tylko te kilka informacji:</h4>
+        <h6>Podaj nam teraz te kilka detali dotyczących Twojego lotu:</h6>
         <span>
           <GridContainer spacing={16}>
             <GridItem xs={12} sm={6}>
-              <AutoComplete placeholder='np. LOT Polish Airlines'
+              <AutoComplete
                 label='Linia: '
                 name='airlane'
                 id='airlane'
                 toWhat='airlane'
+                placeholder='np. LOT Polish Airlines'
                 value={values.airlane}
                 onChange={handleChange}
                 setFieldValue={setFieldValue}
                 onBlur={handleBlur}
                 error={touched.airlane && errors.airlane}
-                suggestions={this.airlanes()}
-                touched={touched.airlane} />
+                touched={touched.airlane}
+                suggestions={this.airlanes()} />
             </GridItem>
-            <GridItem xs={4} sm={2}>
+            <GridItem xs={5} sm={2}>
               <Input placeholder='np. 1234'
                 label='Lot: '
                 name='flight'
@@ -276,13 +283,15 @@ class Form extends React.Component {
                 error={touched.flight && errors.flight}
                 touched={touched.flight} />
             </GridItem>
-            <GridItem xs={8} sm={4}>
+            <GridItem xs={7} sm={4}>
               <Date type='date'
                 label='Data: '
                 name='date'
                 id='date'
                 value={values.date}
+                values={values}
                 onChange={handleChange}
+                setFieldValue={setFieldValue}
                 onBlur={handleBlur}
                 error={touched.date && errors.date}
                 touched={touched.date}
@@ -293,17 +302,112 @@ class Form extends React.Component {
       </div>
     </span>
   )
+  userDetails = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, }) => (
+    <span>
+      <div className='slideContent'>
+        <h4>Super!</h4>
+        <h6>Teraz potrzeba nam już tylko Twojego emaila do zarejestrowania zgłoszenia i opcjonalnie zgodę na beta testy:</h6>
+        <span>
+          <GridContainer spacing={16}>
+            <GridItem xs={12}>
+              <Input placeholder='example@gmail.com'
+                label='E-mail: '
+                name='email'
+                id='email'
+                type='email'
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.email && errors.email}
+                touched={touched.email} />
+            </GridItem>
+            <GridItem xs={12}>
+              <Radio
+                label='Twoja opcjonalna zgoda na specjalne beta testy aplikacji która sama wyszukuje na Twoim emailu przeszłych i przyszłych lotów za które może Ci przysługiwać odszkodowanie!'
+                name='consent'
+                id='consent'
+                type='checkbox'
+                value={values.consent}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.consent && errors.consent}
+                touched={touched.consent} />
+            </GridItem>
+          </GridContainer>
+        </span>
+      </div>
+    </span>
+  )
 
   tabCongrats = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, }) => (
     <span>
       <div className='slideContent'>
-        <div className='mb-5'>
-          <h3>Co się stało ?</h3>
-          <small className="form-text text-muted">Linie lotnicze odpowiadają tylko za sytuacje nad którymi mają względną kontrolę, jednak każdy przypadek jest indywidualny i bardzo często ustalenie odpowiedzialności odbywa się z korzyścią dla klienta.</small>
-        </div>
+        <h4>Wygląda na to, że może Ci się należeć nawet {this.state.compensation}euro !</h4>
+        <h4>Podaj jeszcze tylko te kilka informacji:</h4>
+        <span>
+          <GridContainer spacing={16}>
+            <GridItem xs={12}>
+              <h3 className='justify-content-center'>Gratulacje!</h3>
+              <h5>Twój wniosek został pomyślnie przesłany</h5>
+              <h6>Może rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu starszych lub przyszłych biletów które zasługują na odszkodowanie?</h6>
+            </GridItem>
+          </GridContainer>
+        </span>
       </div>
     </span>
   )
+
+  mainForm = () => {
+    const { classes } = this.props;
+    return (
+      <div className={[classes.section, 'formBackground'].join(' ')}>
+        <Formik
+          validationSchema={
+            Yup.object().shape({
+              fromWhere: Yup.string()
+                .required('Lotnisko jest wymagane!'),
+              toWhere: Yup.string()
+                .max(50, 'zbyt długa nazwa!')
+                // .required('Wybierz z listy lotnisk!'),
+                .max(50, 'zbyt długa nazwa!')
+                .required('Lotnisko jest wymagane!'),
+              airlane: Yup.string()
+                .max(50, 'zbyt długa nazwa!')
+                .required('Linia lotnicza jest wymagana!'),
+              flight: Yup.string()
+                .max(50, 'zbyt długa nazwa!')
+                .required('Pole Wymagane!'),
+              date: Yup.string()
+                .required('Data jest wymagana!'),
+              email: Yup.string()
+                .required('Email jest wymagany!')
+                .max(50, 'zbyt długi email!')
+                .email('Niepoprawny email!')
+            })
+          }
+          onSubmit={(values, { setSubmitting }) => {
+            if (values.whatHappend === 'deniedBoarding' && values.why === 'ownWill') {
+              ownWill = true
+              didSubmit = true;
+              return this.forceUpdate()
+            } else {
+              console.log(values);
+              if (values.why === '') {
+                values.why = 'other'
+              }
+              console.log(values);
+              didSubmit = true;
+              userConsent = values.consent
+              setSubmitting(false);
+              this.forceUpdate();
+            }
+          }}
+        >
+          {this.mainFormFormikFlow}
+        </Formik>
+      </div >
+    );
+  }
 
   mainFormFormikFlow = (formikProps) => {
     let { values, errors, handleSubmit, isSubmitting, submitCount, } = formikProps
@@ -326,8 +430,8 @@ class Form extends React.Component {
       },
       {
         tabButton: "5",
-        tabContent: this.tabCongrats(formikProps)
-      },
+        tabContent: this.userDetails(formikProps)
+      }
     ]
     return (
       <form
@@ -350,106 +454,28 @@ class Form extends React.Component {
     )
   }
 
-  mainForm = () => {
-    const { classes } = this.props;
+  somethingWentWrong = () => {
+    const { classes } = this.props
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
-        <Formik
-          validationSchema={
-            Yup.object().shape({
-              fromWhere: Yup.string()
-                .required('Lotnisko jest wymagane!'),
-              toWhere: Yup.string()
-                .max(50, 'zbyt długa nazwa!')
-                // .required('Wybierz z listy lotnisk!'),
-                .max(50, 'zbyt długa nazwa!')
-                .required('Lotnisko jest wymagane!'),
-              airlane: Yup.string()
-                .max(50, 'zbyt długa nazwa!')
-                .required('Linia lotnicza jest wymagana!'),
-              flight: Yup.string()
-                .max(50, 'zbyt długa nazwa!')
-                .required('Numer lotu jest wymagany!'),
-              date: Yup.date()
-                .required('Data jest wymagana!'),
-              email: Yup.string()
-                .max(50, 'zbyt długi email!')
-                .email('Niepoprawny email!')
-              //   .required('Email jest wymagany do zapisów na beta testy!'),
-            })
-          }
-          onSubmit={(values, { setSubmitting }) => {
-            if (values.whatHappend === 'deniedBoarding' && values.why === 'ownWill') {
-              ownWill = true
-              return this.forceUpdate()
-            } else {
-              console.log(values);
-              didSubmit = true;
-              setSubmitting(false);
-              this.forceUpdate();
-            }
-          }}
-        >
-          {this.mainFormFormikFlow}
-        </Formik>
-      </div >
-    );
-  }
-
-  congratScreen = () => {
-    const { classes } = this.props;
-    return (
-      <div className={[classes.section, 'formBackground'].join(' ')}>
-        <Formik
-          validationSchema={
-            Yup.object().shape({
-              email: Yup.string()
-                .email('Niepoprawny email!')
-                .required('Email jest wymagany do zapisów na beta testy!'),
-            })
-          }
-          onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            didSubmit = true;
-            emailGiven = true
-            setSubmitting(false);
-            this.forceUpdate()
-          }}
-        >
-          {({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
-            <span>
-              <form
-                onSubmit={handleSubmit}>
-                <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
-                  <div className='slideContent'>
-                    <h3 className='justify-content-center'>Gratulacje!</h3>
-                    <h5>Twój wniosek został pomyślnie przesłany</h5>
-                    <h5>Może rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu starszych lub przyszłych biletów które zasługują na odszkodowanie?</h5>
-                    <Input
-                      placeholder='np. example@gmail.com'
-                      label='Twój Email: '
-                      name='email'
-                      id='email'
-                      value={values.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.email && errors.email}
-                      touched={touched.email} />
-                  </div>
-                </Paper>
-                <div className={'navBase'}>
-                  <Button
-                    disabled={this.props.isSubmitting}
-                    className={['nextButton'].join(' ')}
-                    type='submit'
-                  >
-                    Zapisz się na beta testy!
+        <span>
+          <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
+            <div className='slideContent'>
+              <h3 className='justify-content-center'>O nie!</h3>
+              <h5>Coś poszło strasznie nie tak!</h5>
+              <h5>Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo prosimy o napisanie do nas. :(</h5>
+            </div>
+          </Paper>
+          {/* <div className={'navBase'}>
+          <Button
+            disabled={this.props.isSubmitting}
+            className={['nextButton'].join(' ')}
+            type='submit'
+          >
+            Zapisz się na beta testy!
                     </Button>
-                </div>
-              </form>
-            </span>
-          )}
-        </Formik>
+        </div> */}
+        </span>
       </div>
     )
   }
@@ -457,14 +483,39 @@ class Form extends React.Component {
   thankYouBetaTest = () => {
     return (
       <div className={['formBackground'].join(' ')}>
-        <Paper elevation={5} className={['paperSpace'].join(' ')}>
-          <div className='slideContent'>
-            <h3 className='justify-content-center'>Gratulacje!</h3>
-            <h5>Dziękujemy za Twoje zaufanie!</h5>
-            <h5>Obiecujemy, że go nie zawiedziemy :)</h5>
+        <div className={'outer'}>
+          <div className={'middle'}>
+            <div className={'inner'}>
+              <Paper elevation={5} className={['paperSpace'].join(' ')}>
+                <div className='slideContent'>
+                  <h3 className='justify-content-center'>Gratulacje!</h3>
+                  <h5>Składanie wniosku przebiegło pomyśle!</h5>
+                  <h5>I dziękujemy za Twoje zaufanie! Obiecujemy, że go nie zawiedziemy :)</h5>
+                </div>
+              </Paper>
+            </div>
           </div>
-        </Paper>
+        </div>
       </div>
+    )
+  }
+  thankYou = () => {
+    return (
+      <div className={['formBackground'].join(' ')}>
+        <div className={'outer'}>
+          <div className={'middle'}>
+            <div className={'inner'}>
+              <Paper elevation={5} className={['paperSpace'].join(' ')}>
+                <div className='slideContent'>
+                  <h3 className='justify-content-center'>Gratulacje!</h3>
+                  <h5>Twoj wniosek został pomyślnie złożony</h5>
+                  <h5>Przykro nam, że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w przyszłości.</h5>
+                </div>
+              </Paper>
+            </div>
+          </div >
+        </div >
+      </div >
     )
   }
 
@@ -474,10 +525,12 @@ class Form extends React.Component {
       return this.noCompensationScreen()
     } else if (!didSubmit) { //firstStep of the form
       return this.mainForm()
-    } else if (didSubmit === true && emailGiven === false) {
-      return this.congratScreen()
-    } else {
+    } else if (didSubmit === true && userConsent === true) {
       return this.thankYouBetaTest()
+    } else if (didSubmit === true && (typeof userConsent === 'undefined' || userConsent === false)) {
+      return this.thankYou()
+    } else {
+      return this.somethingWentWrong()
     }
   }
 }
