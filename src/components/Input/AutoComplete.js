@@ -101,7 +101,7 @@ class Autocomplete extends Component {
       filteredSuggestions = suggestions.filter(
         suggestion =>
           suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      );
+      ).slice(0, 4);
     }
     // Update the user input and filtered suggestions, reset the active
     // suggestion and make sure the suggestions are shown
@@ -109,7 +109,7 @@ class Autocomplete extends Component {
       activeSuggestion: 0,
       filteredSuggestions,
       showSuggestions: true,
-      userInput: e.currentTarget.value
+      userInput: userInput
     });
     this.props.onChange(e)
   };
@@ -156,11 +156,12 @@ class Autocomplete extends Component {
     if (e.keyCode === 13) {
       if (typeof (filteredSuggestions[activeSuggestion]) === 'undefined') {
         return
-      } else if (filteredSuggestions[activeSuggestion].name !== null && filteredSuggestions[activeSuggestion].name !== '') {
+      } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].name !== '') {
+        console.log(filteredSuggestions[activeSuggestion].name)
         value = filteredSuggestions[activeSuggestion].name
-      } else if (filteredSuggestions[activeSuggestion].name !== null && filteredSuggestions[activeSuggestion].city !== '') {
+      } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].city !== '') {
         value = filteredSuggestions[activeSuggestion].city
-      } else if (filteredSuggestions[activeSuggestion].name !== null && filteredSuggestions[activeSuggestion].country !== '') {
+      } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].country !== '') {
         value = filteredSuggestions[activeSuggestion].country
       } else {
         value = filteredSuggestions[activeSuggestion]
@@ -279,7 +280,7 @@ class Autocomplete extends Component {
 
     return (
       <Fragment>
-        <div className={[errorBorder, "form-group mt-4 position-relative"].join(' ')}>
+        <div className={[errorBorder, "form-group mt-3 position-relative"].join(' ')}>
           <label htmlFor={this.props.name} className={[errorText, this.state.fieldActive ? "label field-active" : "label"].join(' ')}>
             {this.props.label}
           </label>
