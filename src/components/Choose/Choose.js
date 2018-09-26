@@ -19,6 +19,7 @@ import tabsStyle from "assets/jss/material-kit-react/views/componentsSections/ta
 
 import RadioGroup from 'components/Input/Radio/RadioGroup'
 import Select from 'components/Input/Select'
+import Input from 'components/Input/Input'
 
 let whyAnswers = [
   {
@@ -51,7 +52,7 @@ let whyAnswers = [
   },
   {
     label: 'Inny',
-    value: 'Other',
+    value: 'other',
   }
 ]
 
@@ -90,7 +91,7 @@ class Choose extends React.Component {
     <div>
       <h4 className=''>Czy dobrowolnie zrezygnowałaś/eś z lotu?</h4>
       <small className="form-text text-muted pb-2 mb-3">
-        Jeśli zrezygnowałaś/eś ze swojej rezerwacji w zamian za bilet na późniejszy lot lub inne bonusy od linii lotniczej nie będzie należało Ci się odszkodowanie.
+        Jeśli zrezygnowałaś/eś ze swojej rezerwacji w zamian za bilet na późniejszy lot lub inne bonusy od linii lotniczej, nie będzie należało Ci się odszkodowanie.
           </small>
       <RadioGroup
         onBlur={this.props.onBlur}
@@ -130,7 +131,7 @@ class Choose extends React.Component {
       </small>
       <Select
         placeholder='Wybierz Przyczynę'
-        label='Co się stało?: '
+        label='Powód: '
         name='why'
         id='why'
         onChange={this.props.onChange}
@@ -140,33 +141,16 @@ class Choose extends React.Component {
       />
     </div>
   )
-  boardingRefusedMobile = () => (
-    <div>
-      <h4 className=''>Czemu Twoj samolot się opóźnił?</h4>
-      <small className="form-text text-muted pb-2 mb-3">
-        Jeśli Twoj samolot spóźnił się więcej niż 3 godziny do miejsca docelowego załugujesz na odszkodowanie!
-      </small>
-      <Select
-        placeholder='Wybierz Przyczynę'
-        label='Co się stało?: '
-        name='why'
-        id='why'
-        onChange={this.props.onChange}
-        onBlur={this.props.onBlur}
-        options={yesNoAnswer}
-        setFieldValue={this.props.setFieldValue}
-      />
-    </div>
-  )
+
   dismissedMobile = () => (
     <div>
-      <h4 className=''>Czemu Twoj samolot się opóźnił?</h4>
+      <h4 className=''>Jaki był powód odwołania lotu?</h4>
       <small className="form-text text-muted pb-2 mb-3">
-        Jeśli Twoj samolot spóźnił się więcej niż 3 godziny do miejsca docelowego załugujesz na odszkodowanie!
+        Jeśli odwołanie nastąpiło mniej niż 14 dni przed wylotem zasługujesz do odszkodowanie!
       </small>
       <Select
         placeholder='Wybierz Przyczynę'
-        label='Co się stało?: '
+        label='Powód: '
         name='why'
         id='why'
         onChange={this.props.onChange}
@@ -180,6 +164,20 @@ class Choose extends React.Component {
 
 
   whichRadioGroup = () => {
+    let other = ''
+    this.props.values.why === 'other' ?
+      other = (<Input
+        placeholder='np. '
+        label='Opisz problem: '
+        name='why'
+        id='why'
+        type='textarea'
+        value={this.props.values.why}
+        onChange={this.props.handleChange}
+        onBlur={this.props.onBlur} />)
+      :
+      other = ''
+
     if (this.props.values.whatHappend === 'delay') {
       return (
         <div>
@@ -189,6 +187,7 @@ class Choose extends React.Component {
           <MediaQuery minWidth={600}>
             {this.delay()}
           </MediaQuery>
+          {other}
         </div>
       )
     } else if (this.props.values.whatHappend === 'boardingRefused') {
@@ -202,6 +201,7 @@ class Choose extends React.Component {
           <MediaQuery minWidth={600}>
             {this.dismissed()}
           </MediaQuery>
+          {other}
         </div>
       )
     }
