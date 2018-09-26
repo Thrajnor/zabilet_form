@@ -20,30 +20,31 @@ class Radio extends React.Component {
   // to deactivate input only if it's empty
   disableField = (e) => {
     if (typeof (this.props.values.why) !== 'undefined'
+      // WIPE whyDetails after changing to another radio
       && this.props.values.why !== 'other'
       && this.props.name === 'why'
       && this.props.values.whyDetails !== '') {
-      console.log('wiped')
       this.props.setFieldValue(this.props.name + 'Details', '', true)
     }
     if (this.props.type === 'checkbox') {
+      // checkbox onBlurHandle
       if (!this.props.values[this.props.name]) {
         this.setState({
           fieldActive: false
         })
-        this.props.onBlur(e)
       } else {
         this.activateField(e)
       }
     } else {
+      // Radio onBlurHandle
       if (this.props.values[this.props.name] !== this.state.fieldValue) {
         this.setState({
           fieldActive: false
         })
-        this.props.onBlur(e)
       } else {
         this.activateField(e)
       }
+      this.props.onBlur(e)
     }
   }
 
