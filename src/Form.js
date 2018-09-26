@@ -325,8 +325,8 @@ class Form extends React.Component {
               <Radio
                 label='Twoja opcjonalna zgoda na specjalne beta testy aplikacji która sama wyszukuje na Twoim emailu przeszłych i przyszłych lotów za które może Ci przysługiwać odszkodowanie!'
                 name='consent'
-                id='consent'
                 type='checkbox'
+                values={values}
                 value={values.consent}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -379,6 +379,7 @@ class Form extends React.Component {
                 .required('Pole Wymagane!'),
               date: Yup.string()
                 .required('Data jest wymagana!'),
+              whyDetails: Yup.string(),
               email: Yup.string()
                 .required('Email jest wymagany!')
                 .max(50, 'zbyt długi email!')
