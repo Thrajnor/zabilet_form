@@ -55,7 +55,7 @@ class Radio extends React.Component {
           hidden={this.props.hidden}
         // checked={this.props.checked === true? true : false}
         />
-        <span className='label-radio pl-3 pr-1'>{this.props.icon} {this.props.label}</span>
+        <span className='label-radio pl-1 '>{this.props.icon} <small>{this.props.label}</small></span>
       </label>
     );
   }
