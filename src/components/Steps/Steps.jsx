@@ -106,7 +106,12 @@ class Steps extends React.Component {
             this.props.values.why !== undefined) {
             disabled = false
           } else if (prop.tabButton === '5' &&
-            this.props.submitCount > 0) {
+            this.props.values.flight !== undefined &&
+            this.props.values.airlane !== undefined &&
+            this.props.values.date !== undefined &&
+            this.props.errors.flight === undefined &&
+            this.props.errors.airlane === undefined &&
+            this.props.errors.date === undefined) {
             disabled = false
           }
           return (
@@ -154,7 +159,16 @@ class Steps extends React.Component {
               this.props.values.why !== undefined) {
               disabled = false
             } else if (prop.tabButton === '4' &&
-              this.props.didSubmit === false) {
+              this.props.values.flight !== undefined &&
+              this.props.values.airlane !== undefined &&
+              this.props.values.date !== undefined &&
+              this.props.errors.flight === undefined &&
+              this.props.errors.airlane === undefined &&
+              this.props.errors.date === undefined) {
+              disabled = false
+            } else if (prop.tabButton === '5' &&
+              this.props.values.email !== undefined &&
+              this.props.errors.email === undefined) {
               disabled = false
             }
             return (
@@ -167,23 +181,23 @@ class Steps extends React.Component {
                     <div className={'navBase'}>
                       <Button
                         onClick={this.handlePrev}
-                        className={[visibility, this.props.tabs.length === this.state.active + 1 ? 'display-none' : '', 'prevButton'].join(' ')}
+                        className={[visibility, 'prevButton'].join(' ')}
                       >
-                        <ArrowBack /><span>Poprzednie</span>
+                        <ArrowBack /><span>Wstecz</span>
                       </Button>
                       <Button
                         disabled={disabled || this.props.isSubmitting}
-                        className={['nextButton', this.props.tabs.length === this.state.active + 2 ? '' : 'display-none'].join(' ')}
+                        className={['nextButton', this.props.tabs.length === this.state.active + 1 ? '' : 'display-none'].join(' ')}
                         type='submit'
                       >
                         <span className='pr-1'>Wyślij </span> <Send />
                       </Button>
                       <Button
                         onClick={this.handleNext}
-                        className={['nextButton', this.props.tabs.length < this.state.active + 3 ? 'display-none' : ''].join(' ')}
+                        className={['nextButton', this.props.tabs.length < this.state.active + 2 ? 'display-none' : ''].join(' ')}
                         disabled={disabled}
                       >
-                        <span className='pr-1'>Następne</span><ArrowForward />
+                        <span className='pr-1'>Dalej</span><ArrowForward />
                       </Button>
                     </div>
                   </div>
