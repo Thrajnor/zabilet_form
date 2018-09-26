@@ -19,7 +19,7 @@ import tabsStyle from "assets/jss/material-kit-react/views/componentsSections/ta
 
 import RadioGroup from 'components/Input/Radio/RadioGroup'
 import Select from 'components/Input/Select'
-import Input from 'components/Input/Input'
+// import Input from 'components/Input/Input'
 
 let whyAnswers = [
   {
@@ -51,6 +51,7 @@ let whyAnswers = [
     value: 'dontRemember',
   },
   {
+    labelType: 'text',
     label: 'Inny',
     value: 'other',
   }
@@ -77,6 +78,8 @@ class Choose extends React.Component {
         Jeśli Twoj samolot spóźnił się więcej niż 3 godziny załugujesz na odszkodowanie!
       </small>
       <RadioGroup
+        setFieldValue={this.props.setFieldValue}
+        values={this.props.values}
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
         compensation={this.props.compensation}
@@ -94,6 +97,8 @@ class Choose extends React.Component {
         Jeśli zrezygnowałaś/eś ze swojej rezerwacji w zamian za bilet na późniejszy lot lub inne bonusy od linii lotniczej, nie będzie należało Ci się odszkodowanie.
           </small>
       <RadioGroup
+        setFieldValue={this.props.setFieldValue}
+        values={this.props.values}
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
         name='why'
@@ -111,6 +116,8 @@ class Choose extends React.Component {
         Jeśli odwołanie nastąpiło mniej niż 14 dni przed wylotem zasługujesz do odszkodowanie!
       </small>
       <RadioGroup
+        setFieldValue={this.props.setFieldValue}
+        values={this.props.values}
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
         name='why'
@@ -165,18 +172,17 @@ class Choose extends React.Component {
 
   whichRadioGroup = () => {
     let other = ''
-    this.props.values.why === 'other' ?
-      other = (<Input
-        placeholder='np. '
-        label='Opisz problem: '
-        name='why'
-        id='why'
-        type='textarea'
-        value={this.props.values.why}
-        onChange={this.props.handleChange}
-        onBlur={this.props.onBlur} />)
-      :
-      other = ''
+    // this.props.values.why === 'other' ?
+    //   other = (<Input
+    //     placeholder='np. '
+    //     label='Opisz problem: '
+    //     name='why'
+    //     id='why'
+    //     type='textarea'
+    //     onChange={this.props.onChange}
+    //     onBlur={this.props.onBlur} />)
+    //   :
+    //   other = ''
 
     if (this.props.values.whatHappend === 'delay') {
       return (
