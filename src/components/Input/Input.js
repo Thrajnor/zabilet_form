@@ -54,7 +54,7 @@ class Input extends React.Component {
 
 
     return (
-      <div className={[errorBorder, "form-group mt-4 position-relative"].join(' ')} >
+      <div className={[errorBorder, "form-group mt-3 position-relative"].join(' ')} >
         <label htmlFor={this.props.id} className={[errorText, this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
           {this.props.label}
         </label>
