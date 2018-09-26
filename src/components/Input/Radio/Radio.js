@@ -4,60 +4,129 @@ import React from 'react';
 class Radio extends React.Component {
   constructor(props) {
     super(props);
-    this.activateField = this.activateField.bind(this);
-    this.disableField = this.disableField.bind(this);
-    this.changeValue = this.changeValue.bind(this);
     this.state = {
       fieldActive: false,
-      fieldValue: ''
+      fieldValue: '',
     };
   }
   // to activate the input field while typing
-  activateField() {
-    this.setState({
-      fieldActive: true
-    })
+  activateField = () => {
+    if (!this.state.fieldActive) {
+      this.setState({
+        fieldActive: true
+      })
+    }
   }
   // to deactivate input only if it's empty
-  disableField(e) {
-    // if(this.props.values.$(this.props.id))
-    this.setState({
-      fieldActive: false
-    })
-    this.props.onBlur(e)
+  disableField = (e) => {
+    if (typeof (this.props.values.why) !== 'undefined'
+      && this.props.values.why !== 'other'
+      && this.props.name === 'why'
+      && this.props.values.whyDetails !== '') {
+      console.log('wiped')
+      this.props.setFieldValue(this.props.name + 'Details', '', true)
+    }
+    if (this.props.type === 'checkbox') {
+      if (!this.props.values[this.props.name]) {
+        this.setState({
+          fieldActive: false
+        })
+        this.props.onBlur(e)
+      } else {
+        this.activateField(e)
+      }
+    } else {
+      if (this.props.values[this.props.name] !== this.state.fieldValue) {
+        this.setState({
+          fieldActive: false
+        })
+        this.props.onBlur(e)
+      } else {
+        this.activateField(e)
+      }
+    }
   }
 
-  changeValue(event) {
+  changeValue = (e) => {
+    this.setState({ fieldValue: e.currentTarget.value })
     this.activateField()
-    this.props.onChange(event)
-    // , () => {
-    //   let value = 250
-    //   if (this.props.values.why) {
-
-    //   }
-    //   this.props.compensation(value)
-    // }
+    this.props.onChange(e)
+    if (typeof (this.props.values.why) !== 'undefined'
+      && this.props.values.why !== 'other'
+      && this.props.name === 'why') {
+      this.props.setFieldValue(this.props.name + 'Details', '', true)
+    }
+  }
+  changeDetailValue = (e) => {
+    this.props.onChange(e)
+  }
+  componentWillUpdate() {
+    if (this.props.type === 'checkbox') {
+      if (!this.props.values[this.props.name] && this.state.fieldActive) {
+        this.setState({
+          fieldActive: false
+        })
+      }
+    } else {
+      if (typeof this.props.values !== 'undefined') {
+        if (this.props.values[this.props.name] !== this.state.fieldValue && this.state.fieldActive) {
+          this.setState({
+            fieldActive: false
+          })
+        }
+      }
+    }
   }
 
   render() {
 
-    return (
-      <label htmlFor={this.props.id} className={[!this.state.fieldActive === false ? 'focus' : '', "radioBundle position-relative pb-1 form-control"].join(' ')}>
-        <input
-          ref={this.props.name}
-          className="radio"
-          id={this.props.id}
-          onChange={this.changeValue}
-          type={this.props.type || 'radio'}
-          name={this.props.name}
-          value={this.props.value || ''}
-          onBlur={this.disableField}
-          hidden={this.props.hidden}
-        // checked={this.props.checked === true? true : false}
-        />
-        <span className='label-radio pl-1 '>{this.props.icon} <small>{this.props.label}</small></span>
-      </label>
-    );
+    if (this.props.labelType === 'text') {
+      return (
+        <label htmlFor={this.props.id} className={[this.state.fieldActive ? 'focus' : '', "radioBundle position-relative pb-1 form-control"].join(' ')}>
+          <input
+            ref={this.props.name}
+            className="radio"
+            onChange={this.changeValue}
+            type={this.props.type || 'radio'}
+            name={this.props.name}
+            value={this.props.value || ''}
+            onBlur={this.disableField}
+          />
+          {this.state.fieldActive ?
+            (<span className='pl-1 '><small>
+              <input
+                ref={this.props.name + 'Details'}
+                className="radio-input"
+                placeholder='Jaki? :'
+                onChange={this.changeDetailValue}
+                type={this.props.labelType || 'text'}
+                name={this.props.name + 'Details'}
+                value={this.props.values[this.props.name + 'Details'] || ''}
+              />
+            </small></span>)
+            :
+            (<span className='label-radio pl-1 '>{this.props.icon} <small>{this.props.label}</small></span>)
+          }
+        </label>
+      )
+    } else {
+      return (
+        <label htmlFor={this.props.id} className={[this.state.fieldActive ? 'focus' : '', "radioBundle position-relative pb-1 form-control"].join(' ')}>
+          <input
+            ref={this.props.name}
+            className="radio"
+            onChange={this.changeValue}
+            type={this.props.type || 'radio'}
+            name={this.props.name}
+            value={this.props.value || ''}
+            onBlur={this.disableField}
+            hidden={this.props.hidden}
+          // checked={this.props.checked === true? true : false}
+          />
+          <span className='label-radio pl-1 '>{this.props.icon} <small>{this.props.label}</small></span>
+        </label>
+      );
+    }
   }
 }
 
