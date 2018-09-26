@@ -53,17 +53,18 @@ class Select extends React.Component {
   }
   // to deactivate input only if it's empty
   disableField(e) {
-    if (e.target.value === "") {
-      this.setState({
-        fieldActive: false
-      })
-    }
+    setTimeout(() => {
+      if (this.state.selectedOption === null) {
+        this.setState({
+          fieldActive: false
+        })
+      }
+    }, 10)
     this.props.onBlur(e)
   }
 
   changeValue(e) {
     this.activateField(e)
-    console.log(e.value)
     this.setState({ selectedOption: e });
     this.props.setFieldValue(this.props.id, e.value, true)
   }
@@ -81,10 +82,7 @@ class Select extends React.Component {
 
 
     return (
-      <div>
-        <label htmlFor={this.props.id} className={[this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
-          {this.props.label}
-        </label>
+      <div className='position-relative'>
         <ReactSelect
           styles={customStyles}
           onKeyDown={this.handleEnter}
@@ -102,6 +100,9 @@ class Select extends React.Component {
           placeholder={this.state.fieldActive ? this.props.placeholder : null}
           noOptionsMessage={() => ('Nie ma podpowiedzi!')}
         />
+        <label htmlFor={this.props.id} className={[this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
+          {this.props.label}
+        </label>
       </ div>
     );
   }
