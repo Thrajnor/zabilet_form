@@ -117,41 +117,52 @@ class Form extends React.Component {
         >
           {({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
             <span>
-              <form
-                onSubmit={handleSubmit}>
-                <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
-                  <div className='slideContent'>
-                    <h3 className='justify-content-center'>Niestety!</h3>
-                    <h5>Przejrzeliśmy Twoją petycję, jednak nie możliwe będzie uzyskanie odszkodowanie, ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład</h5>
-                    {values.consent ?
-                      (<h5>Na szczęście zaufałeś\aś nam w sprawie beta testów i już niedługo możliwe, ze okaże się, ze któryś z poprzednich Twoich lotów będzie objęty odszkodowaniem</h5>)
-                      :
-                      (<div>
-                        <h5>Jednak może mimo to rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu starszych lub przyszłych biletów które zasługują na odszkodowanie?</h5>
-                        <Input
-                          placeholder='np. example@gmail.com'
-                          label='Twój Email: '
-                          name='email'
-                          id='email'
-                          value={values.email}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={touched.email && errors.email}
-                          touched={touched.email} />
-                      </div>)
-                    }
-                  </div>
-                </Paper>
-                <div className={'navBase'}>
-                  <Button
-                    disabled={this.props.isSubmitting}
-                    className={['nextButton'].join(' ')}
-                    type='submit'
-                  >
-                    Zapisz się na beta testy!
+              <div className={'outer'} SD>
+                <div className={'middle'}>
+                  <div className={'inner'}>
+                    <form
+                      onSubmit={handleSubmit}>
+                      <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
+                        <div className='slideContent'>
+                          <h4 className='justify-content-center'>Niestety!</h4>
+                          <p>Przejrzeliśmy Twoją petycję, jednak nie możliwe będzie uzyskanie odszkodowanie, ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład</p>
+                          <br />
+                          {values.consent ?
+                            (<p>Na szczęście zaufałeś\aś nam w sprawie beta testów i już niedługo możliwe, że okaże się, ze któryś z poprzednich Twoich lotów będzie objęty odszkodowaniem</p>)
+                            :
+                            (<div>
+                              <p>Jednak może mimo to rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu starszych lub przyszłych biletów które zasługują na odszkodowanie?</p>
+                              <Input
+                                placeholder='np. example@gmail.com'
+                                label='Twój Email: '
+                                name='email'
+                                id='email'
+                                value={values.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.email && errors.email}
+                                touched={touched.email} />
+                            </div>)
+                          }
+                        </div>
+                      </Paper>
+                      {values.consent ?
+                        ''
+                        :
+                        (<div className={'navBase'}>
+                          <Button
+                            disabled={this.props.isSubmitting}
+                            className={['wholeButton'].join(' ')}
+                            type='submit'
+                          >
+                            Zapisz się na beta testy!
                         </Button>
+                        </div>)
+                      }
+                    </form>
+                  </div>
                 </div>
-              </form>
+              </div>
             </span>
           )}
         </Formik>
@@ -387,7 +398,7 @@ class Form extends React.Component {
             })
           }
           onSubmit={(values, { setSubmitting }) => {
-            if (values.whatHappend === 'deniedBoarding' && values.why === 'ownWill') {
+            if (values.whatHappend === "boardingRefused" && values.why === 'ownWill') {
               ownWill = true
               didSubmit = true;
               return this.forceUpdate()
@@ -521,6 +532,8 @@ class Form extends React.Component {
   }
 
   render() {
+    console.log(ownWill)
+    console.log(didSubmit)
 
     if (ownWill) { // sorry no compensation, maybe beta
       return this.noCompensationScreen()
