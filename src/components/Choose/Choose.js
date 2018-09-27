@@ -19,7 +19,7 @@ import tabsStyle from "assets/jss/material-kit-react/views/componentsSections/ta
 
 import RadioGroup from 'components/Input/Radio/RadioGroup'
 import Select from 'components/Input/Select'
-// import Input from 'components/Input/Input'
+import Input from 'components/Input/Input'
 
 let whyAnswers = [
   {
@@ -146,6 +146,17 @@ class Choose extends React.Component {
         options={whyAnswers}
         setFieldValue={this.props.setFieldValue}
       />
+      {this.props.values.why === 'other' ?
+        (<Input placeholder='np. Napad na samolot'
+          label='Opisz co się stało: '
+          name='whyDetails'
+          id='whyDetails'
+          className='mt-4'
+          onChange={this.props.onChange}
+          onBlur={this.props.onBlur} />)
+        :
+        ''
+      }
     </div>
   )
 
@@ -165,6 +176,17 @@ class Choose extends React.Component {
         options={whyAnswers}
         setFieldValue={this.props.setFieldValue}
       />
+      {this.props.values.why === 'other' ?
+        (<Input placeholder='np. Napad na samolot'
+          label='Opisz co się stało: '
+          name='whyDetails'
+          id='whyDetails'
+          className='mt-4'
+          onChange={this.props.onChange}
+          onBlur={this.props.onBlur} />)
+        :
+        ''
+      }
     </div>
   )
 

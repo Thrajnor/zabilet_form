@@ -86,7 +86,7 @@ class Input extends React.Component {
           onKeyDown={this.handleEnter}
           ref={this.props.refName || this.props.name}
           id={this.props.name}
-          className={this.props.className || [errorBorder, "floating-label form-control"].join(' ')}
+          className={[errorBorder, this.props.className, "floating-label form-control"].join(' ')}
           onChange={this.changeValue}
           type={this.props.type || 'text'}
           name={this.props.name}
