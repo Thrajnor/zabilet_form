@@ -27,36 +27,6 @@ class Autocomplete extends Component {
       fieldActive: false
     };
   }
-  // FORMSY
-  // FLOATING FIELD !!!!!
-
-
-
-  // to activate the input field while typing
-  activateField() {
-    this.setState({
-      fieldActive: true,
-      showSuggestions: true
-    })
-  }
-  // to deactivate input only if it's empty
-  disableField(e) {
-    e.persist()
-    if (e.target.value === "") {
-      this.setState({
-        fieldActive: false,
-        showSuggestions: false
-      })
-    } else {
-      setTimeout(() => {
-        this.setState({
-          showSuggestions: false
-        })
-      }, 200);
-      this.props.onChange(e)
-    }
-    this.props.onBlur(e)
-  }
 
   // AUTOCOMPLETE
   // Event fired when the input value is changed
@@ -103,11 +73,21 @@ class Autocomplete extends Component {
     // Update the user input and filtered suggestions, reset the active
     // suggestion and make sure the suggestions are shown
     this.setState({
-      activeSuggestion: 0,
-      filteredSuggestions,
-      showSuggestions: true,
       userInput: userInput
     });
+    if (userInput === '') {
+      this.setState({
+        activeSuggestion: 0,
+        filteredSuggestions: [],
+        showSuggestions: false
+      });
+    } else {
+      this.setState({
+        activeSuggestion: 0,
+        filteredSuggestions,
+        showSuggestions: true
+      });
+    }
   };
 
   // Event fired when the user clicks on a suggestion
@@ -153,7 +133,6 @@ class Autocomplete extends Component {
       if (typeof (filteredSuggestions[activeSuggestion]) === 'undefined') {
         return
       } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].name !== '') {
-        console.log(filteredSuggestions[activeSuggestion].name)
         value = filteredSuggestions[activeSuggestion].name
       } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].city !== '') {
         value = filteredSuggestions[activeSuggestion].city
@@ -187,6 +166,34 @@ class Autocomplete extends Component {
       this.setState({ activeSuggestion: activeSuggestion + 1 });
     }
   };
+
+  // to activate the input field while typing
+  activateField() {
+    this.setState({
+      fieldActive: true,
+      showSuggestions: true
+    })
+  }
+  // to deactivate input only if it's empty
+  disableField(e) {
+    e.persist()
+    if (e.target.value === "") {
+      this.setState({
+        fieldActive: false,
+        showSuggestions: false
+      })
+    } else {
+      setTimeout(() => {
+        this.setState({
+          showSuggestions: false
+        })
+      }, 500);
+    }
+    this.props.onChange(e)
+    setTimeout(() => {
+      this.props.onBlur(e)
+    }, 10)
+  }
 
   render() {
     const {
