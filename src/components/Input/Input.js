@@ -20,13 +20,16 @@ class Input extends React.Component {
   }
   // to deactivate input only if it's empty
   disableField(e) {
+    e.persist()
     if (e.target.value === "") {
       this.setState({
         fieldActive: false
       })
     }
-    this.props.onBlur(e)
     this.props.onChange(e)
+    setTimeout(() => {
+      this.props.onBlur(e)
+    }, 10)
   }
 
   changeValue(e) {
@@ -48,7 +51,24 @@ class Input extends React.Component {
   render() {
     let errorText = ''
     let errorBorder = ''
-    if (this.props.error) {
+    if (this.props.className === 'radio-input') {
+      errorText = ''
+      errorBorder = ''
+      return (
+        <input
+          onKeyDown={this.handleEnter}
+          ref={this.props.refName}
+          className={this.props.className}
+          onChange={this.changeValue}
+          type={this.props.type || 'text'}
+          name={this.props.name}
+          value={this.state.userInput}
+          hidden={this.props.hidden}
+          onFocus={this.activateField}
+          onBlur={this.disableField}
+          placeholder={this.state.fieldActive ? this.props.placeholder : null}
+        />)
+    } else if (this.props.error) {
       errorText = 'invalid-text'
       errorBorder = 'invalid-border'
     } else if (!this.props.error && this.props.touched) {
@@ -59,17 +79,17 @@ class Input extends React.Component {
 
     return (
       <div className={[errorBorder, "form-group mt-3 position-relative"].join(' ')} >
-        <label htmlFor={this.props.id} className={[errorText, this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
+        <label htmlFor={this.props.name} className={[errorText, this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
           {this.props.label}
         </label>
         <input
           onKeyDown={this.handleEnter}
-          ref={this.props.name}
-          className={[errorBorder, "floating-label form-control"].join(' ')}
-          id={this.props.id}
+          ref={this.props.refName || this.props.name}
+          id={this.props.name}
+          className={this.props.className || [errorBorder, "floating-label form-control"].join(' ')}
           onChange={this.changeValue}
           type={this.props.type || 'text'}
-          name={this.props.id}
+          name={this.props.name}
           value={this.state.userInput}
           hidden={this.props.hidden}
           onFocus={this.activateField}
