@@ -1,19 +1,22 @@
 // Formsy.js
 import React from 'react';
+import Input from 'components/Input/Input'
 
 class Radio extends React.Component {
   constructor(props) {
     super(props);
+    this.textInput = React.createRef();
     this.state = {
       fieldActive: false,
       fieldValue: '',
+      otherFieldValue: ''
     };
   }
   // to activate the input field while typing
   activateField = () => {
     if (!this.state.fieldActive) {
       this.setState({
-        fieldActive: true
+        fieldActive: true,
       })
     }
   }
@@ -44,6 +47,7 @@ class Radio extends React.Component {
       } else {
         this.activateField(e)
       }
+      this.props.onChange(e)
       this.props.onBlur(e)
     }
   }
@@ -57,9 +61,6 @@ class Radio extends React.Component {
       && this.props.name === 'why') {
       this.props.setFieldValue(this.props.name + 'Details', '', true)
     }
-  }
-  changeDetailValue = (e) => {
-    this.props.onChange(e)
   }
   componentWillUpdate() {
     if (this.props.type === 'checkbox') {
@@ -78,6 +79,12 @@ class Radio extends React.Component {
       }
     }
   }
+  // focus text input
+  focus = () => {
+    setTimeout(() => {
+      this.textInput.current.focus()
+    }, 10)
+  }
 
   render() {
 
@@ -90,23 +97,25 @@ class Radio extends React.Component {
             onChange={this.changeValue}
             type={this.props.type || 'radio'}
             name={this.props.name}
+            onClick={this.focus}
             value={this.props.value || ''}
             onBlur={this.disableField}
           />
           {this.state.fieldActive ?
-            (<span className='pl-1 '><small>
-              <input
-                ref={this.props.name + 'Details'}
+            (<span className='pl-2 '><small>
+              <Input
+                refName={this.textInput}
                 className="radio-input"
                 placeholder='Jaki? :'
-                onChange={this.changeDetailValue}
+                onChange={this.props.onChange}
                 type={this.props.labelType || 'text'}
                 name={this.props.name + 'Details'}
-                value={this.props.values[this.props.name + 'Details'] || ''}
+                value={this.state.otherFieldValue}
+                onBlur={this.props.onBlur}
               />
             </small></span>)
             :
-            (<span className='label-radio pl-1 '>{this.props.icon} <small>{this.props.label}</small></span>)
+            (<span className='label-radio pl-2 '>{this.props.icon} <small>{this.props.label}</small></span>)
           }
         </label>
       )
