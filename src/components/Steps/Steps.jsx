@@ -32,21 +32,66 @@ class Steps extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      intervalId: 0,
       active: 0,
-      submit: null
+      submit: null,
+      scrollingInProgress: false
     };
   }
   handleChange = (event, active) => {
     this.setState({ active });
   };
+
+  scrollStep = (intervalId) => {
+    if (window.pageYOffset <= 2) {
+      clearInterval(this.state.intervalId);
+      this.setState({ scrollingInProgress: false })
+    }
+    window.scroll(0, window.pageYOffset - 2);
+  }
+
+  scrollToTop = () => {
+    clearInterval(this.state.intervalId);
+    let intervalId = setInterval(() => this.scrollStep(), 1);
+    this.setState({ scrollingInProgress: true })
+    this.setState({ intervalId: intervalId });
+  }
   handleNext = () => {
     if (this.props.tabs.length <= this.state.active + 1) {
       return
+    } else if (this.state.active === 0 &&
+      this.props.values.fromWhere !== undefined &&
+      this.props.values.toWhere !== undefined &&
+      this.props.errors.fromWhere === undefined &&
+      this.props.errors.toWhere === undefined) {
+      const active = this.state.active + 1
+      this.setState({ active: active });
+      this.scrollToTop()
+    } else if (this.state.active === 1 &&
+      this.props.values.whatHappend !== undefined) {
+      const active = this.state.active + 1
+      this.setState({ active: active });
+      this.scrollToTop()
+    } else if (this.state.active === 2 &&
+      this.props.values.why !== undefined) {
+      const active = this.state.active + 1
+      this.setState({ active: active });
+      this.scrollToTop()
+    } else if (this.state.active === 3 &&
+      this.props.values.flight !== undefined &&
+      this.props.values.airlane !== undefined &&
+      this.props.errors.flight === undefined &&
+      this.props.errors.airlane === undefined) {
+      const active = this.state.active + 1
+      this.setState({ active: active });
+      this.scrollToTop()
+    } else if (this.state.active === 4 &&
+      this.props.values.email !== undefined &&
+      this.props.errors.email === undefined) {
+      const active = this.state.active + 1
+      this.setState({ active: active });
+      this.scrollToTop()
     }
-
-    const active = this.state.active + 1
-
-    this.setState({ active: active });
   };
   handlePrev = () => {
     if (this.state.active === 0) {
@@ -58,6 +103,28 @@ class Steps extends React.Component {
   handleChangeIndex = index => {
     this.setState({ active: index });
   };
+
+  handleEnterPress = (e) => {
+    if (e.key === 'Enter') {
+      this.handleNext()
+    }
+  }
+
+  componentWillMount() {
+    window.addEventListener('keypress', (e) => this.handleEnterPress(e))
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keypress', (e) => this.handleEnterPress(e))
+  }
+
+  componentDidUpdate() {
+    if (this.props.toNextPage && !this.state.scrollingInProgress) {
+      this.handleNext()
+      this.props.nextPageUsed()
+    }
+  }
+
   render() {
     const {
       classes,

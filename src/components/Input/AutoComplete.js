@@ -92,7 +92,9 @@ class Autocomplete extends Component {
 
   // Event fired when the user clicks on a suggestion
   onClick = e => {
+    const { filteredSuggestions } = this.state;
     // Update the user input and reset the rest of the state
+
     let value = ''
     if (e.currentTarget.getAttribute('name')) {
       value = e.currentTarget.getAttribute('name')
@@ -105,7 +107,7 @@ class Autocomplete extends Component {
     }
     this.setState({
       activeSuggestion: 0,
-      filteredSuggestions: [],
+      filteredSuggestions: [filteredSuggestions[e.currentTarget.getAttribute('index')]],
       showSuggestions: false,
       userInput: value
     });
@@ -114,10 +116,16 @@ class Autocomplete extends Component {
 
   handleEnter = (event) => {
     if (event.keyCode === 13) {
+      event.preventDefault();
       const form = event.target.form;
       const index = Array.prototype.indexOf.call(form, event.target);
       form.elements[index + 1].focus();
-      event.preventDefault();
+      if (this.props.nextPage &&
+        typeof this.props.values[this.props.name] !== 'undefined' &&
+        typeof this.props.error === 'undefined') {
+        this.props.nextPage()
+        document.getElementById(this.props.name).blur()
+      }
     }
   }
 
@@ -125,11 +133,15 @@ class Autocomplete extends Component {
   onKeyDown = e => {
     const { activeSuggestion, filteredSuggestions } = this.state;
     let value = ''
-    this.handleEnter(e)
+    // this.props.handleEnterPress(e)
 
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e.keyCode === 13) {
+      this.props.onChange(e)
+      setTimeout(() => {
+        this.handleEnter(e)
+      }, 10)
       if (typeof (filteredSuggestions[activeSuggestion]) === 'undefined') {
         return
       } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].name !== '') {
@@ -143,7 +155,7 @@ class Autocomplete extends Component {
       }
       this.setState({
         activeSuggestion: 0,
-        filteredSuggestions: [],
+        filteredSuggestions: [filteredSuggestions[activeSuggestion]],
         showSuggestions: false,
         userInput: value
       });
@@ -165,6 +177,7 @@ class Autocomplete extends Component {
 
       this.setState({ activeSuggestion: activeSuggestion + 1 });
     }
+
   };
 
   // to activate the input field while typing
@@ -194,6 +207,7 @@ class Autocomplete extends Component {
       this.props.onBlur(e)
     }, 10)
   }
+
 
   render() {
     const {
@@ -230,11 +244,11 @@ class Autocomplete extends Component {
                     name={suggestion.name}
                     city={suggestion.city}
                     country={suggestion.country}
+                    index={index}
                   >
                     {suggestion.name}
-                    <span>
-                      <small className="form-text text-muted d-inline"> {suggestion.city}, {suggestion.country}</small>
-                    </span>
+                    <br />
+                    <small className="form-text text-muted d-inline"> {suggestion.city}, {suggestion.country}</small>
                   </li>
                 )
               } else {
@@ -243,6 +257,7 @@ class Autocomplete extends Component {
                     className={className}
                     key={suggestion + index}
                     onClick={onClick}
+                    index={index}
                   >
                     {suggestion}
                   </li>

@@ -78,6 +78,7 @@ class Choose extends React.Component {
         Jeśli Twoj samolot spóźnił się więcej niż 3 godziny załugujesz na odszkodowanie!
       </small>
       <RadioGroup
+        nextPage={this.props.nextPage}
         setFieldValue={this.props.setFieldValue}
         values={this.props.values}
         onBlur={this.props.onBlur}
@@ -97,6 +98,7 @@ class Choose extends React.Component {
         Jeśli zrezygnowałaś/eś ze swojej rezerwacji w zamian za bilet na późniejszy lot lub inne bonusy od linii lotniczej, nie będzie należało Ci się odszkodowanie.
           </small>
       <RadioGroup
+        nextPage={this.props.nextPage}
         setFieldValue={this.props.setFieldValue}
         values={this.props.values}
         onBlur={this.props.onBlur}
@@ -116,6 +118,7 @@ class Choose extends React.Component {
         Jeśli odwołanie nastąpiło mniej niż 14 dni przed wylotem zasługujesz do odszkodowanie!
       </small>
       <RadioGroup
+        nextPage={this.props.nextPage}
         setFieldValue={this.props.setFieldValue}
         values={this.props.values}
         onBlur={this.props.onBlur}
@@ -137,6 +140,7 @@ class Choose extends React.Component {
         Jeśli Twoj samolot spóźnił się więcej niż 3 godziny do miejsca docelowego załugujesz na odszkodowanie!
       </small>
       <Select
+        nextPage={this.props.nextPage}
         placeholder='Wybierz Przyczynę'
         label='Powód: '
         name='why'
@@ -147,7 +151,9 @@ class Choose extends React.Component {
         setFieldValue={this.props.setFieldValue}
       />
       {this.props.values.why === 'other' ?
-        (<Input placeholder='np. Napad na samolot'
+        (<Input
+          nextPage={this.props.nextPage}
+          placeholder='np. Napad na samolot'
           label='Opisz co się stało: '
           name='whyDetails'
           id='whyDetails'
@@ -167,6 +173,7 @@ class Choose extends React.Component {
         Jeśli odwołanie nastąpiło mniej niż 14 dni przed wylotem zasługujesz do odszkodowanie!
       </small>
       <Select
+        nextPage={this.props.nextPage}
         placeholder='Wybierz Przyczynę'
         label='Powód: '
         name='why'
@@ -177,7 +184,9 @@ class Choose extends React.Component {
         setFieldValue={this.props.setFieldValue}
       />
       {this.props.values.why === 'other' ?
-        (<Input placeholder='np. Napad na samolot'
+        (<Input
+          nextPage={this.props.nextPage}
+          placeholder='np. Napad na samolot'
           label='Opisz co się stało: '
           name='whyDetails'
           id='whyDetails'

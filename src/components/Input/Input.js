@@ -41,10 +41,15 @@ class Input extends React.Component {
 
   handleEnter = (event) => {
     if (event.keyCode === 13) {
+      this.props.onChange(event)
       const form = event.target.form;
       const index = Array.prototype.indexOf.call(form, event.target);
       form.elements[index + 1].focus();
       event.preventDefault();
+      if (this.props.nextPage &&
+        typeof this.props.values[this.props.name] !== 'undefined') {
+        this.props.nextPage()
+      }
     }
   }
 

@@ -21,7 +21,8 @@ const RadioGroup = (props) => {
               label={prop.label}
               value={prop.value}
               name={props.name}
-              setFieldValue={props.setFieldValue}></Radio>
+              setFieldValue={props.setFieldValue}
+              nextPage={props.nextPage}></Radio>
           </GridItem>
         )
       })}

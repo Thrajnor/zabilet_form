@@ -61,6 +61,11 @@ class Radio extends React.Component {
       && this.props.name === 'why') {
       this.props.setFieldValue(this.props.name + 'Details', '', true)
     }
+    if (e.currentTarget.value !== 'other') {
+      if (this.props.nextPage) {
+        this.props.nextPage()
+      }
+    }
   }
   componentWillUpdate() {
     if (this.props.type === 'checkbox') {
@@ -110,8 +115,11 @@ class Radio extends React.Component {
                 onChange={this.props.onChange}
                 type={this.props.labelType || 'text'}
                 name={this.props.name + 'Details'}
+                id={this.props.name + 'Details'}
                 value={this.state.otherFieldValue}
                 onBlur={this.props.onBlur}
+                values={this.props.values}
+                nextPage={this.props.nextPage}
               />
             </small></span>)
             :
