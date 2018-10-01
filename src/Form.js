@@ -56,9 +56,18 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      compensation: 400
+      compensation: 400,
+      toNextPage: false
     };
   }
+
+  nextPage = () => {
+    this.setState({ toNextPage: true })
+  }
+  nextPageUsed = () => {
+    this.setState({ toNextPage: false })
+  }
+
   componentDidMount() {
     document.getElementById("fromWhere").focus();
   }
@@ -118,21 +127,26 @@ class Form extends React.Component {
         >
           {({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
             <span>
-              <div className={'outer'} SD>
-                <div className={'middle'}>
+              <div className={'outer'}>
+                <div className={'middle middleButtonLess'}>
                   <div className={'inner'}>
                     <form
                       onSubmit={handleSubmit}>
                       <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
                         <div className='slideContent'>
                           <h4 className='justify-content-center'>Niestety!</h4>
-                          <p>Przejrzeliśmy Twoją petycję, jednak nie możliwe będzie uzyskanie odszkodowanie, ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład</p>
-                          <br />
+                          <p className='mb-4'>Ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład, nie będzie możliwe uzyskanie odszkodowania
                           {values.consent ?
-                            (<p>Na szczęście zaufałeś\aś nam w sprawie beta testów i już niedługo możliwe, że okaże się, ze któryś z poprzednich Twoich lotów będzie objęty odszkodowaniem</p>)
+                              ', ale na szczęście zaufałeś/aś nam w sprawie beta testów i możliwe, że okaże się, ze któryś z poprzednich Twoich lotów będzie objęty odszkodowaniem.'
+                              :
+                              ', ale może mimo to rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu poprzednich biletów, które mogą podlegać odszkodowaniu.'
+
+                            }
+                          </p>
+                          {values.consent ?
+                            ''
                             :
-                            (<div>
-                              <p>Jednak może mimo to rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu starszych lub przyszłych biletów które zasługują na odszkodowanie?</p>
+                            (
                               <Input
                                 placeholder='np. example@gmail.com'
                                 label='Twój Email: '
@@ -143,7 +157,7 @@ class Form extends React.Component {
                                 onBlur={handleBlur}
                                 error={touched.email && errors.email}
                                 touched={touched.email} />
-                            </div>)
+                            )
                           }
                         </div>
                       </Paper>
@@ -171,10 +185,10 @@ class Form extends React.Component {
     )
   }
 
-  tabFromWhere = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue }) => (
+  tabFromWhere = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, validateField }) => (
     <span>
       <div className='slideContent'>
-        <h3 className='justify-content-center'>Cześć!</h3>
+        <h3 className='justify-content-center'>Witaj!</h3>
         <h6 className='form-text text-muted mb-3'>Za chwilę zajmiemy się Twoim odszkodowaniem, na razie odpowiedz na te kilka pytań dotyczących Twojego lotu.</h6>
         <GridContainer spacing={16}>
           <GridItem xs={12} sm={6}>
@@ -204,9 +218,12 @@ class Form extends React.Component {
               onChange={handleChange}
               setFieldValue={setFieldValue}
               onBlur={handleBlur}
+              values={values}
               error={touched.toWhere && errors.toWhere}
               touched={touched.toWhere}
-              suggestions={this.airports()} />
+              suggestions={this.airports()}
+              nextPage={this.nextPage}
+              validateField={validateField} />
           </GridItem>
         </GridContainer>
       </div>
@@ -221,6 +238,7 @@ class Form extends React.Component {
           <small className="form-text text-muted">Linie lotnicze odpowiadają tylko za sytuacje, nad którymi mają względną kontrolę, jednak każdy przypadek jest indywidualny i bardzo często ustalenie odpowiedzialności odbywa się z korzyścią dla klienta.</small>
         </div>
         <RadioGroup
+          nextPage={this.nextPage}
           values={values}
           onBlur={handleBlur}
           onChange={handleChange}
@@ -252,6 +270,7 @@ class Form extends React.Component {
     <span>
       <div className='slideContent'>
         <Choose
+          nextPage={this.nextPage}
           values={values}
           onBlur={handleBlur}
           onChange={handleChange}
@@ -265,8 +284,8 @@ class Form extends React.Component {
   tabFlightDetails = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, }) => (
     <span>
       <div className='slideContent'>
-        <h4>Wygląda na to, że może Ci się należeć nawet {this.state.compensation}euro !</h4>
-        <h6>Podaj nam teraz te kilka detali dotyczących Twojego lotu:</h6>
+        <h4>Wygląda na to, że może Ci coś przysługiwać!</h4>
+        <h6 className='mb-3'>Podaj nam teraz te kilka detali, które pozwolą nam nam oszacować, wysokość odszkodowania:</h6>
         <span>
           <GridContainer spacing={16}>
             <GridItem xs={12} sm={6}>
@@ -307,6 +326,7 @@ class Form extends React.Component {
                 onBlur={handleBlur}
                 error={touched.date && errors.date}
                 touched={touched.date}
+                nextPage={this.nextPage}
               />
             </GridItem>
           </GridContainer>
@@ -318,7 +338,7 @@ class Form extends React.Component {
     <span>
       <div className='slideContent'>
         <h4>Super!</h4>
-        <h6>Teraz potrzeba nam już tylko Twojego emaila do zarejestrowania zgłoszenia i opcjonalnie zgodę na beta testy:</h6>
+        <h6 className='mb-3'>Teraz już tylko Email do zarejestrowania zgłoszenia i opcjonalnie zgoda na beta testy:</h6>
         <span>
           <GridContainer spacing={16}>
             <GridItem xs={12}>
@@ -335,7 +355,8 @@ class Form extends React.Component {
             </GridItem>
             <GridItem xs={12}>
               <Radio
-                label='Twoja opcjonalna zgoda na specjalne beta testy aplikacji która sama wyszukuje na Twoim emailu przeszłych i przyszłych lotów za które może Ci przysługiwać odszkodowanie!'
+                // label='* Zgoda na beta testy aplikacji, przeszukującej Twój e-mail pod kątem  poprzednich lotów, za które może Ci za nie przysługiwać odszkodowanie.'
+                label='Zgoda na beta testy aplikacji, szukającej na Twoim e-mailu poprzednich lotów, za które może Ci się należeć odszkodowanie. - opcjonalne'
                 name='consent'
                 type='checkbox'
                 values={values}
@@ -388,7 +409,7 @@ class Form extends React.Component {
                 .required('Linia lotnicza jest wymagana!'),
               flight: Yup.string()
                 .max(50, 'zbyt długa nazwa!')
-                .required('Pole Wymagane!'),
+                .required('Wymagane!'),
               date: Yup.string()
                 .required('Data jest wymagana!'),
               whyDetails: Yup.string(),
@@ -404,7 +425,6 @@ class Form extends React.Component {
               didSubmit = true;
               return this.forceUpdate()
             } else {
-              console.log(values);
               if (values.why === '') {
                 values.why = 'other'
               }
@@ -453,6 +473,9 @@ class Form extends React.Component {
         <div id="navigation-pills">
           <div>
             <Steps
+              nextPageUsed={this.nextPageUsed}
+              toNextPage={this.state.toNextPage}
+              ref={ref => (this.child = ref)}
               color="primary"
               isSubmitting={isSubmitting}
               errors={errors}
@@ -497,7 +520,7 @@ class Form extends React.Component {
     return (
       <div className={['formBackground'].join(' ')}>
         <div className={'outer'}>
-          <div className={'middle'}>
+          <div className={'middle middleButtonLess'}>
             <div className={'inner'}>
               <Paper elevation={5} className={['paperSpace'].join(' ')}>
                 <div className='slideContent'>
@@ -516,7 +539,7 @@ class Form extends React.Component {
     return (
       <div className={['formBackground'].join(' ')}>
         <div className={'outer'}>
-          <div className={'middle'}>
+          <div className={'middle middleButtonLess'}>
             <div className={'inner'}>
               <Paper elevation={5} className={['paperSpace'].join(' ')}>
                 <div className='slideContent'>
@@ -533,9 +556,6 @@ class Form extends React.Component {
   }
 
   render() {
-    console.log(ownWill)
-    console.log(didSubmit)
-
     if (ownWill) { // sorry no compensation, maybe beta
       return this.noCompensationScreen()
     } else if (!didSubmit) { //firstStep of the form
