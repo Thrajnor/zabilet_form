@@ -4,22 +4,31 @@ import DatePicker from 'react-datepicker';
 import windowSize from 'react-window-size';
 import moment from 'moment';
 
-import 'react-datepicker/dist/react-datepicker.css';
 import 'moment/locale/pl';
 
-class Input extends React.Component {
+import 'react-datepicker/dist/react-datepicker.css';
+let ua = window.navigator.userAgent;
+let iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+let webkit = !!ua.match(/WebKit/i);
+let iOSSafari = iOS && webkit && !ua.match(/CriOS/i);
+
+let isSafari = navigator.userAgent.indexOf("Safari") > -1
+
+let isDeskSafari = (isSafari && !iOSSafari)
+let isFirefox = typeof InstallTrigger !== 'undefined';
+class Date extends React.Component {
   constructor(props) {
     super(props);
     this.activateField = this.activateField.bind(this);
     this.disableField = this.disableField.bind(this);
     this.changeValue = this.changeValue.bind(this);
     this.state = {
-      date: moment().format('LL'),
+      date: moment().format('YYYY-MM-DD'),
       fieldActive: false
     };
   }
   // to activate the input field while typing
-  activateField() {
+  activateField(e) {
     this.setState({
       fieldActive: true
     })
@@ -35,15 +44,45 @@ class Input extends React.Component {
   }
 
   changeValue(e) {
-    this.setState({
-      date: e.format('LL')
-    });
+    if ((isDeskSafari || isFirefox) && this.props.windowWidth > 600) {
+      this.setState({
+        date: e.format('LL')
+      });
+      this.props.setFieldValue(this.props.name, e.format('YYYY-MM-DD'), true)
+    } else {
+      this.setState({
+        date: e.currentTarget.value
+      });
+      this.props.setFieldValue(this.props.name, e.currentTarget.value, true)
+    }
     this.activateField(e)
-    this.props.setFieldValue(this.props.name, e.format(), true)
-    // this.props.onChange(e)
+
+    // if (this.props.nextPage &&
+    //   typeof e.currentTarget.value !== 'undefined' &&
+    //   typeof this.props.error === 'undefined') {
+    //   this.props.nextPage()
+    //   document.getElementById(this.props.name).blur()
+    // }
   }
+
+  handleEnter = (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+
+      if (this.props.nextPage &&
+        typeof this.props.values[this.props.name] !== 'undefined' &&
+        typeof this.props.error === 'undefined') {
+        this.props.nextPage()
+        document.getElementById(this.props.name).blur()
+      }
+    }
+  }
+
   componentDidMount() {
-    this.props.setFieldValue(this.props.name, moment().format(), true)
+    if ((isDeskSafari || isFirefox) && this.props.windowWidth > 600) {
+      console.log(moment().format('YYYY-MM-DD'))
+      this.props.setFieldValue(this.props.name, moment().format('YYYY-MM-DD'), true)
+    }
     this.props.setFieldValue('consent', false, true)
   }
 
@@ -66,13 +105,10 @@ class Input extends React.Component {
       errorText = 'valid-text'
       errorBorder = 'valid-border'
     }
-    moment().locale('pl')
+    let Datepicker
 
-    return (
-      <div className={[errorBorder, "form-group mt-3 position-relative"].join(' ')} >
-        <label htmlFor={this.props.name} className={[errorText, this.state.fieldActive ? "label field-active" : "label"].join(' ')}>
-          {this.props.label}
-        </label>
+    if ((isDeskSafari || isFirefox) && this.props.windowWidth > 600) {
+      Datepicker = (
         <DatePicker
           selected={this.state.startDate}
           onKeyDown={this.handleEnter}
@@ -86,8 +122,10 @@ class Input extends React.Component {
           onFocus={this.activateField}
           onBlur={this.disableField}
           withPortal={this.props.windowWidth > 600 ? false : true}
-        />
-        {/* <input
+        />)
+    } else {
+      Datepicker = (
+        <input
           // onKeyDown={this.handleEnter}
           ref={this.props.name}
           className={[errorBorder, "floating-label form-control"].join(' ')}
@@ -95,12 +133,19 @@ class Input extends React.Component {
           onChange={this.changeValue}
           type={this.props.type || 'date'}
           name={this.props.name}
-          value={this.props.value || ''}
-          hidden={this.props.hidden}
+          value={this.state.date || ''}
           onFocus={this.activateField}
           onBlur={this.disableField}
-          placeholder={' '}
-        /> */}
+          placeholder="YYYY-MM-DD"
+        />)
+    }
+
+    return (
+      <div className={[errorBorder, "form-group mt-3 position-relative"].join(' ')} >
+        <label htmlFor={this.props.name} className={[errorText, "label field-active"].join(' ')}>
+          {this.props.label}
+        </label>
+        {Datepicker}
         <small className="form-text text-muted">{this.props.placeholder}</small>
         {this.props.error ? <div className={errorText}>{this.props.error}</div> : null}
       </div>
@@ -108,4 +153,4 @@ class Input extends React.Component {
   }
 }
 
-export default windowSize(Input);
+export default windowSize(Date);
