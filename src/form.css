@@ -204,8 +204,6 @@ box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.66);
   color: #676767;
  }
 
- /* date */
-input[type="date"]:in-range::-webkit-datetime-edit-year-field, input[type="date"]:in-range::-webkit-datetime-edit-month-field, input[type="date"]:in-range::-webkit-datetime-edit-day-field, input[type="date"]:in-range::-webkit-datetime-edit-text { color: transparent; }
 
 
 /* Floating label Class */
@@ -326,6 +324,9 @@ input[type="date"]:in-range::-webkit-datetime-edit-year-field, input[type="date"
   .radio {
     transform: translateY(2px);
   }
+  .tabPanel {
+    bottom: 40px !important;
+  }
   .tabButton {
     margin: 0 !important;
   }
@@ -334,6 +335,9 @@ input[type="date"]:in-range::-webkit-datetime-edit-year-field, input[type="date"
     /* position: absolute; */
     height: 100vh;
     width: 100%;
+  }
+  .middleButtonLess {
+    transform: translateY(0)
   }
   .slideContent {
     padding: 25px 30px !important;
