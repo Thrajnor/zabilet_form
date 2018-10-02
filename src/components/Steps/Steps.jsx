@@ -107,15 +107,19 @@ class Steps extends React.Component {
   handleEnterPress = (e) => {
     if (e.key === 'Enter') {
       this.handleNext()
+    } else if (e.key === 'Tab') {
+      // prevent tabbing between inputs
+      e.preventDefault()
+      this.handleNext()
     }
   }
 
   componentWillMount() {
-    window.addEventListener('keypress', (e) => this.handleEnterPress(e))
+    window.addEventListener('keydown', (e) => this.handleEnterPress(e))
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keypress', (e) => this.handleEnterPress(e))
+    window.removeEventListener('keydown', (e) => this.handleEnterPress(e))
   }
 
   componentDidUpdate() {
