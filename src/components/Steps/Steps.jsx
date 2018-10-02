@@ -56,7 +56,10 @@ class Steps extends React.Component {
     this.setState({ scrollingInProgress: true })
     this.setState({ intervalId: intervalId });
   }
-  handleNext = () => {
+  handleNext = (e) => {
+    if (e) {
+      e.target.blur()
+    }
     if (this.props.tabs.length <= this.state.active + 1) {
       return
     } else if (this.state.active === 0 &&
@@ -93,7 +96,8 @@ class Steps extends React.Component {
       this.scrollToTop()
     }
   };
-  handlePrev = () => {
+  handlePrev = (e) => {
+    e.target.blur()
     if (this.state.active === 0) {
       return
     }
@@ -105,12 +109,9 @@ class Steps extends React.Component {
   };
 
   handleEnterPress = (e) => {
-    if (e.key === 'Enter') {
-      this.handleNext()
-    } else if (e.key === 'Tab') {
+    if (e.key === 'Tab') {
       // prevent tabbing between inputs
       e.preventDefault()
-      this.handleNext()
     }
   }
 
