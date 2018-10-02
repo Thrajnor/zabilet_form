@@ -115,7 +115,8 @@ class Autocomplete extends Component {
   };
 
   handleEnter = (event) => {
-    if (event.keyCode === 13) {
+    console.log(event.keyCode)
+    if (event.keyCode === 13 || event.keyCode === 9) {
       event.preventDefault();
       const form = event.target.form;
       const index = Array.prototype.indexOf.call(form, event.target);
@@ -176,6 +177,11 @@ class Autocomplete extends Component {
       }
 
       this.setState({ activeSuggestion: activeSuggestion + 1 });
+    } else if (e.keyCode === 9) {
+      this.props.onChange(e)
+      setTimeout(() => {
+        this.handleEnter(e)
+      }, 10)
     }
 
   };
