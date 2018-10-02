@@ -24,12 +24,13 @@ const customStyles = {
   menuList: (base) => ({
     ...base,
     height: 'auto',
-    maxHeight: '40vh',
+    maxHeight: '25vh',
     overflow: 'auto'
   }),
   option: (base) => ({
     ...base,
     marginTop: '0',
+    padding: '2px 10px 2px',
     zIndex: '10',
   })
 }
@@ -67,6 +68,11 @@ class Select extends React.Component {
     this.activateField(e)
     this.setState({ selectedOption: e });
     this.props.setFieldValue(this.props.id, e.value, true)
+
+    if (e.value !== 'other') {
+      this.props.nextPage()
+      document.getElementById(this.props.name).blur()
+    }
   }
 
   // handleEnter = (event) => {
