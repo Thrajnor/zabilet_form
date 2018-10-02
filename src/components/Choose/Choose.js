@@ -158,6 +158,7 @@ class Choose extends React.Component {
           name='whyDetails'
           id='whyDetails'
           className='mt-4'
+          values={this.props.values}
           onChange={this.props.onChange}
           onBlur={this.props.onBlur} />)
         :
@@ -191,6 +192,7 @@ class Choose extends React.Component {
           name='whyDetails'
           id='whyDetails'
           className='mt-4'
+          values={this.props.values}
           onChange={this.props.onChange}
           onBlur={this.props.onBlur} />)
         :
