@@ -80,7 +80,6 @@ class Date extends React.Component {
 
   componentDidMount() {
     if ((isDeskSafari || isFirefox) && this.props.windowWidth > 600) {
-      console.log(moment().format('YYYY-MM-DD'))
       this.props.setFieldValue(this.props.name, moment().format('YYYY-MM-DD'), true)
     }
     this.props.setFieldValue('consent', false, true)
