@@ -41,26 +41,34 @@ class Autocomplete extends Component {
         suggestion =>
           suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1
       ).slice(0, 4)
+
       let filteredSuggestionsByName = suggestions.filter(
         suggestion =>
           suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1
       ).slice(0, 4)
-      let filteredSuggestionsByCode = suggestions.filter(
-        suggestion =>
-          suggestion.code.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      ).slice(0, 4)
+
+      let filteredSuggestionsByIata = suggestions.filter(
+        suggestion => {
+          if (suggestion.iata) {
+            return suggestion.iata.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+          }
+          return false
+        }).slice(0, 4)
+
       let filteredSuggestionsByCountry = suggestions.filter(
         suggestion =>
           suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
       ).slice(0, 4)
+
       let filteredSuggestionsByIcao = suggestions.filter(
         suggestion =>
           suggestion.icao.toLowerCase().indexOf(userInput.toLowerCase()) > -1
       ).slice(0, 4)
-      filteredSuggestions = filteredSuggestionsByCity
+
+      filteredSuggestions = filteredSuggestionsByIata
+        .concat(filteredSuggestionsByCity)
         .concat(filteredSuggestionsByName)
         .concat(filteredSuggestionsByCountry)
-        .concat(filteredSuggestionsByCode)
         .concat(filteredSuggestionsByIcao)
       filteredSuggestions = [...new Set(filteredSuggestions)]
       filteredSuggestions = filteredSuggestions.slice(0, 4)
@@ -115,7 +123,6 @@ class Autocomplete extends Component {
   };
 
   handleEnter = (event) => {
-    console.log(event.keyCode)
     if (event.keyCode === 13 || event.keyCode === 9) {
       event.preventDefault();
       const form = event.target.form;
@@ -245,7 +252,7 @@ class Autocomplete extends Component {
                 return (
                   <li
                     className={className}
-                    key={suggestion.code + index}
+                    key={suggestion.icao + index}
                     onClick={onClick}
                     name={suggestion.name}
                     city={suggestion.city}
@@ -272,23 +279,9 @@ class Autocomplete extends Component {
             })}
           </ul>
         );
-      } else if (this.props.toWhat === 'airport') {
-        suggestionsListComponent = (
-          <div className="no-suggestions suggestion-active">
-            <span>Nie takiego lotniska!</span>
-          </div>
-        );
-      } else if (this.props.toWhat === 'airlane') {
-        suggestionsListComponent = (
-          <div className="no-suggestions suggestion-active">
-            <span>Nie takiej lini lotniczej!</span>
-          </div>
-        );
       } else {
         suggestionsListComponent = (
-          <div className="no-suggestions suggestion-active">
-            <span>Nie ma podpowiedzi!</span>
-          </div>
+          <div></div>
         );
       }
     }

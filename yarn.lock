@@ -193,6 +193,10 @@ address@1.0.3, address@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/address/-/address-1.0.3.tgz#b5f50631f8d6cec8bd20c963963afb55e06cbce9"
 
+airport-data@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/airport-data/-/airport-data-1.0.1.tgz#41c743c48fc5b37765a1bd3cf0617c1de8151316"
+
 ajv-keywords@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"

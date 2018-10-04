@@ -30,7 +30,7 @@ import Button from "components/CustomButtons/Button.jsx"
 
 import './form.css'
 // Airports Data
-import AirportDatabase from 'data/airports-small.json'
+import AirportDatabase from 'airport-data'
 import AirlineDatabase from 'data/airlanes-small.json'
 
 // variables ==========================================================================
