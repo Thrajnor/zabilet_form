@@ -1,42 +1,43 @@
-import "@babel/polyfill";
-import React from "react";
+import '@babel/polyfill';
+import React from 'react';
 
 // import _ from 'lodash'
 
-import * as Yup from 'yup'
-import { Formik } from 'formik'
+import * as Yup from 'yup';
+import { Formik } from 'formik';
 
 // @material-ui/core components
-import withStyles from "@material-ui/core/styles/withStyles";
-import Paper from '@material-ui/core/Paper'
+import withStyles from '@material-ui/core/styles/withStyles';
+import Paper from '@material-ui/core/Paper';
 
 //  @material-ui/icons components
-import Timer from '@material-ui/icons/Timer'
-import PanTool from '@material-ui/icons/PanTool'
-import Cancel from '@material-ui/icons/Cancel'
+import Timer from '@material-ui/icons/Timer';
+import PanTool from '@material-ui/icons/PanTool';
+import Cancel from '@material-ui/icons/Cancel';
 
 // core components
-import Steps from "components/Steps/Steps";
-import Choose from 'components/Choose/Choose'
-import AutoComplete from 'components/Input/AutoComplete'
-import Input from 'components/Input/Input'
-import Date from 'components/Input/Date'
-import pillsStyle from "assets/jss/material-kit-react/views/componentsSections/pillsStyle.jsx";
-import GridContainer from "components/Grid/GridContainer.jsx";
-import GridItem from "components/Grid/GridItem.jsx";
-import RadioGroup from 'components/Input/Radio/RadioGroup'
-import Radio from 'components/Input/Radio/Radio'
-import Button from "components/CustomButtons/Button.jsx"
+import Steps from 'components/Steps/Steps';
+import Choose from 'components/Choose/Choose';
+import AutoComplete from 'components/Input/AutoComplete';
+import Input from 'components/Input/Input';
+import Date from 'components/Input/Date';
+import pillsStyle from 'assets/jss/material-kit-react/views/componentsSections/pillsStyle.jsx';
+import GridContainer from 'components/Grid/GridContainer.jsx';
+import GridItem from 'components/Grid/GridItem.jsx';
+import RadioGroup from 'components/Input/Radio/RadioGroup';
+import Radio from 'components/Input/Radio/Radio';
+import Button from 'components/CustomButtons/Button.jsx';
 
-import './form.css'
+import './form.css';
 // Airports Data
-import AirportDatabase from 'airport-data'
-import AirlineDatabase from 'data/airlanes-small.json'
+import AirportDatabase from 'airport-data';
+import AirlineDatabase from 'data/airlanes-small.json';
 
 // variables ==========================================================================
-let didSubmit = false
-let userConsent = false
-let ownWill = false
+let didSubmit = false;
+let userConsent = false;
+let ownWill = false;
+let submitBeta = false;
 // yup
 
 // Yup.addMethod(Yup.type, 'isTheSame', function (anyArgsYouNeed) {
@@ -62,21 +63,24 @@ class Form extends React.Component {
   }
 
   nextPage = () => {
-    this.setState({ toNextPage: true })
-  }
+    this.setState({ toNextPage: true });
+  };
   nextPageUsed = () => {
-    this.setState({ toNextPage: false })
-  }
+    this.setState({ toNextPage: false });
+  };
+  ownWillHandler = bool => {
+    ownWill = bool;
+  };
 
   componentDidMount() {
-    document.getElementById("fromWhere").focus();
+    document.getElementById('fromWhere').focus();
   }
   // handleCompensation = (value) => {
   //   this.setState({compensation: value})
   // }
   // _airports = null
   airports = () => {
-    return AirportDatabase
+    return AirportDatabase;
     // if (this._airports === null) {
     //   // parse airports
     //   // Airports legend
@@ -92,7 +96,7 @@ class Form extends React.Component {
     // } else {
     //   return this._airports;
     // }
-  }
+  };
   // _airlanes = null;
   airlanes = () => {
     // if (this._airlanes === null) {
@@ -103,26 +107,26 @@ class Form extends React.Component {
     // } else {
     //   return this._airlanes;
     // }
-    return AirlineDatabase
-  }
+    return AirlineDatabase;
+  };
 
   noCompensationScreen = () => {
     const { classes } = this.props;
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
         <Formik
-          validationSchema={
-            Yup.object().shape({
-              email: Yup.string()
-                .email('Niepoprawny email!')
-                .required('Email jest wymagany do zapisów na beta testy!'),
-            })
-          }
+          validationSchema={Yup.object().shape({
+            email: Yup.string()
+              .email('Niepoprawny email!')
+              .required('Email jest wymagany do zapisów na beta testy!'),
+            consent: Yup.boolean().oneOf([true], 'Wymagana zgoda na beta testy')
+          })}
           onSubmit={(values, { setSubmitting }) => {
             console.log(values);
             didSubmit = true;
+            submitBeta = true;
             setSubmitting(false);
-            this.forceUpdate()
+            this.forceUpdate();
           }}
         >
           {({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
@@ -130,50 +134,56 @@ class Form extends React.Component {
               <div className={'outer'}>
                 <div className={'middle middleButtonLess'}>
                   <div className={'inner'}>
-                    <form
-                      onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit}>
                       <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
-                        <div className='slideContent'>
-                          <h4 className='justify-content-center'>Niestety!</h4>
-                          <p className='mb-4'>Ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład, nie będzie możliwe uzyskanie odszkodowania
-                          {values.consent ?
-                              ', ale na szczęście zaufałeś/aś nam w sprawie beta testów i możliwe, że okaże się, ze któryś z poprzednich Twoich lotów będzie objęty odszkodowaniem.'
-                              :
-                              ', ale może mimo to rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu poprzednich biletów, które mogą podlegać odszkodowaniu.'
-
-                            }
+                        <div className="slideContent">
+                          <h4 className="justify-content-center">Niestety!</h4>
+                          <p className="mb-4">
+                            Ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład nie będzie
+                            możliwe uzyskanie odszkodowania. Możesz jednak zapisać się na beta testy
+                            naszej aplikacji, która szanując Twoją prywatność, sprawdzi czy na
+                            skrzynce pocztowej masz więcej biletów mogących podlegać odszkodowaniu
                           </p>
-                          {values.consent ?
-                            ''
-                            :
-                            (
+                          <GridContainer spacing={16}>
+                            <GridItem xs={12}>
                               <Input
-                                placeholder='np. example@gmail.com'
-                                label='Twój Email: '
-                                name='email'
-                                id='email'
+                                placeholder="np. example@gmail.com"
+                                label="Twój Email: "
+                                name="email"
+                                id="email"
                                 value={values.email}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={touched.email && errors.email}
-                                touched={touched.email} />
-                            )
-                          }
+                                touched={touched.email}
+                              />
+                            </GridItem>
+                            <GridItem xs={12}>
+                              <Radio
+                                // label='* Zgoda na beta testy aplikacji, przeszukującej Twój e-mail pod kątem  poprzednich lotów, za które może Ci za nie przysługiwać odszkodowanie.'
+                                label="Zgoda na beta testy aplikacji, która wyszuka na Twojej skrzynce bilety za poprzednie loty (do 3 lat). Być może należy Ci się więcej odszkodowań."
+                                name="consent"
+                                type="checkbox"
+                                values={values}
+                                value={values.consent}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.consent && errors.consent}
+                                touched={touched.consent}
+                              />
+                            </GridItem>
+                          </GridContainer>
                         </div>
                       </Paper>
-                      {values.consent ?
-                        ''
-                        :
-                        (<div className={'navBase'}>
-                          <Button
-                            disabled={this.props.isSubmitting}
-                            className={['wholeButton'].join(' ')}
-                            type='submit'
-                          >
-                            Zapisz się na beta testy!
+                      <div className={'navBase'}>
+                        <Button
+                          disabled={this.props.isSubmitting}
+                          className={['wholeButton'].join(' ')}
+                          type="submit"
+                        >
+                          Zapisz się na beta testy!
                         </Button>
-                        </div>)
-                      }
+                      </div>
                     </form>
                   </div>
                 </div>
@@ -182,22 +192,36 @@ class Form extends React.Component {
           )}
         </Formik>
       </div>
-    )
-  }
+    );
+  };
 
-  tabFromWhere = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, validateField }) => (
+  tabFromWhere = ({
+    values,
+    touched,
+    errors,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    isSubmitting,
+    submitCount,
+    setFieldValue,
+    validateField
+  }) => (
     <span>
-      <div className='slideContent'>
-        <h3 className='justify-content-center'>Witaj!</h3>
-        <h6 className='form-text text-muted mb-3'>Za chwilę zajmiemy się Twoim odszkodowaniem, na razie odpowiedz na te kilka pytań dotyczących Twojego lotu.</h6>
+      <div className="slideContent">
+        <h3 className="justify-content-center">Witaj!</h3>
+        <h6 className="form-text text-muted mb-3">
+          Odszkodowanie za problematyczny lot należy Ci się nawet do 3 lat wstecz, pod warunkiem, że
+          miejsce wylotu lub docelowe (albo oba) to terytorium Unii Europejskiej.
+        </h6>
         <GridContainer spacing={16}>
           <GridItem xs={12} sm={6}>
             <AutoComplete
-              id='fromWhere'
-              toWhat='airport'
-              label='Miejsce wylotu:'
-              name='fromWhere'
-              placeholder='np. Tokio lub HND'
+              id="fromWhere"
+              toWhat="airport"
+              label="Miejsce wylotu:"
+              name="fromWhere"
+              placeholder="np. Tokio lub HND"
               value={values.formWhere}
               onChange={handleChange}
               setFieldValue={setFieldValue}
@@ -209,11 +233,11 @@ class Form extends React.Component {
           </GridItem>
           <GridItem xs={12} sm={6}>
             <AutoComplete
-              id='toWhere'
-              toWhat='airport'
-              label='Miejsce przylotu:'
-              name='toWhere'
-              placeholder='np. Poland lub EPWR'
+              id="toWhere"
+              toWhat="airport"
+              label="Miejsce przylotu:"
+              name="toWhere"
+              placeholder="np. Poland lub EPWR"
               value={values.toWhere}
               onChange={handleChange}
               setFieldValue={setFieldValue}
@@ -223,102 +247,143 @@ class Form extends React.Component {
               touched={touched.toWhere}
               suggestions={this.airports()}
               nextPage={this.nextPage}
-              validateField={validateField} />
+              validateField={validateField}
+            />
           </GridItem>
         </GridContainer>
       </div>
     </span>
-  )
+  );
 
-  tabWhatHappend = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, }) => (
+  tabWhatHappend = ({
+    values,
+    touched,
+    errors,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    isSubmitting,
+    submitCount,
+    setFieldValue
+  }) => (
     <span>
-      <div className='slideContent'>
-        <div className='pb-2 mb-3'>
+      <div className="slideContent">
+        <div className="pb-2 mb-3">
           <h3>Co się stało?</h3>
-          <small className="form-text text-muted">Linie lotnicze odpowiadają tylko za sytuacje, nad którymi mają względną kontrolę, jednak każdy przypadek jest indywidualny i bardzo często ustalenie odpowiedzialności odbywa się z korzyścią dla klienta.</small>
+          <small className="form-text text-muted">
+            Linie lotnicze odpowiadają tylko za sytuacje, nad którymi mają względną kontrolę, jednak
+            każdy przypadek jest indywidualny i bardzo często ustalenie odpowiedzialności odbywa się
+            z korzyścią dla klienta.
+          </small>
         </div>
         <RadioGroup
           nextPage={this.nextPage}
           values={values}
           onBlur={handleBlur}
           onChange={handleChange}
-          name='whatHappend'
+          name="whatHappend"
           grid={12}
-          size='big'
+          size="big"
           radios={[
             {
-              icon: (<Timer />),
+              icon: <Timer />,
               label: 'Duże opóźnienie lądowania',
-              value: 'delay',
+              value: 'delay'
             },
             {
-              icon: (<PanTool />),
+              icon: <PanTool />,
               label: 'Niewpuszczenie na pokład',
-              value: 'boardingRefused',
+              value: 'boardingRefused'
             },
             {
-              icon: (<Cancel />),
+              icon: <Cancel />,
               label: 'Lot został odwołany',
-              value: 'dismissed',
-            },
-          ]} />
+              value: 'dismissed'
+            }
+          ]}
+        />
       </div>
     </span>
-  )
+  );
 
-  tabWhy = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, }) => (
+  tabWhy = ({
+    values,
+    touched,
+    errors,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    isSubmitting,
+    submitCount,
+    setFieldValue
+  }) => (
     <span>
-      <div className='slideContent'>
+      <div className="slideContent">
         <Choose
           nextPage={this.nextPage}
           values={values}
           onBlur={handleBlur}
           onChange={handleChange}
           setFieldValue={setFieldValue}
-        // compensation={this.handleCompensation()}
-        ></Choose>
+          ownWillHandler={this.ownWillHandler}
+          // compensation={this.handleCompensation()}
+        />
       </div>
     </span>
-  )
+  );
 
-  tabFlightDetails = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, }) => (
+  tabFlightDetails = ({
+    values,
+    touched,
+    errors,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    isSubmitting,
+    submitCount,
+    setFieldValue
+  }) => (
     <span>
-      <div className='slideContent'>
-        <h4>Wygląda na to, że może Ci coś przysługiwać!</h4>
-        <h6 className='mb-3'>Podaj nam teraz te kilka detali, które pozwolą nam nam oszacować, wysokość odszkodowania:</h6>
+      <div className="slideContent">
+        <h4>Możliwe że należy Ci się odszkodowanie!</h4>
+        <h6 className="mb-3">Podaj nam detale lotu, abyśmy mogli to sprawdzić:</h6>
         <span>
           <GridContainer spacing={16}>
             <GridItem xs={12} sm={6}>
               <AutoComplete
-                label='Linia: '
-                name='airlane'
-                id='airlane'
-                toWhat='airlane'
-                placeholder='np. LOT Polish Airlines'
+                label="Linia: "
+                name="airlane"
+                id="airlane"
+                toWhat="airlane"
+                placeholder="np. LOT Polish Airlines"
                 value={values.airlane}
                 onChange={handleChange}
                 setFieldValue={setFieldValue}
                 onBlur={handleBlur}
                 error={touched.airlane && errors.airlane}
                 touched={touched.airlane}
-                suggestions={this.airlanes()} />
+                suggestions={this.airlanes()}
+              />
             </GridItem>
             <GridItem xs={5} sm={2}>
-              <Input placeholder='np. 1234'
-                label='Lot: '
-                name='flight'
-                id='flight'
+              <Input
+                placeholder="np. 1234"
+                label="Lot: "
+                name="flight"
+                id="flight"
                 value={values.flight}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.flight && errors.flight}
-                touched={touched.flight} />
+                touched={touched.flight}
+              />
             </GridItem>
             <GridItem xs={7} sm={4}>
-              <Date type='date'
-                label='Data: '
-                name='date'
-                id='date'
+              <Date
+                type="date"
+                label="Data: "
+                name="date"
+                id="date"
                 value={values.date}
                 values={values}
                 onChange={handleChange}
@@ -333,143 +398,150 @@ class Form extends React.Component {
         </span>
       </div>
     </span>
-  )
-  userDetails = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, }) => (
+  );
+  userDetails = ({
+    values,
+    touched,
+    errors,
+    handleSubmit,
+    handleChange,
+    handleBlur,
+    isSubmitting,
+    submitCount,
+    setFieldValue
+  }) => (
     <span>
-      <div className='slideContent'>
+      <div className="slideContent">
         <h4>Super!</h4>
-        <h6 className='mb-3'>Teraz już tylko Email do zarejestrowania zgłoszenia i opcjonalnie zgoda na beta testy:</h6>
+        <h6 className="mb-3">
+          Teraz już tylko Email do zarejestrowania zgłoszenia i opcjonalnie zgoda na beta testy:
+        </h6>
         <span>
           <GridContainer spacing={16}>
             <GridItem xs={12}>
-              <Input placeholder='example@gmail.com'
-                label='E-mail: '
-                name='email'
-                id='email'
-                type='email'
+              <Input
+                placeholder="example@gmail.com"
+                label="E-mail: "
+                name="email"
+                id="email"
+                type="email"
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.email && errors.email}
-                touched={touched.email} />
+                touched={touched.email}
+              />
             </GridItem>
             <GridItem xs={12}>
               <Radio
                 // label='* Zgoda na beta testy aplikacji, przeszukującej Twój e-mail pod kątem  poprzednich lotów, za które może Ci za nie przysługiwać odszkodowanie.'
-                label='Zgoda na beta testy aplikacji, szukającej na Twoim e-mailu poprzednich lotów, za które może Ci się należeć odszkodowanie. - opcjonalne'
-                name='consent'
-                type='checkbox'
+                label="Opcjonalna zgoda na beta testy aplikacji, która wyszuka na Twojej skrzynce bilety za poprzednie loty (do 3 lat). Być może należy Ci się więcej odszkodowań."
+                name="consent"
+                type="checkbox"
                 values={values}
                 value={values.consent}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.consent && errors.consent}
-                touched={touched.consent} />
+                touched={touched.consent}
+              />
             </GridItem>
           </GridContainer>
         </span>
       </div>
     </span>
-  )
+  );
 
-  tabCongrats = ({ values, touched, errors, handleSubmit, handleChange, handleBlur, isSubmitting, submitCount, setFieldValue, }) => (
-    <span>
-      <div className='slideContent'>
-        <h4>Wygląda na to, że może Ci się należeć nawet {this.state.compensation}euro !</h4>
-        <h4>Podaj jeszcze tylko te kilka informacji:</h4>
-        <span>
-          <GridContainer spacing={16}>
-            <GridItem xs={12}>
-              <h3 className='justify-content-center'>Gratulacje!</h3>
-              <h5>Twój wniosek został pomyślnie przesłany</h5>
-              <h6>Może rozważył/a byś zapisanie się na beta testy naszej aplikacji która szanując w najwyższym stopniu Twoją prywatność, przeszukuje Twój email w poszukiwaniu starszych lub przyszłych biletów które zasługują na odszkodowanie?</h6>
-            </GridItem>
-          </GridContainer>
-        </span>
+  betaTesty = () => (
+    <div className={['formBackground'].join(' ')}>
+      <div className={'outer'}>
+        <div className={'middle middleButtonLess'}>
+          <div className={'inner'}>
+            <Paper elevation={5} className={['paperSpace'].join(' ')}>
+              <div className="slideContent">
+                <h3 className="justify-content-center">
+                  Pomyślnie zapisałeś/aś się na beta testy!
+                </h3>
+                <h5>
+                  Gdy nasza aplikacja będzie gotowa sprawdzimy czy na Twojej skrzynce jest więcej
+                  biletów, za które należy Ci się odszkodowanie.
+                </h5>
+              </div>
+            </Paper>
+          </div>
+        </div>
       </div>
-    </span>
-  )
+    </div>
+  );
 
   mainForm = () => {
     const { classes } = this.props;
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
         <Formik
-          validationSchema={
-            Yup.object().shape({
-              fromWhere: Yup.string()
-                .required('Lotnisko jest wymagane!'),
-              toWhere: Yup.string()
-                .max(50, 'zbyt długa nazwa!')
-                // .required('Wybierz z listy lotnisk!'),
-                .max(50, 'zbyt długa nazwa!')
-                .required('Lotnisko jest wymagane!'),
-              airlane: Yup.string()
-                .max(50, 'zbyt długa nazwa!')
-                .required('Linia lotnicza jest wymagana!'),
-              flight: Yup.string()
-                .max(50, 'zbyt długa nazwa!')
-                .required('Wymagane!'),
-              date: Yup.string()
-                .required('Wymagane!'),
-              whyDetails: Yup.string(),
-              email: Yup.string()
-                .required('Email jest wymagany!')
-                .max(50, 'zbyt długi email!')
-                .email('Niepoprawny email!')
-            })
-          }
+          validationSchema={Yup.object().shape({
+            fromWhere: Yup.string().required('Lotnisko jest wymagane!'),
+            toWhere: Yup.string()
+              .max(50, 'zbyt długa nazwa!')
+              // .required('Wybierz z listy lotnisk!'),
+              .max(50, 'zbyt długa nazwa!')
+              .required('Lotnisko jest wymagane!'),
+            airlane: Yup.string()
+              .max(50, 'zbyt długa nazwa!')
+              .required('Linia lotnicza jest wymagana!'),
+            flight: Yup.string()
+              .max(50, 'zbyt długa nazwa!')
+              .required('Wymagane!'),
+            date: Yup.string().required('Wymagane!'),
+            whyDetails: Yup.string(),
+            email: Yup.string()
+              .required('Email jest wymagany!')
+              .max(50, 'zbyt długi email!')
+              .email('Niepoprawny email!')
+          })}
           onSubmit={(values, { setSubmitting }) => {
-            if (values.whatHappend === "boardingRefused" && values.why === 'ownWill') {
-              ownWill = true
-              didSubmit = true;
-              return this.forceUpdate()
-            } else {
-              if (values.why === '') {
-                values.why = 'other'
-              }
-              console.log(values);
-              didSubmit = true;
-              userConsent = values.consent
-              setSubmitting(false);
-              this.forceUpdate();
+            if (values.why === '') {
+              values.why = 'other';
             }
+            console.log(values);
+            didSubmit = true;
+            userConsent = values.consent;
+            setSubmitting(false);
+            this.forceUpdate();
           }}
         >
           {this.mainFormFormikFlow}
         </Formik>
-      </div >
+      </div>
     );
-  }
+  };
 
-  mainFormFormikFlow = (formikProps) => {
-    let { values, errors, handleSubmit, isSubmitting, submitCount, } = formikProps
+  mainFormFormikFlow = formikProps => {
+    let { values, errors, handleSubmit, isSubmitting, submitCount } = formikProps;
     let tabs = [
       {
-        tabButton: "1",
+        tabButton: '1',
         tabContent: this.tabFromWhere(formikProps)
       },
       {
-        tabButton: "2",
+        tabButton: '2',
         tabContent: this.tabWhatHappend(formikProps)
       },
       {
-        tabButton: "3",
+        tabButton: '3',
         tabContent: this.tabWhy(formikProps)
       },
       {
-        tabButton: "4",
+        tabButton: '4',
         tabContent: this.tabFlightDetails(formikProps)
       },
       {
-        tabButton: "5",
+        tabButton: '5',
         tabContent: this.userDetails(formikProps)
       }
-    ]
+    ];
     return (
-      <form
-        onSubmit={handleSubmit}>
-
+      <form onSubmit={handleSubmit}>
         <div id="navigation-pills">
           <div>
             <Steps
@@ -487,19 +559,22 @@ class Form extends React.Component {
           </div>
         </div>
       </form>
-    )
-  }
+    );
+  };
 
   somethingWentWrong = () => {
-    const { classes } = this.props
+    const { classes } = this.props;
     return (
       <div className={[classes.section, 'formBackground'].join(' ')}>
         <span>
           <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
-            <div className='slideContent'>
-              <h3 className='justify-content-center'>O nie!</h3>
+            <div className="slideContent">
+              <h3 className="justify-content-center">O nie!</h3>
               <h5>Coś poszło strasznie nie tak!</h5>
-              <h5>Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo prosimy o napisanie do nas. :(</h5>
+              <h5>
+                Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo prosimy o
+                napisanie do nas. :(
+              </h5>
             </div>
           </Paper>
           {/* <div className={'navBase'}>
@@ -513,8 +588,8 @@ class Form extends React.Component {
         </div> */}
         </span>
       </div>
-    )
-  }
+    );
+  };
 
   thankYouBetaTest = () => {
     return (
@@ -523,18 +598,18 @@ class Form extends React.Component {
           <div className={'middle middleButtonLess'}>
             <div className={'inner'}>
               <Paper elevation={5} className={['paperSpace'].join(' ')}>
-                <div className='slideContent'>
-                  <h3 className='justify-content-center'>Gratulacje!</h3>
-                  <h5>Składanie wniosku przebiegło pomyśle!</h5>
-                  <h5>I dziękujemy za Twoje zaufanie! Obiecujemy, że go nie zawiedziemy :)</h5>
+                <div className="slideContent">
+                  <h3 className="justify-content-center">Gratulacje!</h3>
+                  <h5>Składanie wniosku przebiegło pomyślnie.</h5>
+                  <h5>Skontaktujemy się z Tobą jak najszybciej :)</h5>
                 </div>
               </Paper>
             </div>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
   thankYou = () => {
     return (
       <div className={['formBackground'].join(' ')}>
@@ -542,30 +617,38 @@ class Form extends React.Component {
           <div className={'middle middleButtonLess'}>
             <div className={'inner'}>
               <Paper elevation={5} className={['paperSpace'].join(' ')}>
-                <div className='slideContent'>
-                  <h3 className='justify-content-center'>Gratulacje!</h3>
-                  <h5>Twoj wniosek został pomyślnie złożony</h5>
-                  <h5>Przykro nam, że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w przyszłości.</h5>
+                <div className="slideContent">
+                  <h3 className="justify-content-center">Gratulacje!</h3>
+                  <h5>Składanie wniosku przebiegło pomyślnie.</h5>
+                  <h5>Skontaktujemy się z Tobą jak najszybciej :)</h5>
+                  <h5>
+                    Przykro nam, że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w
+                    przyszłości.
+                  </h5>
                 </div>
               </Paper>
             </div>
-          </div >
-        </div >
-      </div >
-    )
-  }
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   render() {
-    if (ownWill) { // sorry no compensation, maybe beta
-      return this.noCompensationScreen()
-    } else if (!didSubmit) { //firstStep of the form
-      return this.mainForm()
-    } else if (didSubmit === true && userConsent === true) {
-      return this.thankYouBetaTest()
-    } else if (didSubmit === true && (typeof userConsent === 'undefined' || userConsent === false)) {
-      return this.thankYou()
+    if (!submitBeta && ownWill) {
+      // sorry no compensation, maybe beta
+      return this.noCompensationScreen();
+    } else if (submitBeta) {
+      return this.betaTesty();
+    } else if (!didSubmit) {
+      //firstStep of the form
+      return this.mainForm();
+    } else if (didSubmit && userConsent) {
+      return this.thankYouBetaTest();
+    } else if (didSubmit && (typeof userConsent === 'undefined' || !userConsent)) {
+      return this.thankYou();
     } else {
-      return this.somethingWentWrong()
+      return this.somethingWentWrong();
     }
   }
 }
