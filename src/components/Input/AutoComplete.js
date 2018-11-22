@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
+import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -23,7 +23,7 @@ class Autocomplete extends Component {
       // Whether or not the suggestion list is shown
       showSuggestions: false,
       // What the user has entered
-      userInput: "",
+      userInput: '',
       fieldActive: false
     };
   }
@@ -34,49 +34,47 @@ class Autocomplete extends Component {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
     this.activateField();
-    let filteredSuggestions = []
+    let filteredSuggestions = [];
     // Filter our suggestions that don't contain the user's input
     if (suggestions[0].city !== undefined) {
-      let filteredSuggestionsByCity = suggestions.filter(
-        suggestion =>
-          suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      ).slice(0, 4)
+      let filteredSuggestionsByCity = suggestions
+        .filter(suggestion => suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
+        .slice(0, 4);
 
-      let filteredSuggestionsByName = suggestions.filter(
-        suggestion =>
-          suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      ).slice(0, 4)
+      let filteredSuggestionsByName = suggestions
+        .filter(suggestion => suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
+        .slice(0, 4);
 
-      let filteredSuggestionsByIata = suggestions.filter(
-        suggestion => {
+      let filteredSuggestionsByIata = suggestions
+        .filter(suggestion => {
           if (suggestion.iata) {
-            return suggestion.iata.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+            return suggestion.iata.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
           }
-          return false
-        }).slice(0, 4)
+          return false;
+        })
+        .slice(0, 4);
 
-      let filteredSuggestionsByCountry = suggestions.filter(
-        suggestion =>
-          suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      ).slice(0, 4)
+      let filteredSuggestionsByCountry = suggestions
+        .filter(
+          suggestion => suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+        )
+        .slice(0, 4);
 
-      let filteredSuggestionsByIcao = suggestions.filter(
-        suggestion =>
-          suggestion.icao.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      ).slice(0, 4)
+      let filteredSuggestionsByIcao = suggestions
+        .filter(suggestion => suggestion.icao.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
+        .slice(0, 4);
 
       filteredSuggestions = filteredSuggestionsByIata
         .concat(filteredSuggestionsByCity)
         .concat(filteredSuggestionsByName)
         .concat(filteredSuggestionsByCountry)
-        .concat(filteredSuggestionsByIcao)
-      filteredSuggestions = [...new Set(filteredSuggestions)]
-      filteredSuggestions = filteredSuggestions.slice(0, 4)
+        .concat(filteredSuggestionsByIcao);
+      filteredSuggestions = [...new Set(filteredSuggestions)];
+      filteredSuggestions = filteredSuggestions.slice(0, 4);
     } else {
-      filteredSuggestions = suggestions.filter(
-        suggestion =>
-          suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-      ).slice(0, 4);
+      filteredSuggestions = suggestions
+        .filter(suggestion => suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
+        .slice(0, 4);
     }
     // Update the user input and filtered suggestions, reset the active
     // suggestion and make sure the suggestions are shown
@@ -103,15 +101,15 @@ class Autocomplete extends Component {
     const { filteredSuggestions } = this.state;
     // Update the user input and reset the rest of the state
 
-    let value = ''
+    let value = '';
     if (e.currentTarget.getAttribute('name')) {
-      value = e.currentTarget.getAttribute('name')
+      value = e.currentTarget.getAttribute('name');
     } else if (e.currentTarget.getAttribute('city')) {
-      value = e.currentTarget.getAttribute('city')
+      value = e.currentTarget.getAttribute('city');
     } else if (e.currentTarget.getAttribute('country')) {
-      value = e.currentTarget.getAttribute('country')
+      value = e.currentTarget.getAttribute('country');
     } else {
-      value = e.currentTarget.innerText
+      value = e.currentTarget.innerText;
     }
     this.setState({
       activeSuggestion: 0,
@@ -119,47 +117,58 @@ class Autocomplete extends Component {
       showSuggestions: false,
       userInput: value
     });
-    this.props.setFieldValue(this.props.id, value, true)
+    this.props.setFieldValue(this.props.id, value, true);
   };
 
-  handleEnter = (event) => {
+  handleEnter = event => {
     if (event.keyCode === 13 || event.keyCode === 9) {
       event.preventDefault();
       const form = event.target.form;
       const index = Array.prototype.indexOf.call(form, event.target);
       form.elements[index + 1].focus();
-      if (this.props.nextPage &&
+      if (
+        this.props.nextPage &&
         typeof this.props.values[this.props.name] !== 'undefined' &&
-        typeof this.props.error === 'undefined') {
-        this.props.nextPage()
-        document.getElementById(this.props.name).blur()
+        typeof this.props.error === 'undefined'
+      ) {
+        this.props.nextPage();
+        document.getElementById(this.props.name).blur();
       }
     }
-  }
+  };
 
   // Event fired when the user presses a key down
   onKeyDown = e => {
     const { activeSuggestion, filteredSuggestions } = this.state;
-    let value = ''
+    let value = '';
     // this.props.handleEnterPress(e)
 
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e.keyCode === 13) {
-      this.props.onChange(e)
+      this.props.onChange(e);
       setTimeout(() => {
-        this.handleEnter(e)
-      }, 10)
-      if (typeof (filteredSuggestions[activeSuggestion]) === 'undefined') {
-        return
-      } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].name !== '') {
-        value = filteredSuggestions[activeSuggestion].name
-      } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].city !== '') {
-        value = filteredSuggestions[activeSuggestion].city
-      } else if (typeof filteredSuggestions[activeSuggestion].name !== 'undefined' && filteredSuggestions[activeSuggestion].country !== '') {
-        value = filteredSuggestions[activeSuggestion].country
+        this.handleEnter(e);
+      }, 10);
+      if (typeof filteredSuggestions[activeSuggestion] === 'undefined') {
+        return;
+      } else if (
+        typeof filteredSuggestions[activeSuggestion].name !== 'undefined' &&
+        filteredSuggestions[activeSuggestion].name !== ''
+      ) {
+        value = filteredSuggestions[activeSuggestion].name;
+      } else if (
+        typeof filteredSuggestions[activeSuggestion].name !== 'undefined' &&
+        filteredSuggestions[activeSuggestion].city !== ''
+      ) {
+        value = filteredSuggestions[activeSuggestion].city;
+      } else if (
+        typeof filteredSuggestions[activeSuggestion].name !== 'undefined' &&
+        filteredSuggestions[activeSuggestion].country !== ''
+      ) {
+        value = filteredSuggestions[activeSuggestion].country;
       } else {
-        value = filteredSuggestions[activeSuggestion]
+        value = filteredSuggestions[activeSuggestion];
       }
       this.setState({
         activeSuggestion: 0,
@@ -167,7 +176,7 @@ class Autocomplete extends Component {
         showSuggestions: false,
         userInput: value
       });
-      this.props.setFieldValue(this.props.id, value, true)
+      this.props.setFieldValue(this.props.id, value, true);
     }
     // User pressed the up arrow, decrement the index
     else if (e.keyCode === 38) {
@@ -185,12 +194,11 @@ class Autocomplete extends Component {
 
       this.setState({ activeSuggestion: activeSuggestion + 1 });
     } else if (e.keyCode === 9) {
-      this.props.onChange(e)
+      this.props.onChange(e);
       setTimeout(() => {
-        this.handleEnter(e)
-      }, 10)
+        this.handleEnter(e);
+      }, 10);
     }
-
   };
 
   // to activate the input field while typing
@@ -198,41 +206,35 @@ class Autocomplete extends Component {
     this.setState({
       fieldActive: true,
       showSuggestions: true
-    })
+    });
   }
   // to deactivate input only if it's empty
   disableField(e) {
-    e.persist()
-    if (e.target.value === "") {
+    e.persist();
+    if (e.target.value === '') {
       this.setState({
         fieldActive: false,
         showSuggestions: false
-      })
+      });
     } else {
       setTimeout(() => {
         this.setState({
           showSuggestions: false
-        })
+        });
       }, 500);
     }
-    this.props.onChange(e)
+    this.props.onChange(e);
     setTimeout(() => {
-      this.props.onBlur(e)
-    }, 10)
+      this.props.onBlur(e);
+    }, 10);
   }
-
 
   render() {
     const {
       onChange,
       onClick,
       onKeyDown,
-      state: {
-        activeSuggestion,
-        filteredSuggestions,
-        showSuggestions,
-        userInput
-      }
+      state: { activeSuggestion, filteredSuggestions, showSuggestions, userInput }
     } = this;
 
     let suggestionsListComponent;
@@ -246,9 +248,9 @@ class Autocomplete extends Component {
 
               // Flag the active suggestion with a class
               if (index === activeSuggestion) {
-                className = "suggestion-active";
+                className = 'suggestion-active';
               }
-              if (typeof (suggestion) === 'object') {
+              if (typeof suggestion === 'object') {
                 return (
                   <li
                     className={className}
@@ -261,9 +263,12 @@ class Autocomplete extends Component {
                   >
                     {suggestion.name}
                     <br />
-                    <small className="form-text text-muted d-inline"> {suggestion.city}, {suggestion.country}</small>
+                    <small className="form-text text-muted d-inline">
+                      {' '}
+                      {suggestion.city}, {suggestion.country}
+                    </small>
                   </li>
-                )
+                );
               } else {
                 return (
                   <li
@@ -274,35 +279,38 @@ class Autocomplete extends Component {
                   >
                     {suggestion}
                   </li>
-                )
+                );
               }
             })}
           </ul>
         );
       } else {
-        suggestionsListComponent = (
-          <div></div>
-        );
+        suggestionsListComponent = <div />;
       }
     }
-    let errorText = ''
-    let errorBorder = ''
+    let errorText = '';
+    let errorBorder = '';
     if (this.props.error) {
-      errorText = 'invalid-text'
-      errorBorder = 'invalid-border'
+      errorText = 'invalid-text';
+      errorBorder = 'invalid-border';
     } else if (!this.props.error && this.props.touched) {
-      errorText = 'valid-text'
-      errorBorder = 'valid-border'
+      errorText = 'valid-text';
+      errorBorder = 'valid-border';
     }
 
     return (
       <Fragment>
-        <div className={[errorBorder, "form-group mt-3 position-relative"].join(' ')}>
-          <label htmlFor={this.props.name} className={[errorText, this.state.fieldActive ? "label field-active" : "label"].join(' ')}>
+        <div className={[errorBorder, 'form-group mt-3 position-relative'].join(' ')}>
+          <label
+            htmlFor={this.props.name}
+            className={[errorText, this.state.fieldActive ? 'label field-active' : 'label'].join(
+              ' '
+            )}
+          >
             {this.props.label}
           </label>
           <input
-            className={[errorBorder, "floating-label form-control"].join(' ')}
+            className={[errorBorder, 'floating-label form-control'].join(' ')}
             id={this.props.name}
             name={this.props.name}
             type="text"
@@ -310,7 +318,7 @@ class Autocomplete extends Component {
             onChange={onChange}
             onKeyDown={onKeyDown}
             value={this.state.userInput}
-            autoComplete='off'
+            autoComplete="off"
             onFocus={this.activateField}
             onBlur={this.disableField}
             required={this.props.required}

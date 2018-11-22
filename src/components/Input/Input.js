@@ -16,51 +16,50 @@ class Input extends React.Component {
   activateField(e) {
     this.setState({
       fieldActive: true
-    })
+    });
   }
   // to deactivate input only if it's empty
   disableField(e) {
-    e.persist()
-    if (e.target.value === "") {
+    e.persist();
+    if (e.target.value === '') {
       this.setState({
         fieldActive: false
-      })
+      });
     }
-    this.props.onChange(e)
+    this.props.onChange(e);
     setTimeout(() => {
-      this.props.onBlur(e)
-    }, 10)
+      this.props.onBlur(e);
+    }, 10);
   }
 
   changeValue(e) {
-    this.activateField(e)
+    this.activateField(e);
     this.setState({
       userInput: e.currentTarget.value
     });
   }
 
-  handleEnter = (event) => {
+  handleEnter = event => {
     if (event.keyCode === 13 || event.keyCode === 9) {
-      this.props.onChange(event)
+      this.props.onChange(event);
       const form = event.target.form;
       const index = Array.prototype.indexOf.call(form, event.target);
       form.elements[index + 1].focus();
       event.preventDefault();
       setTimeout(() => {
-        if (this.props.nextPage &&
-          typeof this.props.values[this.props.name] !== 'undefined') {
-          this.props.nextPage()
+        if (this.props.nextPage && typeof this.props.values[this.props.name] !== 'undefined') {
+          this.props.nextPage();
         }
-      }, 10)
+      }, 10);
     }
-  }
+  };
 
   render() {
-    let errorText = ''
-    let errorBorder = ''
+    let errorText = '';
+    let errorBorder = '';
     if (this.props.className === 'radio-input') {
-      errorText = ''
-      errorBorder = ''
+      errorText = '';
+      errorBorder = '';
       return (
         <input
           onKeyDown={this.handleEnter}
@@ -74,26 +73,29 @@ class Input extends React.Component {
           onFocus={this.activateField}
           onBlur={this.disableField}
           placeholder={this.state.fieldActive ? this.props.placeholder : null}
-        />)
+        />
+      );
     } else if (this.props.error) {
-      errorText = 'invalid-text'
-      errorBorder = 'invalid-border'
+      errorText = 'invalid-text';
+      errorBorder = 'invalid-border';
     } else if (!this.props.error && this.props.touched) {
-      errorText = 'valid-text'
-      errorBorder = 'valid-border'
+      errorText = 'valid-text';
+      errorBorder = 'valid-border';
     }
 
-
     return (
-      <div className={[errorBorder, "form-group mt-3 position-relative"].join(' ')} >
-        <label htmlFor={this.props.name} className={[errorText, this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
+      <div className={[errorBorder, 'form-group mt-3 position-relative'].join(' ')}>
+        <label
+          htmlFor={this.props.name}
+          className={[errorText, this.state.fieldActive ? 'field-active label' : 'label'].join(' ')}
+        >
           {this.props.label}
         </label>
         <input
           onKeyDown={this.handleEnter}
           ref={this.props.refName || this.props.name}
           id={this.props.name}
-          className={[errorBorder, this.props.className, "floating-label form-control"].join(' ')}
+          className={[errorBorder, this.props.className, 'floating-label form-control'].join(' ')}
           onChange={this.changeValue}
           type={this.props.type || 'text'}
           name={this.props.name}
@@ -104,7 +106,7 @@ class Input extends React.Component {
           placeholder={this.state.fieldActive ? this.props.placeholder : null}
         />
         {this.props.error ? <div className={errorText}>{this.props.error}</div> : null}
-      </ div>
+      </div>
     );
   }
 }
