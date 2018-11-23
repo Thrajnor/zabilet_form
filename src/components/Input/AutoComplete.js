@@ -38,7 +38,12 @@ class Autocomplete extends Component {
     // Filter our suggestions that don't contain the user's input
     if (suggestions[0].city !== undefined) {
       let filteredSuggestionsByCity = suggestions
-        .filter(suggestion => suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
+        .filter(suggestion => {
+          if (suggestion.city) {
+            return suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
+          }
+          return false;
+        })
         .slice(0, 4);
 
       let filteredSuggestionsByName = suggestions
@@ -59,16 +64,10 @@ class Autocomplete extends Component {
           suggestion => suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
         )
         .slice(0, 4);
-
-      let filteredSuggestionsByIcao = suggestions
-        .filter(suggestion => suggestion.icao.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
-        .slice(0, 4);
-
       filteredSuggestions = filteredSuggestionsByIata
         .concat(filteredSuggestionsByCity)
         .concat(filteredSuggestionsByName)
-        .concat(filteredSuggestionsByCountry)
-        .concat(filteredSuggestionsByIcao);
+        .concat(filteredSuggestionsByCountry);
       filteredSuggestions = [...new Set(filteredSuggestions)];
       filteredSuggestions = filteredSuggestions.slice(0, 4);
     } else {
@@ -254,7 +253,7 @@ class Autocomplete extends Component {
                 return (
                   <li
                     className={className}
-                    key={suggestion.icao + index}
+                    key={suggestion.iata + 'auto' + index}
                     onClick={onClick}
                     name={suggestion.name}
                     city={suggestion.city}

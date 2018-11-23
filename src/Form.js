@@ -1,8 +1,6 @@
 import '@babel/polyfill';
 import React from 'react';
 
-// import _ from 'lodash'
-
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 
@@ -30,7 +28,7 @@ import Button from 'components/CustomButtons/Button.jsx';
 
 import './form.css';
 // Airports Data
-import AirportDatabase from 'airport-data';
+import AirportDatabase from 'data/airports-small.json';
 import AirlineDatabase from 'data/airlanes-small.json';
 
 // variables ==========================================================================
