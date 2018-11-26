@@ -77,7 +77,7 @@ class Autocomplete extends Component {
           .slice(0, 4);
       }
     } else {
-      console.log('database not found!');
+      filteredSuggestions = ['Brak połączenia z bazą danych!'];
     }
     // Update the user input and filtered suggestions, reset the active
     // suggestion and make sure the suggestions are shown
