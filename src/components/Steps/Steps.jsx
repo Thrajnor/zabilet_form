@@ -43,10 +43,7 @@ class Steps extends React.Component {
 
   scrollStep = element => {
     if (element) {
-      console.log('on');
-      console.log(element.scrollTop);
       if (element.scrollTop <= 2) {
-        console.log('off');
         clearInterval(this.state.intervalId);
         this.setState({ scrollingInProgress: false });
       }
