@@ -3,11 +3,11 @@ import React from 'react';
 import ReactSelect from 'react-select';
 
 const customStyles = {
-  noOptionsMessageCSS: (base) => ({
+  noOptionsMessageCSS: base => ({
     ...base,
     height: 'auto'
   }),
-  menu: (base) => ({
+  menu: base => ({
     ...base,
     top: '100%',
     backgroundColor: 'hsl(0, 0%, 100%)',
@@ -19,21 +19,21 @@ const customStyles = {
     width: '100%',
     overflow: 'auto',
     zIndex: '10000',
-    boxSizing: 'border-box',
+    boxSizing: 'border-box'
   }),
-  menuList: (base) => ({
+  menuList: base => ({
     ...base,
     height: 'auto',
     maxHeight: '25vh',
     overflow: 'auto'
   }),
-  option: (base) => ({
+  option: base => ({
     ...base,
     marginTop: '0',
     padding: '2px 10px 2px',
-    zIndex: '10',
+    zIndex: '10'
   })
-}
+};
 
 class Select extends React.Component {
   constructor(props) {
@@ -50,7 +50,7 @@ class Select extends React.Component {
   activateField(e) {
     this.setState({
       fieldActive: true
-    })
+    });
   }
   // to deactivate input only if it's empty
   disableField(e) {
@@ -58,20 +58,20 @@ class Select extends React.Component {
       if (this.state.selectedOption === null) {
         this.setState({
           fieldActive: false
-        })
+        });
       }
-    }, 10)
-    this.props.onBlur(e)
+    }, 10);
+    this.props.onBlur(e);
   }
 
   changeValue(e) {
-    this.activateField(e)
+    this.activateField(e);
     this.setState({ selectedOption: e });
-    this.props.setFieldValue(this.props.id, e.value, true)
+    this.props.setFieldValue(this.props.id, e.value, true);
 
     if (e.value !== 'other') {
-      this.props.nextPage()
-      document.getElementById(this.props.name).blur()
+      this.props.nextPage();
+      document.getElementById(this.props.name).blur();
     }
   }
 
@@ -85,15 +85,13 @@ class Select extends React.Component {
   // }
 
   render() {
-
-
     return (
-      <div className='position-relative'>
+      <div className="position-relative">
         <ReactSelect
           styles={customStyles}
           onKeyDown={this.handleEnter}
           ref={this.props.name}
-          className={["floating-label"].join(' ')}
+          className={['floating-label'].join(' ')}
           id={this.props.id}
           onChange={this.changeValue}
           type={this.props.type || 'text'}
@@ -104,12 +102,15 @@ class Select extends React.Component {
           onBlur={this.disableField}
           options={this.props.options}
           placeholder={this.state.fieldActive ? this.props.placeholder : null}
-          noOptionsMessage={() => ('Nie ma podpowiedzi!')}
+          noOptionsMessage={() => 'Jeśli twój powód nie jest tu podany wybierz "Inny"'}
         />
-        <label htmlFor={this.props.id} className={[this.state.fieldActive ? "field-active label" : "label"].join(' ')}>
+        <label
+          htmlFor={this.props.id}
+          className={[this.state.fieldActive ? 'field-active label' : 'label'].join(' ')}
+        >
           {this.props.label}
         </label>
-      </ div>
+      </div>
     );
   }
 }
