@@ -1,32 +1,31 @@
-import React from "react";
+import React from 'react';
 // nodejs library that concatenates classes
-import classNames from "classnames";
+import classNames from 'classnames';
 // nodejs library to set properties for components
-import PropTypes from "prop-types";
-import SwipeableViews from "react-swipeable-views";
+import PropTypes from 'prop-types';
+import SwipeableViews from 'react-swipeable-views';
 
 // @material-ui/core components
-import withStyles from "@material-ui/core/styles/withStyles";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Paper from '@material-ui/core/Paper'
+import withStyles from '@material-ui/core/styles/withStyles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Paper from '@material-ui/core/Paper';
 
 //  @material-ui/icons components
-import ArrowForward from '@material-ui/icons/ArrowForward'
-import ArrowBack from '@material-ui/icons/ArrowBack'
-import Send from '@material-ui/icons/Send'
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import Send from '@material-ui/icons/Send';
 
 // core components
-import GridContainer from "components/Grid/GridContainer.jsx";
-import GridItem from "components/Grid/GridItem.jsx";
-import Button from "components/CustomButtons/Button.jsx"
+import GridContainer from 'components/Grid/GridContainer.jsx';
+import GridItem from 'components/Grid/GridItem.jsx';
+import Button from 'components/CustomButtons/Button.jsx';
 
-import navPillsStyle from "assets/jss/material-kit-react/components/navPillsStyle.jsx";
-
+import navPillsStyle from 'assets/jss/material-kit-react/components/navPillsStyle.jsx';
 
 const style = {
-  overflow: 'hidden visible',
-}
+  overflow: 'hidden visible'
+};
 
 class Steps extends React.Component {
   constructor(props) {
@@ -42,106 +41,110 @@ class Steps extends React.Component {
     this.setState({ active });
   };
 
-  scrollStep = (intervalId) => {
-    if (window.pageYOffset <= 2) {
-      clearInterval(this.state.intervalId);
-      this.setState({ scrollingInProgress: false })
+  scrollStep = element => {
+    if (element) {
+      console.log('on');
+      console.log(element.scrollTop);
+      if (element.scrollTop <= 2) {
+        console.log('off');
+        clearInterval(this.state.intervalId);
+        this.setState({ scrollingInProgress: false });
+      }
+      element.scrollTop -= 2;
     }
-    window.scroll(0, window.pageYOffset - 2);
-  }
+  };
 
   scrollToTop = () => {
     clearInterval(this.state.intervalId);
-    let intervalId = setInterval(() => this.scrollStep(), 1);
-    this.setState({ scrollingInProgress: true })
+    const formatka = document.getElementsByClassName('ml-popup-window');
+    let intervalId = setInterval(() => this.scrollStep(formatka[0]), 1);
+    this.setState({ scrollingInProgress: true });
     this.setState({ intervalId: intervalId });
-  }
-  handleNext = (e) => {
+  };
+  handleNext = e => {
     if (e) {
-      e.target.blur()
+      e.target.blur();
     }
     if (this.props.tabs.length <= this.state.active + 1) {
-      return
-    } else if (this.state.active === 0 &&
+      return;
+    } else if (
+      this.state.active === 0 &&
       this.props.values.fromWhere !== undefined &&
       this.props.values.toWhere !== undefined &&
       this.props.errors.fromWhere === undefined &&
-      this.props.errors.toWhere === undefined) {
-      const active = this.state.active + 1
+      this.props.errors.toWhere === undefined
+    ) {
+      const active = this.state.active + 1;
       this.setState({ active: active });
-      this.scrollToTop()
-    } else if (this.state.active === 1 &&
-      this.props.values.whatHappend !== undefined) {
-      const active = this.state.active + 1
+      this.scrollToTop();
+    } else if (this.state.active === 1 && this.props.values.whatHappend !== undefined) {
+      const active = this.state.active + 1;
       this.setState({ active: active });
-      this.scrollToTop()
-    } else if (this.state.active === 2 &&
-      this.props.values.why !== undefined) {
-      const active = this.state.active + 1
+      this.scrollToTop();
+    } else if (this.state.active === 2 && this.props.values.why !== undefined) {
+      const active = this.state.active + 1;
       this.setState({ active: active });
-      this.scrollToTop()
-    } else if (this.state.active === 3 &&
+      this.scrollToTop();
+    } else if (
+      this.state.active === 3 &&
       this.props.values.flight !== undefined &&
       this.props.values.airlane !== undefined &&
       this.props.errors.flight === undefined &&
-      this.props.errors.airlane === undefined) {
-      const active = this.state.active + 1
+      this.props.errors.airlane === undefined
+    ) {
+      const active = this.state.active + 1;
       this.setState({ active: active });
-      this.scrollToTop()
-    } else if (this.state.active === 4 &&
+      this.scrollToTop();
+    } else if (
+      this.state.active === 4 &&
       this.props.values.email !== undefined &&
-      this.props.errors.email === undefined) {
-      const active = this.state.active + 1
+      this.props.errors.email === undefined
+    ) {
+      const active = this.state.active + 1;
       this.setState({ active: active });
-      this.scrollToTop()
+      this.scrollToTop();
     }
   };
-  handlePrev = (e) => {
-    e.target.blur()
+  handlePrev = e => {
+    e.target.blur();
     if (this.state.active === 0) {
-      return
+      return;
     }
-    const active = this.state.active - 1
+    const active = this.state.active - 1;
     this.setState({ active: active });
   };
   handleChangeIndex = index => {
     this.setState({ active: index });
   };
 
-  handleEnterPress = (e) => {
+  handleEnterPress = e => {
     if (e.key === 'Tab') {
       // prevent tabbing between inputs
-      e.preventDefault()
+      e.preventDefault();
     }
-  }
+  };
 
   componentWillMount() {
-    window.addEventListener('keydown', (e) => this.handleEnterPress(e))
+    window.addEventListener('keydown', e => this.handleEnterPress(e));
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keydown', (e) => this.handleEnterPress(e))
+    window.removeEventListener('keydown', e => this.handleEnterPress(e));
   }
 
   componentDidUpdate() {
     if (this.props.toNextPage && !this.state.scrollingInProgress) {
-      this.handleNext()
-      this.props.nextPageUsed()
+      this.handleNext();
+      this.props.nextPageUsed();
     }
   }
 
   render() {
-    const {
-      classes,
-      tabs,
-      direction,
-      color,
-      horizontal
-    } = this.props;
+    const { classes, tabs, direction, color, horizontal } = this.props;
     const flexContainerClasses = classNames({
       [classes.horizontalDisplay]: horizontal !== undefined
     });
-    const visibility = this.state.active === 0 ? 'visibility-hidden' : ''
+    const visibility = this.state.active === 0 ? 'visibility-hidden' : '';
     const tabButtons = (
       <Tabs
         classes={{
@@ -153,7 +156,7 @@ class Steps extends React.Component {
         value={this.state.active}
         onChange={this.handleChange}
         centered={true}
-        className='tabPanel'
+        className="tabPanel"
       >
         {tabs.map((prop, key) => {
           const pillsClasses = classNames({
@@ -161,30 +164,32 @@ class Steps extends React.Component {
             [classes.horizontalPills]: horizontal !== undefined,
             [classes.pillsWithIcons]: prop.tabIcon !== undefined
           });
-          let disabled = true
+          let disabled = true;
           // HARDCODE #toRefactor ============================================================================================
           if (prop.tabButton === '1') {
-            disabled = false
-          } else if (prop.tabButton === '2' &&
+            disabled = false;
+          } else if (
+            prop.tabButton === '2' &&
             this.props.values.fromWhere !== undefined &&
             this.props.values.toWhere !== undefined &&
             this.props.errors.fromWhere === undefined &&
-            this.props.errors.toWhere === undefined) {
-            disabled = false
-          } else if (prop.tabButton === '3' &&
-            this.props.values.whatHappend !== undefined) {
-            disabled = false
-          } else if (prop.tabButton === '4' &&
-            this.props.values.why !== undefined) {
-            disabled = false
-          } else if (prop.tabButton === '5' &&
+            this.props.errors.toWhere === undefined
+          ) {
+            disabled = false;
+          } else if (prop.tabButton === '3' && this.props.values.whatHappend !== undefined) {
+            disabled = false;
+          } else if (prop.tabButton === '4' && this.props.values.why !== undefined) {
+            disabled = false;
+          } else if (
+            prop.tabButton === '5' &&
             this.props.values.flight !== undefined &&
             this.props.values.airlane !== undefined &&
             this.props.values.date !== undefined &&
             this.props.errors.flight === undefined &&
             this.props.errors.airlane === undefined &&
-            this.props.errors.date === undefined) {
-            disabled = false
+            this.props.errors.date === undefined
+          ) {
+            disabled = false;
           }
           return (
             <Tab
@@ -196,7 +201,7 @@ class Steps extends React.Component {
                 label: classes.label,
                 selected: classes[color]
               }}
-              className='tabButton'
+              className="tabButton"
               disabled={disabled}
             />
           );
@@ -206,42 +211,46 @@ class Steps extends React.Component {
     const tabContent = (
       <div>
         <SwipeableViews
-          axis={direction === "rtl" ? "x-reverse" : "x"}
+          axis={direction === 'rtl' ? 'x-reverse' : 'x'}
           index={this.state.active}
           onChangeIndex={this.handleChangeIndex}
-          className='swieableViews'
+          className="swieableViews"
           disabled={true}
           animateHeight={false}
           style={style}
           slideStyle={style}
         >
           {tabs.map((prop, key) => {
-            let disabled = true
+            let disabled = true;
             // HARDCODE #toRefactor ============================================================================================
-            if (prop.tabButton === '1' &&
+            if (
+              prop.tabButton === '1' &&
               this.props.values.fromWhere !== undefined &&
               this.props.values.toWhere !== undefined &&
               this.props.errors.fromWhere === undefined &&
-              this.props.errors.toWhere === undefined) {
-              disabled = false
-            } else if (prop.tabButton === '2' &&
-              this.props.values.whatHappend !== undefined) {
-              disabled = false
-            } else if (prop.tabButton === '3' &&
-              this.props.values.why !== undefined) {
-              disabled = false
-            } else if (prop.tabButton === '4' &&
+              this.props.errors.toWhere === undefined
+            ) {
+              disabled = false;
+            } else if (prop.tabButton === '2' && this.props.values.whatHappend !== undefined) {
+              disabled = false;
+            } else if (prop.tabButton === '3' && this.props.values.why !== undefined) {
+              disabled = false;
+            } else if (
+              prop.tabButton === '4' &&
               this.props.values.flight !== undefined &&
               this.props.values.airlane !== undefined &&
               this.props.values.date !== undefined &&
               this.props.errors.flight === undefined &&
               this.props.errors.airlane === undefined &&
-              this.props.errors.date === undefined) {
-              disabled = false
-            } else if (prop.tabButton === '5' &&
+              this.props.errors.date === undefined
+            ) {
+              disabled = false;
+            } else if (
+              prop.tabButton === '5' &&
               this.props.values.email !== undefined &&
-              this.props.errors.email === undefined) {
-              disabled = false
+              this.props.errors.email === undefined
+            ) {
+              disabled = false;
             }
             return (
               <div className={'outer'} key={key}>
@@ -255,21 +264,29 @@ class Steps extends React.Component {
                         onClick={this.handlePrev}
                         className={[visibility, 'prevButton'].join(' ')}
                       >
-                        <ArrowBack /><span>Wstecz</span>
+                        <ArrowBack />
+                        <span>Wstecz</span>
                       </Button>
                       <Button
                         disabled={disabled || this.props.isSubmitting}
-                        className={['nextButton', this.props.tabs.length === this.state.active + 1 ? '' : 'display-none'].join(' ')}
-                        type='submit'
+                        className={[
+                          'nextButton',
+                          this.props.tabs.length === this.state.active + 1 ? '' : 'display-none'
+                        ].join(' ')}
+                        type="submit"
                       >
-                        <span className='pr-1'>Wyślij </span> <Send />
+                        <span className="pr-1">Wyślij </span> <Send />
                       </Button>
                       <Button
                         onClick={this.handleNext}
-                        className={['nextButton', this.props.tabs.length < this.state.active + 2 ? 'display-none' : ''].join(' ')}
+                        className={[
+                          'nextButton',
+                          this.props.tabs.length < this.state.active + 2 ? 'display-none' : ''
+                        ].join(' ')}
                         disabled={disabled}
                       >
-                        <span className='pr-1'>Dalej</span><ArrowForward />
+                        <span className="pr-1">Dalej</span>
+                        <ArrowForward />
                       </Button>
                     </div>
                   </div>
@@ -286,17 +303,17 @@ class Steps extends React.Component {
         <GridItem {...horizontal.contentGrid}>{tabContent}</GridItem>
       </GridContainer>
     ) : (
-        <div>
-          {tabButtons}
-          {tabContent}
-        </div>
-      );
+      <div>
+        {tabButtons}
+        {tabContent}
+      </div>
+    );
   }
 }
 
 Steps.defaultProps = {
   active: 0,
-  color: "primary"
+  color: 'primary'
 };
 
 Steps.propTypes = {
@@ -310,14 +327,7 @@ Steps.propTypes = {
       tabContent: PropTypes.node
     })
   ).isRequired,
-  color: PropTypes.oneOf([
-    "primary",
-    "warning",
-    "danger",
-    "success",
-    "info",
-    "rose"
-  ]),
+  color: PropTypes.oneOf(['primary', 'warning', 'danger', 'success', 'info', 'rose']),
   direction: PropTypes.string,
   horizontal: PropTypes.shape({
     tabsGrid: PropTypes.object,
