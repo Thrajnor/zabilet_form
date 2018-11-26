@@ -26,10 +26,12 @@ import RadioGroup from 'components/Input/Radio/RadioGroup';
 import Radio from 'components/Input/Radio/Radio';
 import Button from 'components/CustomButtons/Button.jsx';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './form.css';
+
 // Airports Data
-import AirportDatabase from 'data/airports-small.json';
-import AirlineDatabase from 'data/airlanes-small.json';
+// import AirportDatabase from 'https://cdn.jsdelivr.net/gh/Thrajnor/zabilet_form/src/data/airports-small.json';
+// import AirlineDatabase from 'data/airlanes-small.json';
 
 // variables ==========================================================================
 let didSubmit = false;
@@ -60,6 +62,16 @@ class Form extends React.Component {
     };
   }
 
+  componentDidMount() {
+    document.getElementById('fromWhere').focus();
+    fetch('https://cdn.jsdelivr.net/gh/Thrajnor/CDN-data/airports-small.min.json')
+      .then(response => response.json())
+      .then(AirportDatabase => this.setState({ AirportDatabase }));
+    fetch('https://cdn.jsdelivr.net/gh/Thrajnor/CDN-data/airlanes-small.min.json')
+      .then(response => response.json())
+      .then(AirlineDatabase => this.setState({ AirlineDatabase }));
+  }
+
   nextPage = () => {
     this.setState({ toNextPage: true });
   };
@@ -69,16 +81,12 @@ class Form extends React.Component {
   ownWillHandler = bool => {
     ownWill = bool;
   };
-
-  componentDidMount() {
-    document.getElementById('fromWhere').focus();
-  }
   // handleCompensation = (value) => {
   //   this.setState({compensation: value})
   // }
   // _airports = null
   airports = () => {
-    return AirportDatabase;
+    return this.state.AirportDatabase;
     // if (this._airports === null) {
     //   // parse airports
     //   // Airports legend
@@ -105,7 +113,7 @@ class Form extends React.Component {
     // } else {
     //   return this._airlanes;
     // }
-    return AirlineDatabase;
+    return this.state.AirlineDatabase;
   };
 
   noCompensationScreen = () => {
@@ -213,7 +221,7 @@ class Form extends React.Component {
           miejsce wylotu lub docelowe (albo oba) to terytorium Unii Europejskiej.
         </h6>
         <GridContainer spacing={16}>
-          <GridItem xs={12} sm={6}>
+          <GridItem xs={12} md={6}>
             <AutoComplete
               id="fromWhere"
               toWhat="airport"
@@ -229,7 +237,7 @@ class Form extends React.Component {
               touched={touched.fromWhere}
             />
           </GridItem>
-          <GridItem xs={12} sm={6}>
+          <GridItem xs={12} md={6}>
             <AutoComplete
               id="toWhere"
               toWhat="airport"
@@ -347,7 +355,7 @@ class Form extends React.Component {
         <h6 className="mb-3">Podaj nam detale lotu, abyśmy mogli to sprawdzić:</h6>
         <span>
           <GridContainer spacing={16}>
-            <GridItem xs={12} sm={6}>
+            <GridItem xs={12} md={6}>
               <AutoComplete
                 label="Linia: "
                 name="airlane"
@@ -363,7 +371,7 @@ class Form extends React.Component {
                 suggestions={this.airlanes()}
               />
             </GridItem>
-            <GridItem xs={5} sm={2}>
+            <GridItem xs={5} md={2}>
               <Input
                 placeholder="np. 1234"
                 label="Lot: "
@@ -376,7 +384,7 @@ class Form extends React.Component {
                 touched={touched.flight}
               />
             </GridItem>
-            <GridItem xs={7} sm={4}>
+            <GridItem xs={7} md={4}>
               <Date
                 type="date"
                 label="Data: "
