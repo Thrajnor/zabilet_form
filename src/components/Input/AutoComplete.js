@@ -36,44 +36,48 @@ class Autocomplete extends Component {
     this.activateField();
     let filteredSuggestions = [];
     // Filter our suggestions that don't contain the user's input
-    if (suggestions[0].city !== undefined) {
-      let filteredSuggestionsByCity = suggestions
-        .filter(suggestion => {
-          if (suggestion.city) {
-            return suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
-          }
-          return false;
-        })
-        .slice(0, 4);
+    if (typeof suggestions !== 'undefined' && suggestions[0] !== undefined) {
+      if (suggestions[0].city !== undefined) {
+        let filteredSuggestionsByCity = suggestions
+          .filter(suggestion => {
+            if (suggestion.city) {
+              return suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
+            }
+            return false;
+          })
+          .slice(0, 4);
 
-      let filteredSuggestionsByName = suggestions
-        .filter(suggestion => suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
-        .slice(0, 4);
+        let filteredSuggestionsByName = suggestions
+          .filter(suggestion => suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
+          .slice(0, 4);
 
-      let filteredSuggestionsByIata = suggestions
-        .filter(suggestion => {
-          if (suggestion.iata) {
-            return suggestion.iata.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
-          }
-          return false;
-        })
-        .slice(0, 4);
+        let filteredSuggestionsByIata = suggestions
+          .filter(suggestion => {
+            if (suggestion.iata) {
+              return suggestion.iata.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
+            }
+            return false;
+          })
+          .slice(0, 4);
 
-      let filteredSuggestionsByCountry = suggestions
-        .filter(
-          suggestion => suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-        )
-        .slice(0, 4);
-      filteredSuggestions = filteredSuggestionsByIata
-        .concat(filteredSuggestionsByCity)
-        .concat(filteredSuggestionsByName)
-        .concat(filteredSuggestionsByCountry);
-      filteredSuggestions = [...new Set(filteredSuggestions)];
-      filteredSuggestions = filteredSuggestions.slice(0, 4);
+        let filteredSuggestionsByCountry = suggestions
+          .filter(
+            suggestion => suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+          )
+          .slice(0, 4);
+        filteredSuggestions = filteredSuggestionsByIata
+          .concat(filteredSuggestionsByCity)
+          .concat(filteredSuggestionsByName)
+          .concat(filteredSuggestionsByCountry);
+        filteredSuggestions = [...new Set(filteredSuggestions)];
+        filteredSuggestions = filteredSuggestions.slice(0, 4);
+      } else {
+        filteredSuggestions = suggestions
+          .filter(suggestion => suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
+          .slice(0, 4);
+      }
     } else {
-      filteredSuggestions = suggestions
-        .filter(suggestion => suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
-        .slice(0, 4);
+      console.log('database not found!');
     }
     // Update the user input and filtered suggestions, reset the active
     // suggestion and make sure the suggestions are shown
