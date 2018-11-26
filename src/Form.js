@@ -25,6 +25,7 @@ import GridItem from 'components/Grid/GridItem.jsx';
 import RadioGroup from 'components/Input/Radio/RadioGroup';
 import Radio from 'components/Input/Radio/Radio';
 import Button from 'components/CustomButtons/Button.jsx';
+import FilePond from 'components/Input/FilePond.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './form.css';
@@ -414,13 +415,15 @@ class Form extends React.Component {
     handleBlur,
     isSubmitting,
     submitCount,
-    setFieldValue
+    setFieldValue,
+    setFieldTouched
   }) => (
     <span>
       <div className="slideContent">
         <h4>Super!</h4>
         <h6 className="mb-3">
-          Teraz już tylko Email do zarejestrowania zgłoszenia i opcjonalnie zgoda na beta testy:
+          Teraz prześlij nam kartę pokładową lub jej zdjęcie oraz podaj swój adres email.
+          Opcjonalnie możesz również zapisać się na beta testy.
         </h6>
         <span>
           <GridContainer spacing={16}>
@@ -450,6 +453,19 @@ class Form extends React.Component {
                 onBlur={handleBlur}
                 error={touched.consent && errors.consent}
                 touched={touched.consent}
+              />
+            </GridItem>
+            <GridItem xs={12}>
+              <FilePond
+                values={values}
+                name="card"
+                id="card"
+                setFieldTouched={setFieldTouched}
+                value={values.card}
+                setFieldValue={setFieldValue}
+                error={errors.card}
+                // touched={touched.card}
+                label="Twoja karta pokładowa"
               />
             </GridItem>
           </GridContainer>
@@ -503,7 +519,8 @@ class Form extends React.Component {
             email: Yup.string()
               .required('Email jest wymagany!')
               .max(50, 'zbyt długi email!')
-              .email('Niepoprawny email!')
+              .email('Niepoprawny email!'),
+            card: Yup.array().required('Karta pokładowa jest wymagana!')
           })}
           onSubmit={(values, { setSubmitting }) => {
             if (values.why === '') {
