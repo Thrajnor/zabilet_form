@@ -24,48 +24,48 @@ import Input from 'components/Input/Input';
 let whyAnswers = [
   {
     label: 'Problemy Techniczne',
-    value: 'techProblem'
+    value: 'problemy_techniczne'
   },
   {
     label: 'Wpływ innych lotów',
-    value: 'otherFlights'
+    value: 'wpływ_innych_lotów'
   },
   {
     label: 'Strajk',
-    value: 'strike'
+    value: 'strajk'
   },
   {
     label: 'Problemy na lotnisku',
-    value: 'airPortProblems'
+    value: 'problemy_na_lotnisku'
   },
   {
     label: 'Złe warunki pogodowe',
-    value: 'badWeather'
+    value: 'złe_warunki_pogodowe'
   },
   {
     label: 'Nie podano powodu',
-    value: 'noCauseGiven'
+    value: 'nie_podano_powodu'
   },
   {
     label: 'Nie pamiętam',
-    value: 'dontRemember'
+    value: 'nie_pamiętam'
   },
   {
     labelType: 'text',
     label: 'Inny',
-    value: 'other'
+    value: 'inny'
   }
 ];
 
 let yesNoAnswer = [
   {
     label: 'Tak',
-    value: 'ownWill',
+    value: 'tak',
     ownWill: true
   },
   {
     label: 'Nie',
-    value: 'forced'
+    value: 'nie'
   }
 ];
 
@@ -224,7 +224,7 @@ class Choose extends React.Component {
     //   :
     //   other = ''
 
-    if (this.props.values.whatHappend === 'delay') {
+    if (this.props.values.whatHappend === 'opóźnienie') {
       return (
         <div>
           <MediaQuery maxWidth={600}>{this.delayMobile()}</MediaQuery>
@@ -232,9 +232,9 @@ class Choose extends React.Component {
           {other}
         </div>
       );
-    } else if (this.props.values.whatHappend === 'boardingRefused') {
+    } else if (this.props.values.whatHappend === 'niewpuszczenie_na_pokład') {
       return this.boardingRefused();
-    } else if (this.props.values.whatHappend === 'dismissed') {
+    } else if (this.props.values.whatHappend === 'lot_został_odwołany') {
       return (
         <div>
           <MediaQuery maxWidth={600}>{this.dismissedMobile()}</MediaQuery>
