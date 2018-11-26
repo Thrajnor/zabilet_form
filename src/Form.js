@@ -25,7 +25,6 @@ import GridItem from 'components/Grid/GridItem.jsx';
 import RadioGroup from 'components/Input/Radio/RadioGroup';
 import Radio from 'components/Input/Radio/Radio';
 import Button from 'components/CustomButtons/Button.jsx';
-import FilePond from 'components/Input/FilePond.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './form.css';
@@ -295,17 +294,17 @@ class Form extends React.Component {
             {
               icon: <Timer />,
               label: 'Duże opóźnienie lądowania',
-              value: 'delay'
+              value: 'opóźnienie'
             },
             {
               icon: <PanTool />,
               label: 'Niewpuszczenie na pokład',
-              value: 'boardingRefused'
+              value: 'niewpuszczenie_na_pokład'
             },
             {
               icon: <Cancel />,
               label: 'Lot został odwołany',
-              value: 'dismissed'
+              value: 'lot_został_odwołany'
             }
           ]}
         />
@@ -455,19 +454,6 @@ class Form extends React.Component {
                 touched={touched.consent}
               />
             </GridItem>
-            <GridItem xs={12}>
-              <FilePond
-                values={values}
-                name="card"
-                id="card"
-                setFieldTouched={setFieldTouched}
-                value={values.card}
-                setFieldValue={setFieldValue}
-                error={errors.card}
-                // touched={touched.card}
-                label="Twoja karta pokładowa"
-              />
-            </GridItem>
           </GridContainer>
         </span>
       </div>
@@ -519,13 +505,38 @@ class Form extends React.Component {
             email: Yup.string()
               .required('Email jest wymagany!')
               .max(50, 'zbyt długi email!')
-              .email('Niepoprawny email!'),
-            card: Yup.array().required('Karta pokładowa jest wymagana!')
+              .email('Niepoprawny email!')
           })}
           onSubmit={(values, { setSubmitting }) => {
             if (values.why === '') {
               values.why = 'other';
             }
+            fetch('https://zabilet.zendesk.com/api/v2/requests.json', {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                request: {
+                  requester: { name: values.email, email: values.email },
+                  subject: values.email,
+                  custom_fields: [
+                    { 360008313294: values.flight },
+                    { 360008249493: values.airlane },
+                    { 360008249553: values.fromWhere },
+                    { 360008249573: values.toWhere },
+                    { 360008313574: values.date },
+                    { 360008249493: values.airlane },
+                    { 360011764713: values.whatHappend },
+                    { 360011845134: values.why },
+                    { 360011767173: values.whyDetails },
+                    { 360011846354: values.consent }
+                  ],
+                  comment: { body: 'Proszę o odszkodowanie' }
+                }
+              })
+            });
             console.log(values);
             didSubmit = true;
             userConsent = values.consent;
