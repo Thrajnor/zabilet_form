@@ -265,7 +265,7 @@ class Steps extends React.Component {
                         <span>Wstecz</span>
                       </Button>
                       <Button
-                        disabled={disabled || this.props.isSubmitting}
+                        disabled={this.props.isSubmitting}
                         className={[
                           'nextButton',
                           this.props.tabs.length === this.state.active + 1 ? '' : 'display-none'
