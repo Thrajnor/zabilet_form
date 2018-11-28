@@ -81,6 +81,10 @@ class Form extends React.Component {
   ownWillHandler = bool => {
     ownWill = bool;
   };
+  cityToWhereHandler = city => {
+    console.log(city);
+    this.setState({ city });
+  };
   // handleCompensation = (value) => {
   //   this.setState({compensation: value})
   // }
@@ -232,6 +236,7 @@ class Form extends React.Component {
               onChange={handleChange}
               setFieldValue={setFieldValue}
               onBlur={handleBlur}
+              values={values}
               suggestions={this.airports()}
               error={touched.fromWhere && errors.fromWhere}
               touched={touched.fromWhere}
@@ -243,6 +248,7 @@ class Form extends React.Component {
               toWhat="airport"
               label="Miejsce przylotu:"
               name="toWhere"
+              cityToWhereHandler={this.cityToWhereHandler}
               placeholder="np. Poland lub EPWR"
               value={values.toWhere}
               onChange={handleChange}
@@ -421,8 +427,8 @@ class Form extends React.Component {
       <div className="slideContent">
         <h4>Super!</h4>
         <h6 className="mb-3">
-          Teraz prześlij nam kartę pokładową lub jej zdjęcie oraz podaj swój adres email.
-          Opcjonalnie możesz również zapisać się na beta testy.
+          To już ostatni krok! Podaj nam swój adres email, abyśmy mogli się z Tobą skontaktować.
+          Opcjonalnie możesz również zapisać się na beta testy
         </h6>
         <span>
           <GridContainer spacing={16}>
@@ -511,6 +517,25 @@ class Form extends React.Component {
             if (values.why === '') {
               values.why = 'other';
             }
+            let requestSubject;
+            if (this.state.city) {
+              requestSubject = this.state.city + ' ' + values.date;
+            } else {
+              requestSubject = values.toWhere + ' ' + values.date;
+            }
+
+            const date = 'Witam, Dnia ' + values.date;
+            const travel =
+              values.whatHappend !== 'opóźniony'
+                ? ' planowałem/am lecieć z ' + values.fromWhere + ' do ' + values.toWhere
+                : ' leciałem/am z ' + values.fromWhere + ' do ' + values.toWhere;
+            const couse =
+              values.whatHappend === 'opóźniony'
+                ? ' jednak nastąpiło opóźnienie '
+                : values.whatHappend === 'niewpuszczenie_na_pokład'
+                ? ' jednak odmówiono mi wejścia na pokład '
+                : ' jednak lot został odwołany ';
+            const body = date + travel + couse + 'i potrzebuje pomocy w uzyskaniu odszkodowania.';
             fetch('https://zabilet.zendesk.com/api/v2/requests.json', {
               method: 'POST',
               headers: {
@@ -520,7 +545,7 @@ class Form extends React.Component {
               body: JSON.stringify({
                 request: {
                   requester: { name: values.email, email: values.email },
-                  subject: values.email,
+                  subject: requestSubject,
                   custom_fields: [
                     { 360008313294: values.flight },
                     { 360008249493: values.airlane },
@@ -533,7 +558,7 @@ class Form extends React.Component {
                     { 360011767173: values.whyDetails },
                     { 360011846354: values.consent }
                   ],
-                  comment: { body: 'Proszę o odszkodowanie' }
+                  comment: { body: body }
                 }
               })
             });
