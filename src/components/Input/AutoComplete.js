@@ -35,9 +35,13 @@ class Autocomplete extends Component {
     const userInput = e.currentTarget.value;
     this.activateField();
     let filteredSuggestions = [];
+
+    if (this.props.cityToWhereHandler) {
+      this.props.cityToWhereHandler('');
+    }
     // Filter our suggestions that don't contain the user's input
-    if (typeof suggestions !== 'undefined' && suggestions[0] !== undefined) {
-      if (suggestions[0].city !== undefined) {
+    if (suggestions) {
+      if (suggestions[0].city) {
         let filteredSuggestionsByCity = suggestions
           .filter(suggestion => {
             if (suggestion.city) {
@@ -102,6 +106,7 @@ class Autocomplete extends Component {
   // Event fired when the user clicks on a suggestion
   onClick = e => {
     const { filteredSuggestions } = this.state;
+    let cityOfValue;
     // Update the user input and reset the rest of the state
 
     let value = '';
@@ -114,11 +119,22 @@ class Autocomplete extends Component {
     } else {
       value = e.currentTarget.innerText;
     }
+    if (this.props.cityToWhereHandler) {
+      if (e.currentTarget.getAttribute('city')) {
+        cityOfValue = e.currentTarget.getAttribute('city');
+      } else if (e.currentTarget.getAttribute('country')) {
+        cityOfValue = e.currentTarget.getAttribute('country');
+      } else if (e.currentTarget.getAttribute('name')) {
+        cityOfValue = e.currentTarget.getAttribute('name');
+      }
+      this.props.cityToWhereHandler(cityOfValue);
+    }
     this.setState({
       activeSuggestion: 0,
       filteredSuggestions: [filteredSuggestions[e.currentTarget.getAttribute('index')]],
       showSuggestions: false,
-      userInput: value
+      userInput: value,
+      cityOfValue
     });
     this.props.setFieldValue(this.props.id, value, true);
   };
@@ -129,11 +145,7 @@ class Autocomplete extends Component {
       const form = event.target.form;
       const index = Array.prototype.indexOf.call(form, event.target);
       form.elements[index + 1].focus();
-      if (
-        this.props.nextPage &&
-        typeof this.props.values[this.props.name] !== 'undefined' &&
-        typeof this.props.error === 'undefined'
-      ) {
+      if (this.props.nextPage && this.props.values[this.props.name] && !this.props.error) {
         this.props.nextPage();
         document.getElementById(this.props.name).blur();
       }
@@ -144,6 +156,7 @@ class Autocomplete extends Component {
   onKeyDown = e => {
     const { activeSuggestion, filteredSuggestions } = this.state;
     let value = '';
+    let cityOfValue = '';
     // this.props.handleEnterPress(e)
 
     // User pressed the enter key, update the input and close the
@@ -153,31 +166,38 @@ class Autocomplete extends Component {
       setTimeout(() => {
         this.handleEnter(e);
       }, 10);
-      if (typeof filteredSuggestions[activeSuggestion] === 'undefined') {
+      if (!filteredSuggestions[activeSuggestion]) {
         return;
-      } else if (
-        typeof filteredSuggestions[activeSuggestion].name !== 'undefined' &&
-        filteredSuggestions[activeSuggestion].name !== ''
-      ) {
+      } else if (filteredSuggestions[activeSuggestion].name) {
         value = filteredSuggestions[activeSuggestion].name;
-      } else if (
-        typeof filteredSuggestions[activeSuggestion].name !== 'undefined' &&
-        filteredSuggestions[activeSuggestion].city !== ''
-      ) {
+      } else if (filteredSuggestions[activeSuggestion].city) {
         value = filteredSuggestions[activeSuggestion].city;
-      } else if (
-        typeof filteredSuggestions[activeSuggestion].name !== 'undefined' &&
-        filteredSuggestions[activeSuggestion].country !== ''
-      ) {
+      } else if (filteredSuggestions[activeSuggestion].country) {
         value = filteredSuggestions[activeSuggestion].country;
       } else {
         value = filteredSuggestions[activeSuggestion];
+      }
+
+      if (this.props.cityToWhereHandler) {
+        if (!filteredSuggestions[activeSuggestion]) {
+          return;
+        } else if (filteredSuggestions[activeSuggestion].city) {
+          cityOfValue = filteredSuggestions[activeSuggestion].city;
+        } else if (filteredSuggestions[activeSuggestion].country) {
+          cityOfValue = filteredSuggestions[activeSuggestion].country;
+        } else if (filteredSuggestions[activeSuggestion].name) {
+          cityOfValue = filteredSuggestions[activeSuggestion].name;
+        } else {
+          cityOfValue = filteredSuggestions[activeSuggestion];
+        }
+        this.props.cityToWhereHandler(cityOfValue);
       }
       this.setState({
         activeSuggestion: 0,
         filteredSuggestions: [filteredSuggestions[activeSuggestion]],
         showSuggestions: false,
-        userInput: value
+        userInput: value,
+        cityOfValue
       });
       this.props.setFieldValue(this.props.id, value, true);
     }
@@ -214,7 +234,7 @@ class Autocomplete extends Component {
   // to deactivate input only if it's empty
   disableField(e) {
     e.persist();
-    if (e.target.value === '') {
+    if (!e.target.value) {
       this.setState({
         fieldActive: false,
         showSuggestions: false
