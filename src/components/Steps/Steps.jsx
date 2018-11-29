@@ -24,7 +24,7 @@ import Button from 'components/CustomButtons/Button.jsx';
 import navPillsStyle from 'assets/jss/material-kit-react/components/navPillsStyle.jsx';
 
 const style = {
-  overflow: 'hidden visible'
+  overflow: 'visible'
 };
 
 class Steps extends React.Component {
