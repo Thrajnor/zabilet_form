@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import Timer from '@material-ui/icons/Timer';
 import PanTool from '@material-ui/icons/PanTool';
 import Cancel from '@material-ui/icons/Cancel';
+import FullscreenExit from '@material-ui/icons/FullscreenExit';
 
 // core components
 import Steps from 'components/Steps/Steps';
@@ -123,85 +124,104 @@ class Form extends React.Component {
   noCompensationScreen = () => {
     const { classes } = this.props;
     return (
-      <div className={[classes.section, 'formBackground'].join(' ')}>
-        <Formik
-          validationSchema={Yup.object().shape({
-            email: Yup.string()
-              .email('Niepoprawny email!')
-              .required('Email jest wymagany do zapisów na beta testy!'),
-            consent: Yup.boolean().oneOf([true], 'Wymagana zgoda na beta testy')
-          })}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            didSubmit = true;
-            submitBeta = true;
-            setSubmitting(false);
-            this.forceUpdate();
-          }}
-        >
-          {({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
-            <span>
-              <div className={'outer'}>
-                <div className={'middle middleButtonLess'}>
-                  <div className={'inner'}>
-                    <form onSubmit={handleSubmit}>
-                      <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
-                        <div className="slideContent">
-                          <h4 className="justify-content-center">Niestety!</h4>
-                          <p className="mb-4">
-                            Ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład nie będzie
-                            możliwe uzyskanie odszkodowania. Możesz jednak zapisać się na beta testy
-                            naszej aplikacji, która szanując Twoją prywatność, sprawdzi czy na
-                            skrzynce pocztowej masz więcej biletów mogących podlegać odszkodowaniu
-                          </p>
-                          <GridContainer spacing={16}>
-                            <GridItem xs={12}>
-                              <Input
-                                placeholder="np. example@gmail.com"
-                                label="Twój Email: "
-                                name="email"
-                                id="email"
-                                value={values.email}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.email && errors.email}
-                                touched={touched.email}
-                              />
-                            </GridItem>
-                            <GridItem xs={12}>
-                              <Radio
-                                // label='* Zgoda na beta testy aplikacji, przeszukującej Twój e-mail pod kątem  poprzednich lotów, za które może Ci za nie przysługiwać odszkodowanie.'
-                                label="Zgoda na beta testy aplikacji, która wyszuka na Twojej skrzynce bilety za poprzednie loty (do 3 lat). Być może należy Ci się więcej odszkodowań."
-                                name="consent"
-                                type="checkbox"
-                                values={values}
-                                value={values.consent}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                error={touched.consent && errors.consent}
-                                touched={touched.consent}
-                              />
-                            </GridItem>
-                          </GridContainer>
-                        </div>
-                      </Paper>
-                      <div className={'navBase'}>
-                        <Button
-                          disabled={this.props.isSubmitting}
-                          className={['wholeButton'].join(' ')}
-                          type="submit"
-                        >
-                          Zapisz się na beta testy!
-                        </Button>
+      <Formik
+        validationSchema={Yup.object().shape({
+          email: Yup.string()
+            .email('Niepoprawny email!')
+            .required('Email jest wymagany do zapisów na beta testy!'),
+          consent: Yup.boolean().oneOf([true], 'Wymagana zgoda na beta testy')
+        })}
+        onSubmit={(values, { setSubmitting }) => {
+          console.log(values);
+          didSubmit = true;
+          submitBeta = true;
+          const requestSubject = 'Beta testy';
+          const body =
+            'Niestety, lot za który próbowałem dostać odszkodowanie, nie podlega mu. Jednak mam nadzieje, że w mojej skrzynce pocztowej znajdą się zaległe loty za które dostanę odszkodowanie. więc z chęcią zapiszę sie na beta testy Waszej aplikacji.';
+          fetch('https://zabilet.zendesk.com/api/v2/requests.json', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              request: {
+                requester: { name: values.email, email: values.email },
+                subject: requestSubject,
+                custom_fields: [{ 360011846354: values.consent }],
+                comment: { body: body }
+              }
+            })
+          });
+          setSubmitting(false);
+          this.forceUpdate();
+        }}
+      >
+        {({ values, touched, errors, handleSubmit, handleChange, handleBlur }) => (
+          <span>
+            <div className={'outer'}>
+              <div className={'middle middleButtonLess'}>
+                <div className={'inner'}>
+                  <form onSubmit={handleSubmit}>
+                    <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
+                      <div className="slideContent">
+                        <h4 className="justify-content-center">Niestety!</h4>
+                        <p className="mb-4">
+                          Ponieważ dobrowolnie zrezygnowałeś/aś z wejścia na pokład nie będzie
+                          możliwe uzyskanie odszkodowania. Możesz jednak zapisać się na beta testy
+                          naszej aplikacji, która szanując Twoją prywatność, sprawdzi czy na
+                          skrzynce pocztowej masz więcej biletów mogących podlegać odszkodowaniu
+                        </p>
+                        <GridContainer spacing={16}>
+                          <GridItem xs={12}>
+                            <Input
+                              placeholder="np. example@gmail.com"
+                              label="Twój Email: "
+                              name="email"
+                              id="email"
+                              value={values.email}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={touched.email && errors.email}
+                              touched={touched.email}
+                            />
+                          </GridItem>
+                          <GridItem xs={12}>
+                            <Radio
+                              // label='* Zgoda na beta testy aplikacji, przeszukującej Twój e-mail pod kątem  poprzednich lotów, za które może Ci za nie przysługiwać odszkodowanie.'
+                              label="Zgoda na beta testy aplikacji, która wyszuka na Twojej skrzynce bilety za poprzednie loty (do 3 lat). Być może należy Ci się więcej odszkodowań."
+                              name="consent"
+                              type="checkbox"
+                              values={values}
+                              value={values.consent}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={touched.consent && errors.consent}
+                              touched={touched.consent}
+                            />
+                          </GridItem>
+                        </GridContainer>
                       </div>
-                    </form>
-                  </div>
+                    </Paper>
+                    <div className={'navBase'}>
+                      <Button className={['prevButton', 'ml-popup-toggle'].join(' ')} type="button">
+                        Nie, dziękuję.
+                      </Button>
+                      <Button
+                        disabled={this.props.isSubmitting}
+                        className={['nextButton'].join(' ')}
+                        type="submit"
+                      >
+                        Zapisz się na beta testy!
+                      </Button>
+                    </div>
+                  </form>
                 </div>
               </div>
-            </span>
-          )}
-        </Formik>
-      </div>
+            </div>
+          </span>
+        )}
+      </Formik>
     );
   };
 
@@ -467,22 +487,18 @@ class Form extends React.Component {
   );
 
   betaTesty = () => (
-    <div className={['formBackground'].join(' ')}>
-      <div className={'outer'}>
-        <div className={'middle middleButtonLess'}>
-          <div className={'inner'}>
-            <Paper elevation={5} className={['paperSpace'].join(' ')}>
-              <div className="slideContent">
-                <h3 className="justify-content-center">
-                  Pomyślnie zapisałeś/aś się na beta testy!
-                </h3>
-                <h5>
-                  Gdy nasza aplikacja będzie gotowa sprawdzimy czy na Twojej skrzynce jest więcej
-                  biletów, za które należy Ci się odszkodowanie.
-                </h5>
-              </div>
-            </Paper>
-          </div>
+    <div className={'outer'}>
+      <div className={'middle middleButtonLess'}>
+        <div className={'inner'}>
+          <Paper elevation={5} className={['paperSpace'].join(' ')}>
+            <div className="slideContent">
+              <h3 className="justify-content-center">Pomyślnie zapisałeś/aś się na beta testy!</h3>
+              <h5>
+                Gdy nasza aplikacja będzie gotowa sprawdzimy czy na Twojej skrzynce jest więcej
+                biletów, za które należy Ci się odszkodowanie.
+              </h5>
+            </div>
+          </Paper>
         </div>
       </div>
     </div>
@@ -491,87 +507,85 @@ class Form extends React.Component {
   mainForm = () => {
     const { classes } = this.props;
     return (
-      <div className={[classes.section, 'formBackground'].join(' ')}>
-        <Formik
-          validationSchema={Yup.object().shape({
-            fromWhere: Yup.string().required('Lotnisko jest wymagane!'),
-            toWhere: Yup.string()
-              .max(50, 'zbyt długa nazwa!')
-              // .required('Wybierz z listy lotnisk!'),
-              .max(50, 'zbyt długa nazwa!')
-              .required('Lotnisko jest wymagane!'),
-            airlane: Yup.string()
-              .max(50, 'zbyt długa nazwa!')
-              .required('Linia lotnicza jest wymagana!'),
-            flight: Yup.string()
-              .max(50, 'zbyt długa nazwa!')
-              .required('Wymagane!'),
-            date: Yup.string().required('Wymagane!'),
-            whyDetails: Yup.string(),
-            email: Yup.string()
-              .required('Email jest wymagany!')
-              .max(50, 'zbyt długi email!')
-              .email('Niepoprawny email!')
-          })}
-          onSubmit={(values, { setSubmitting }) => {
-            if (values.why === '') {
-              values.why = 'other';
-            }
-            let requestSubject;
-            if (this.state.city) {
-              requestSubject = this.state.city + ' ' + values.date;
-            } else {
-              requestSubject = values.toWhere + ' ' + values.date;
-            }
+      <Formik
+        validationSchema={Yup.object().shape({
+          fromWhere: Yup.string().required('Lotnisko jest wymagane!'),
+          toWhere: Yup.string()
+            .max(50, 'zbyt długa nazwa!')
+            // .required('Wybierz z listy lotnisk!'),
+            .max(50, 'zbyt długa nazwa!')
+            .required('Lotnisko jest wymagane!'),
+          airlane: Yup.string()
+            .max(50, 'zbyt długa nazwa!')
+            .required('Linia lotnicza jest wymagana!'),
+          flight: Yup.string()
+            .max(50, 'zbyt długa nazwa!')
+            .required('Wymagane!'),
+          date: Yup.string().required('Wymagane!'),
+          whyDetails: Yup.string(),
+          email: Yup.string()
+            .required('Email jest wymagany!')
+            .max(50, 'zbyt długi email!')
+            .email('Niepoprawny email!')
+        })}
+        onSubmit={(values, { setSubmitting }) => {
+          if (values.why === '') {
+            values.why = 'other';
+          }
+          let requestSubject;
+          if (this.state.city) {
+            requestSubject = this.state.city + ' ' + values.date;
+          } else {
+            requestSubject = values.toWhere + ' ' + values.date;
+          }
 
-            const date = 'Witam, Dnia ' + values.date;
-            const travel =
-              values.whatHappend !== 'opóźniony'
-                ? ' planowałem/am lecieć z ' + values.fromWhere + ' do ' + values.toWhere
-                : ' leciałem/am z ' + values.fromWhere + ' do ' + values.toWhere;
-            const couse =
-              values.whatHappend === 'opóźniony'
-                ? ' jednak nastąpiło opóźnienie '
-                : values.whatHappend === 'niewpuszczenie_na_pokład'
-                ? ' jednak odmówiono mi wejścia na pokład '
-                : ' jednak lot został odwołany ';
-            const body = date + travel + couse + 'i potrzebuje pomocy w uzyskaniu odszkodowania.';
-            fetch('https://zabilet.zendesk.com/api/v2/requests.json', {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                request: {
-                  requester: { name: values.email, email: values.email },
-                  subject: requestSubject,
-                  custom_fields: [
-                    { 360008313294: values.flight },
-                    { 360008249493: values.airlane },
-                    { 360008249553: values.fromWhere },
-                    { 360008249573: values.toWhere },
-                    { 360008313574: values.date },
-                    { 360008249493: values.airlane },
-                    { 360011764713: values.whatHappend },
-                    { 360011845134: values.why },
-                    { 360011767173: values.whyDetails },
-                    { 360011846354: values.consent }
-                  ],
-                  comment: { body: body }
-                }
-              })
-            });
-            console.log(values);
-            didSubmit = true;
-            userConsent = values.consent;
-            setSubmitting(false);
-            this.forceUpdate();
-          }}
-        >
-          {this.mainFormFormikFlow}
-        </Formik>
-      </div>
+          const date = 'Witam, Dnia ' + values.date;
+          const travel =
+            values.whatHappend !== 'opóźniony'
+              ? ' planowałem/am lecieć z ' + values.fromWhere + ' do ' + values.toWhere
+              : ' leciałem/am z ' + values.fromWhere + ' do ' + values.toWhere;
+          const couse =
+            values.whatHappend === 'opóźniony'
+              ? ' jednak nastąpiło opóźnienie '
+              : values.whatHappend === 'niewpuszczenie_na_pokład'
+              ? ' jednak odmówiono mi wejścia na pokład '
+              : ' jednak lot został odwołany ';
+          const body = date + travel + couse + 'i potrzebuje pomocy w uzyskaniu odszkodowania.';
+          fetch('https://zabilet.zendesk.com/api/v2/requests.json', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              request: {
+                requester: { name: values.email, email: values.email },
+                subject: requestSubject,
+                custom_fields: [
+                  { 360008313294: values.flight },
+                  { 360008249493: values.airlane },
+                  { 360008249553: values.fromWhere },
+                  { 360008249573: values.toWhere },
+                  { 360008313574: values.date },
+                  { 360008249493: values.airlane },
+                  { 360011764713: values.whatHappend },
+                  { 360011845134: values.why },
+                  { 360011767173: values.whyDetails },
+                  { 360011846354: values.consent }
+                ],
+                comment: { body: body }
+              }
+            })
+          });
+          console.log(values);
+          didSubmit = true;
+          userConsent = values.consent;
+          setSubmitting(false);
+          this.forceUpdate();
+        }}
+      >
+        {this.mainFormFormikFlow}
+      </Formik>
     );
   };
 
@@ -624,19 +638,18 @@ class Form extends React.Component {
   somethingWentWrong = () => {
     const { classes } = this.props;
     return (
-      <div className={[classes.section, 'formBackground'].join(' ')}>
-        <span>
-          <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
-            <div className="slideContent">
-              <h3 className="justify-content-center">O nie!</h3>
-              <h5>Coś poszło strasznie nie tak!</h5>
-              <h5>
-                Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo prosimy o
-                napisanie do nas. :(
-              </h5>
-            </div>
-          </Paper>
-          {/* <div className={'navBase'}>
+      <span>
+        <Paper elevation={5} className={[classes.tabContent, 'paperSpace'].join(' ')}>
+          <div className="slideContent">
+            <h3 className="justify-content-center">O nie!</h3>
+            <h5>Coś poszło strasznie nie tak!</h5>
+            <h5>
+              Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo prosimy o
+              napisanie do nas. :(
+            </h5>
+          </div>
+        </Paper>
+        {/* <div className={'navBase'}>
           <Button
             disabled={this.props.isSubmitting}
             className={['nextButton'].join(' ')}
@@ -645,25 +658,22 @@ class Form extends React.Component {
             Zapisz się na beta testy!
                     </Button>
         </div> */}
-        </span>
-      </div>
+      </span>
     );
   };
 
   thankYouBetaTest = () => {
     return (
-      <div className={['formBackground'].join(' ')}>
-        <div className={'outer'}>
-          <div className={'middle middleButtonLess'}>
-            <div className={'inner'}>
-              <Paper elevation={5} className={['paperSpace'].join(' ')}>
-                <div className="slideContent">
-                  <h3 className="justify-content-center">Gratulacje!</h3>
-                  <h5>Składanie wniosku przebiegło pomyślnie.</h5>
-                  <h5>Skontaktujemy się z Tobą jak najszybciej :)</h5>
-                </div>
-              </Paper>
-            </div>
+      <div className={'outer'}>
+        <div className={'middle middleButtonLess'}>
+          <div className={'inner'}>
+            <Paper elevation={5} className={['paperSpace'].join(' ')}>
+              <div className="slideContent">
+                <h3 className="justify-content-center">Gratulacje!</h3>
+                <h5>Składanie wniosku przebiegło pomyślnie.</h5>
+                <h5>Skontaktujemy się z Tobą jak najszybciej :)</h5>
+              </div>
+            </Paper>
           </div>
         </div>
       </div>
@@ -671,22 +681,20 @@ class Form extends React.Component {
   };
   thankYou = () => {
     return (
-      <div className={['formBackground'].join(' ')}>
-        <div className={'outer'}>
-          <div className={'middle middleButtonLess'}>
-            <div className={'inner'}>
-              <Paper elevation={5} className={['paperSpace'].join(' ')}>
-                <div className="slideContent">
-                  <h3 className="justify-content-center">Gratulacje!</h3>
-                  <h5>Składanie wniosku przebiegło pomyślnie.</h5>
-                  <h5>Skontaktujemy się z Tobą jak najszybciej :)</h5>
-                  <h5>
-                    Przykro nam, że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w
-                    przyszłości.
-                  </h5>
-                </div>
-              </Paper>
-            </div>
+      <div className={'outer'}>
+        <div className={'middle middleButtonLess'}>
+          <div className={'inner'}>
+            <Paper elevation={5} className={['paperSpace'].join(' ')}>
+              <div className="slideContent">
+                <h3 className="justify-content-center">Gratulacje!</h3>
+                <h5>Składanie wniosku przebiegło pomyślnie.</h5>
+                <h5>Skontaktujemy się z Tobą jak najszybciej :)</h5>
+                <h5>
+                  Przykro nam, że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w
+                  przyszłości.
+                </h5>
+              </div>
+            </Paper>
           </div>
         </div>
       </div>
@@ -694,21 +702,29 @@ class Form extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
+    let content;
     if (!submitBeta && ownWill) {
       // sorry no compensation, maybe beta
-      return this.noCompensationScreen();
+      content = this.noCompensationScreen();
     } else if (submitBeta) {
-      return this.betaTesty();
+      content = this.betaTesty();
     } else if (!didSubmit) {
       //firstStep of the form
-      return this.mainForm();
+      content = this.mainForm();
     } else if (didSubmit && userConsent) {
-      return this.thankYouBetaTest();
+      content = this.thankYouBetaTest();
     } else if (didSubmit && (typeof userConsent === 'undefined' || !userConsent)) {
-      return this.thankYou();
+      content = this.thankYou();
     } else {
-      return this.somethingWentWrong();
+      content = this.somethingWentWrong();
     }
+    return (
+      <div className={[classes.section, 'formBackground'].join(' ')}>
+        <FullscreenExit className={['ml-popup-toggle', 'exitButton'].join(' ')} />
+        {content}
+      </div>
+    );
   }
 }
 
