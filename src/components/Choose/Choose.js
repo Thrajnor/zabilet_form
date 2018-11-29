@@ -227,18 +227,18 @@ class Choose extends React.Component {
     if (this.props.values.whatHappend === 'opóźnienie') {
       return (
         <div>
-          <MediaQuery maxWidth={600}>{this.delayMobile()}</MediaQuery>
-          <MediaQuery minWidth={600}>{this.delay()}</MediaQuery>
+          <MediaQuery maxWidth={763}>{this.delayMobile()}</MediaQuery>
+          <MediaQuery minWidth={763}>{this.delay()}</MediaQuery>
           {other}
         </div>
       );
     } else if (this.props.values.whatHappend === 'niewpuszczenie_na_pokład') {
       return this.boardingRefused();
-    } else if (this.props.values.whatHappend === 'lot_został_odwołany') {
+    } else {
       return (
         <div>
-          <MediaQuery maxWidth={600}>{this.dismissedMobile()}</MediaQuery>
-          <MediaQuery minWidth={600}>{this.dismissed()}</MediaQuery>
+          <MediaQuery maxWidth={763}>{this.dismissedMobile()}</MediaQuery>
+          <MediaQuery minWidth={763}>{this.dismissed()}</MediaQuery>
           {other}
         </div>
       );
