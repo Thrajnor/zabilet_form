@@ -21,6 +21,9 @@ body #formatka {
 #formatka {
   height: 630px !important;
   overflow: hidden;
+  width: 100%;
+  border-radius: 20px;
+  background-color: #e0edff;
 }
 
 .display-none {
@@ -40,16 +43,6 @@ input.invalid-border:focus {
 }
 input.valid-border:focus {
   box-shadow: 0px 0px 0px 0.2rem rgba(128, 214, 74, 0.25) !important;
-}
-
-.exitButton {
-  position: absolute;
-  right: 2%;
-  top: 2%;
-  font-size: 35px !important;
-  cursor: pointer;
-  z-index: 10000;
-  color: #003878;
 }
 
 /* Form */
@@ -350,28 +343,56 @@ input.valid-border:focus {
   background: #006feed2;
 }
 
+/* landingi styles */
+.ml-popup {
+  left: 0 !important;
+}
+
 @media only screen and (max-width: 763px) {
+  #custom-html-value {
+    height: 100%;
+  }
+  #formatka {
+    height: 100% !important;
+  }
+
+  .ml-popup-window {
+    width: 100vw !important;
+    height: 102vh !important;
+  }
+
+  .ml-popup {
+    width: 98vw !important;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   .react-datepicker__portal {
     height: 120vh;
   }
+
   .radio {
     transform: translateY(2px);
   }
+
   .tabPanel {
     bottom: 40px !important;
   }
+
   .tabButton {
     margin: 0 !important;
   }
+
   .outer {
     display: table;
     /* position: absolute; */
-    height: 100%;
+    height: 100% !important;
     width: 100%;
   }
-  .middleButtonLess {
+  .middle {
     transform: translateY(0);
   }
+
   .slideContent {
     padding: 25px 30px !important;
     max-height: auto;
@@ -381,7 +402,7 @@ input.valid-border:focus {
     padding-left: 0px !important;
     padding-top: 0px !important;
     padding-bottom: 0px !important;
-    height: 100%;
+    height: 100% !important;
   }
   .paperSpace {
     margin-right: 5px;
