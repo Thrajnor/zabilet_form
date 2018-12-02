@@ -539,17 +539,17 @@ class Form extends React.Component {
             requestSubject = values.toWhere + ' ' + values.date;
           }
 
-          const date = 'Witam, Dnia ' + values.date;
+          const date = 'Witam, dnia ' + values.date;
           const travel =
             values.whatHappend !== 'opóźniony'
               ? ' planowałem/am lecieć z ' + values.fromWhere + ' do ' + values.toWhere
               : ' leciałem/am z ' + values.fromWhere + ' do ' + values.toWhere;
           const couse =
             values.whatHappend === 'opóźniony'
-              ? ' jednak nastąpiło opóźnienie '
+              ? '. Samolot wylądował w miejscu docelowym z ponad 3 godzinnym opóźnieniem '
               : values.whatHappend === 'niewpuszczenie_na_pokład'
-              ? ' jednak odmówiono mi wejścia na pokład '
-              : ' jednak lot został odwołany ';
+              ? ' jednak odmówiono mi wejścia na pokład'
+              : ' jednak lot został odwołany mniej niż na 2 tygodnie przed odlotem';
           const body = date + travel + couse + 'i potrzebuje pomocy w uzyskaniu odszkodowania.';
           fetch('https://zabilet.zendesk.com/api/v2/requests.json', {
             method: 'POST',
