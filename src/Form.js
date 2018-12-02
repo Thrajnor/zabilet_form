@@ -12,7 +12,6 @@ import Paper from '@material-ui/core/Paper';
 import Timer from '@material-ui/icons/Timer';
 import PanTool from '@material-ui/icons/PanTool';
 import Cancel from '@material-ui/icons/Cancel';
-import FullscreenExit from '@material-ui/icons/FullscreenExit';
 
 // core components
 import Steps from 'components/Steps/Steps';
@@ -131,7 +130,7 @@ class Form extends React.Component {
             .required('Email jest wymagany do zapisów na beta testy!'),
           consent: Yup.boolean().oneOf([true], 'Wymagana zgoda na beta testy')
         })}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           console.log(values);
           didSubmit = true;
           submitBeta = true;
@@ -154,6 +153,10 @@ class Form extends React.Component {
             })
           });
           setSubmitting(false);
+          resetForm(values);
+          userConsent = false;
+          ownWill = false;
+          submitBeta = false;
           this.forceUpdate();
         }}
       >
@@ -488,7 +491,7 @@ class Form extends React.Component {
 
   betaTesty = () => (
     <div className={'outer'}>
-      <div className={'middle middleButtonLess'}>
+      <div className={'middle'}>
         <div className={'inner'}>
           <Paper elevation={5} className={['paperSpace'].join(' ')}>
             <div className="slideContent">
@@ -499,13 +502,24 @@ class Form extends React.Component {
               </h5>
             </div>
           </Paper>
+          <div className={'navBase'}>
+            <Button
+              onClick={() => {
+                didSubmit = false;
+                this.forceUpdate();
+              }}
+              className={['wholeButton'].join(' ')}
+              type="button"
+            >
+              NOWY BILET!
+            </Button>
+          </div>
         </div>
       </div>
     </div>
   );
 
   mainForm = () => {
-    const { classes } = this.props;
     return (
       <Formik
         validationSchema={Yup.object().shape({
@@ -528,7 +542,7 @@ class Form extends React.Component {
             .max(50, 'zbyt długi email!')
             .email('Niepoprawny email!')
         })}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           if (values.why === '') {
             values.why = 'other';
           }
@@ -548,8 +562,8 @@ class Form extends React.Component {
             values.whatHappend === 'opóźniony'
               ? '. Samolot wylądował w miejscu docelowym z ponad 3 godzinnym opóźnieniem '
               : values.whatHappend === 'niewpuszczenie_na_pokład'
-              ? ' jednak odmówiono mi wejścia na pokład'
-              : ' jednak lot został odwołany mniej niż na 2 tygodnie przed odlotem';
+              ? ', jednak odmówiono mi wejścia na pokład'
+              : ', jednak lot został odwołany mniej niż na 2 tygodnie przed odlotem';
           const body = date + travel + couse + 'i potrzebuje pomocy w uzyskaniu odszkodowania.';
           fetch('https://zabilet.zendesk.com/api/v2/requests.json', {
             method: 'POST',
@@ -581,6 +595,10 @@ class Form extends React.Component {
           didSubmit = true;
           userConsent = values.consent;
           setSubmitting(false);
+          resetForm(values);
+          userConsent = false;
+          ownWill = false;
+          submitBeta = false;
           this.forceUpdate();
         }}
       >
@@ -649,15 +667,21 @@ class Form extends React.Component {
             </h5>
           </div>
         </Paper>
-        {/* <div className={'navBase'}>
+        <div className={'navBase'}>
           <Button
-            disabled={this.props.isSubmitting}
-            className={['nextButton'].join(' ')}
-            type='submit'
+            onClick={() => {
+              didSubmit = false;
+              userConsent = false;
+              ownWill = false;
+              submitBeta = false;
+              this.forceUpdate();
+            }}
+            className={['wholeButton'].join(' ')}
+            type="button"
           >
-            Zapisz się na beta testy!
-                    </Button>
-        </div> */}
+            NOWY BILET!
+          </Button>
+        </div>
       </span>
     );
   };
@@ -671,9 +695,21 @@ class Form extends React.Component {
               <div className="slideContent">
                 <h3 className="justify-content-center">Gratulacje!</h3>
                 <h5>Składanie wniosku przebiegło pomyślnie.</h5>
-                <h5>Skontaktujemy się z Tobą jak najszybciej :)</h5>
+                <h5>Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia :)</h5>
               </div>
             </Paper>
+            <div className={'navBase'}>
+              <Button
+                onClick={() => {
+                  didSubmit = false;
+                  this.forceUpdate();
+                }}
+                className={['wholeButton'].join(' ')}
+                type="button"
+              >
+                NOWY BILET!
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -682,19 +718,31 @@ class Form extends React.Component {
   thankYou = () => {
     return (
       <div className={'outer'}>
-        <div className={'middle middleButtonLess'}>
+        <div className={'middle'}>
           <div className={'inner'}>
             <Paper elevation={5} className={['paperSpace'].join(' ')}>
               <div className="slideContent">
                 <h3 className="justify-content-center">Gratulacje!</h3>
                 <h5>Składanie wniosku przebiegło pomyślnie.</h5>
-                <h5>Skontaktujemy się z Tobą jak najszybciej :)</h5>
+                <h5>Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia :)</h5>
                 <h5>
                   Przykro nam, że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w
                   przyszłości.
                 </h5>
               </div>
             </Paper>
+            <div className={'navBase'}>
+              <Button
+                onClick={() => {
+                  didSubmit = false;
+                  this.forceUpdate();
+                }}
+                className={['wholeButton'].join(' ')}
+                type="button"
+              >
+                NOWY BILET!
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -714,17 +762,12 @@ class Form extends React.Component {
       content = this.mainForm();
     } else if (didSubmit && userConsent) {
       content = this.thankYouBetaTest();
-    } else if (didSubmit && (typeof userConsent === 'undefined' || !userConsent)) {
+    } else if (didSubmit && !userConsent) {
       content = this.thankYou();
     } else {
       content = this.somethingWentWrong();
     }
-    return (
-      <div className={[classes.section, 'formBackground'].join(' ')}>
-        <FullscreenExit className={['ml-popup-toggle', 'exitButton'].join(' ')} />
-        {content}
-      </div>
-    );
+    return <div className={[classes.section, 'formBackground'].join(' ')}>{content}</div>;
   }
 }
 
