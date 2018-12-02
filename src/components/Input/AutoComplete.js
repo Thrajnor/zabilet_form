@@ -42,33 +42,75 @@ class Autocomplete extends Component {
     // Filter our suggestions that don't contain the user's input
     if (suggestions) {
       if (suggestions[0].city) {
-        let filteredSuggestionsByCity = suggestions
+        // POLISH
+        let polishAirports = suggestions.filter(suggestion => {
+          return suggestion.country.toLowerCase().indexOf('poland') > -1;
+        });
+        // NON POLISH
+        let nonPolishAirports = suggestions.filter(suggestion => {
+          return suggestion.country.toLowerCase().indexOf('poland') <= -1;
+        });
+        // COUNTRY
+        let filteredSuggestionsByCountry = polishAirports
+          .filter(
+            suggestion => suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+          )
+          .slice(0, 4)
+          .concat(
+            nonPolishAirports
+              .filter(
+                suggestion => suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+              )
+              .slice(0, 4)
+          );
+        // CITY
+        let filteredSuggestionsByCity = polishAirports
           .filter(suggestion => {
             if (suggestion.city) {
               return suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
             }
             return false;
           })
-          .slice(0, 4);
-
-        let filteredSuggestionsByName = suggestions
+          .slice(0, 4)
+          .concat(
+            nonPolishAirports
+              .filter(suggestion => {
+                if (suggestion.city) {
+                  return suggestion.city.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
+                }
+                return false;
+              })
+              .slice(0, 4)
+          );
+        // NAME
+        let filteredSuggestionsByName = polishAirports
           .filter(suggestion => suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1)
-          .slice(0, 4);
-
-        let filteredSuggestionsByIata = suggestions
+          .slice(0, 4)
+          .concat(
+            nonPolishAirports.filter(
+              suggestion => suggestion.name.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+            )
+          );
+        // IATA
+        let filteredSuggestionsByIata = polishAirports
           .filter(suggestion => {
             if (suggestion.iata) {
               return suggestion.iata.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
             }
             return false;
           })
-          .slice(0, 4);
+          .slice(0, 4)
+          .concat(
+            nonPolishAirports
+              .filter(suggestion => {
+                if (suggestion.iata) {
+                  return suggestion.iata.toLowerCase().indexOf(userInput.toLowerCase()) > -1;
+                }
+                return false;
+              })
+              .slice(0, 4)
+          );
 
-        let filteredSuggestionsByCountry = suggestions
-          .filter(
-            suggestion => suggestion.country.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-          )
-          .slice(0, 4);
         filteredSuggestions = filteredSuggestionsByIata
           .concat(filteredSuggestionsByCity)
           .concat(filteredSuggestionsByName)
