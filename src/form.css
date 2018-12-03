@@ -344,8 +344,10 @@ input.valid-border:focus {
 }
 
 /* landingi styles */
-.ml-popup {
-  left: 0 !important;
+@media only screen and (max-width: 959px) {
+  .ml-popup {
+    left: 0 !important;
+  }
 }
 
 @media only screen and (max-width: 763px) {
