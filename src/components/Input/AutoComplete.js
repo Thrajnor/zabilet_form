@@ -41,7 +41,7 @@ class Autocomplete extends Component {
     }
     // Filter our suggestions that don't contain the user's input
     if (suggestions) {
-      if (suggestions[0].city) {
+      if (suggestions[0] && suggestions[0].city) {
         // POLISH
         let polishAirports = suggestions.filter(suggestion => {
           return suggestion.country.toLowerCase().indexOf('poland') > -1;
