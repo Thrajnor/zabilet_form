@@ -104,9 +104,7 @@ class DateSelect extends React.Component {
   };
 
   componentDidMount() {
-    if ((isDeskSafari || isFirefox) && this.props.windowWidth > 600) {
-      this.props.setFieldValue(this.props.name, today, true);
-    }
+    this.props.setFieldValue(this.props.name, today, true);
     this.props.setFieldValue('consent', false, true);
   }
 

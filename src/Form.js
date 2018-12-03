@@ -82,7 +82,6 @@ class Form extends React.Component {
     ownWill = bool;
   };
   cityToWhereHandler = city => {
-    console.log(city);
     this.setState({ city });
   };
   // handleCompensation = (value) => {
@@ -126,8 +125,15 @@ class Form extends React.Component {
       <Formik
         validationSchema={Yup.object().shape({
           email: Yup.string()
+            .required('Email jest wymagany do zapisów na beta testy!')
+            .email('Niepoprawny email!'),
+          confirmEmail: Yup.string()
+            .required('Potwierdź email!')
+            .max(50, 'zbyt długi email!')
             .email('Niepoprawny email!')
-            .required('Email jest wymagany do zapisów na beta testy!'),
+            .test('match', 'Emaile muszą się zgadzać!', function(emailConfirmation) {
+              return emailConfirmation === this.parent.email;
+            }),
           consent: Yup.boolean().oneOf([true], 'Wymagana zgoda na beta testy')
         })}
         onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -179,7 +185,7 @@ class Form extends React.Component {
                           <GridItem xs={12}>
                             <Input
                               placeholder="np. example@gmail.com"
-                              label="Twój Email: "
+                              label="Twój email: "
                               name="email"
                               id="email"
                               value={values.email}
@@ -187,6 +193,19 @@ class Form extends React.Component {
                               onBlur={handleBlur}
                               error={touched.email && errors.email}
                               touched={touched.email}
+                            />
+                          </GridItem>
+                          <GridItem xs={12}>
+                            <Input
+                              placeholder="np. example@gmail.com"
+                              label="Potwierdź email: "
+                              name="confirmEmail"
+                              id="confirmEmail"
+                              value={values.confirmEmail}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              error={touched.confirmEmail && errors.confirmEmail}
+                              touched={touched.confirmEmail}
                             />
                           </GridItem>
                           <GridItem xs={12}>
@@ -254,7 +273,7 @@ class Form extends React.Component {
               toWhat="airport"
               label="Miejsce wylotu:"
               name="fromWhere"
-              placeholder="np. Tokio lub HND"
+              placeholder="np. Warsaw lub Waw"
               value={values.formWhere}
               onChange={handleChange}
               setFieldValue={setFieldValue}
@@ -443,6 +462,7 @@ class Form extends React.Component {
     handleBlur,
     isSubmitting,
     submitCount,
+    setErrors,
     setFieldValue,
     setFieldTouched
   }) => (
@@ -458,15 +478,31 @@ class Form extends React.Component {
             <GridItem xs={12}>
               <Input
                 placeholder="example@gmail.com"
-                label="E-mail: "
+                label="Twój e-mail: "
                 name="email"
                 id="email"
                 type="email"
                 value={values.email}
+                values={values}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.email && errors.email}
                 touched={touched.email}
+              />
+            </GridItem>
+            <GridItem xs={12}>
+              <Input
+                placeholder="example@gmail.com"
+                label="Potwierdź e-mail: "
+                name="confirmEmail"
+                id="confirmEmail"
+                type="email"
+                value={values.confirmEmail}
+                values={values}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.confirmEmail && errors.confirmEmail}
+                touched={touched.confirmEmail}
               />
             </GridItem>
             <GridItem xs={12}>
@@ -508,7 +544,7 @@ class Form extends React.Component {
                 didSubmit = false;
                 this.forceUpdate();
               }}
-              className={['wholeButton'].join(' ')}
+              className={['leftButton'].join(' ')}
               type="button"
             >
               Kolejny bilet
@@ -540,7 +576,14 @@ class Form extends React.Component {
           email: Yup.string()
             .required('Email jest wymagany!')
             .max(50, 'zbyt długi email!')
+            .email('Niepoprawny email!'),
+          confirmEmail: Yup.string()
+            .required('Potwierdź email!')
+            .max(50, 'zbyt długi email!')
             .email('Niepoprawny email!')
+            .test('match', 'Emaile muszą się zgadzać!', function(emailConfirmation) {
+              return emailConfirmation === this.parent.email;
+            })
         })}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           if (values.why === '') {
@@ -596,10 +639,20 @@ class Form extends React.Component {
                   { 360011767173: values.whyDetails },
                   { 360011846354: values.consent }
                 ],
+                is_public: false,
                 comment: { body: body }
               }
             })
-          });
+          })
+            .then(function(response) {
+              if (!response.ok) {
+                throw new Error('HTTP error, status = ' + response.status);
+              }
+              return response.json();
+            })
+            .then(function(myJson) {
+              // console.log(JSON.stringify(myJson));
+            });
           console.log(values);
           didSubmit = true;
           userConsent = values.consent;
@@ -685,7 +738,7 @@ class Form extends React.Component {
               submitBeta = false;
               this.forceUpdate();
             }}
-            className={['wholeButton'].join(' ')}
+            className={['leftButton'].join(' ')}
             type="button"
           >
             Kolejny bilet
@@ -704,7 +757,10 @@ class Form extends React.Component {
               <div className="slideContent">
                 <h3 className="justify-content-center">Gratulacje!</h3>
                 <h5>Składanie wniosku przebiegło pomyślnie.</h5>
-                <h5>Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia.</h5>
+                <h5>
+                  Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia, a my skontaktujemy
+                  się z Tobą wkrótcę.
+                </h5>
               </div>
             </Paper>
             <div className={'navBase'}>
@@ -713,7 +769,7 @@ class Form extends React.Component {
                   didSubmit = false;
                   this.forceUpdate();
                 }}
-                className={['wholeButton'].join(' ')}
+                className={['leftButton'].join(' ')}
                 type="button"
               >
                 Kolejny bilet
@@ -733,7 +789,10 @@ class Form extends React.Component {
               <div className="slideContent">
                 <h3 className="justify-content-center">Gratulacje!</h3>
                 <h5>Składanie wniosku przebiegło pomyślnie.</h5>
-                <h5>Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia.</h5>
+                <h5>
+                  Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia, a my skontaktujemy
+                  się z Tobą wkrótcę.
+                </h5>
                 <h5>
                   szkoda że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w przyszłości.
                 </h5>
@@ -745,7 +804,7 @@ class Form extends React.Component {
                   didSubmit = false;
                   this.forceUpdate();
                 }}
-                className={['wholeButton'].join(' ')}
+                className={['leftButton'].join(' ')}
                 type="button"
               >
                 Kolejny bilet

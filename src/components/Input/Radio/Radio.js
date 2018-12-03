@@ -25,7 +25,7 @@ class Radio extends React.Component {
     if (
       typeof this.props.values.why !== 'undefined' &&
       // WIPE whyDetails after changing to another radio
-      this.props.values.why !== 'other' &&
+      this.props.values.why !== 'inny' &&
       this.props.name === 'why' &&
       this.props.values.whyDetails !== ''
     ) {
@@ -58,14 +58,10 @@ class Radio extends React.Component {
     this.setState({ fieldValue: e.currentTarget.value });
     this.activateField();
     this.props.onChange(e);
-    if (
-      typeof this.props.values.why !== 'undefined' &&
-      this.props.values.why !== 'other' &&
-      this.props.name === 'why'
-    ) {
+    if (this.props.values.why && this.props.values.why !== 'inny' && this.props.name === 'why') {
       this.props.setFieldValue(this.props.name + 'Details', '', true);
     }
-    if (e.currentTarget.value !== 'other') {
+    if (e.currentTarget.value !== 'inny') {
       if (this.props.nextPage) {
         this.props.nextPage();
       }
