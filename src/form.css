@@ -357,13 +357,15 @@ input.valid-border:focus {
   }
 
   .ml-popup-window {
+    margin: 0;
     width: 100vw !important;
-    height: 102vh !important;
+    height: 100vh !important;
   }
 
   .ml-popup {
+    height: 630px !important;
     width: 98vw !important;
-    top: 50%;
+    top: 50% !important;
     transform: translateY(-50%);
   }
 
