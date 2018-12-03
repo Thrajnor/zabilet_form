@@ -511,7 +511,7 @@ class Form extends React.Component {
               className={['wholeButton'].join(' ')}
               type="button"
             >
-              NOWY BILET!
+              Kolejny bilet
             </Button>
           </div>
         </div>
@@ -554,16 +554,25 @@ class Form extends React.Component {
           }
 
           const date = 'Witam, dnia ' + values.date;
-          const travel =
-            values.whatHappend !== 'opóźniony'
-              ? ' planowałem/am lecieć z ' + values.fromWhere + ' do ' + values.toWhere
-              : ' leciałem/am z ' + values.fromWhere + ' do ' + values.toWhere;
-          const couse =
-            values.whatHappend === 'opóźniony'
-              ? '. Samolot wylądował w miejscu docelowym z ponad 3 godzinnym opóźnieniem '
-              : values.whatHappend === 'niewpuszczenie_na_pokład'
-              ? ', jednak odmówiono mi wejścia na pokład'
-              : ', jednak lot został odwołany mniej niż na 2 tygodnie przed odlotem';
+          let travel = '';
+          let couse = '';
+          if (values.whatHappend === 'opóźnienie') {
+            travel = ' leciałem/am z ' + values.fromWhere + ' do ' + values.toWhere;
+            couse = '. Samolot wylądował w miejscu docelowym z ponad 3 godzinnym opóźnieniem ';
+          } else if (values.whatHappend === 'niewpuszczenie_na_pokład') {
+            travel = ' planowałem/am lecieć z ' + values.fromWhere + ' do ' + values.toWhere;
+            couse = ', jednak odmówiono mi wejścia na pokład ';
+          } else if (values.whatHappend === 'lot_został_odwołany') {
+            travel = ' planowałem/am lecieć z ' + values.fromWhere + ' do ' + values.toWhere;
+            couse = ', jednak lot został odwołany mniej niż na 2 tygodnie przed odlotem ';
+          } else {
+            travel =
+              ' planowałem/am bezproblemowo przelecieć z ' +
+              values.fromWhere +
+              ' do ' +
+              values.toWhere;
+            couse = ', jednak niestety nastąpiły komplikacje ';
+          }
           const body = date + travel + couse + 'i potrzebuje pomocy w uzyskaniu odszkodowania.';
           fetch('https://zabilet.zendesk.com/api/v2/requests.json', {
             method: 'POST',
@@ -679,7 +688,7 @@ class Form extends React.Component {
             className={['wholeButton'].join(' ')}
             type="button"
           >
-            NOWY BILET!
+            Kolejny bilet
           </Button>
         </div>
       </span>
@@ -695,7 +704,7 @@ class Form extends React.Component {
               <div className="slideContent">
                 <h3 className="justify-content-center">Gratulacje!</h3>
                 <h5>Składanie wniosku przebiegło pomyślnie.</h5>
-                <h5>Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia :)</h5>
+                <h5>Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia.</h5>
               </div>
             </Paper>
             <div className={'navBase'}>
@@ -707,7 +716,7 @@ class Form extends React.Component {
                 className={['wholeButton'].join(' ')}
                 type="button"
               >
-                NOWY BILET!
+                Kolejny bilet
               </Button>
             </div>
           </div>
@@ -724,10 +733,9 @@ class Form extends React.Component {
               <div className="slideContent">
                 <h3 className="justify-content-center">Gratulacje!</h3>
                 <h5>Składanie wniosku przebiegło pomyślnie.</h5>
-                <h5>Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia :)</h5>
+                <h5>Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia.</h5>
                 <h5>
-                  Przykro nam, że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w
-                  przyszłości.
+                  szkoda że nie zapisałeś/aś się na beta testy, ale proszę rozważ to w przyszłości.
                 </h5>
               </div>
             </Paper>
@@ -740,7 +748,7 @@ class Form extends React.Component {
                 className={['wholeButton'].join(' ')}
                 type="button"
               >
-                NOWY BILET!
+                Kolejny bilet
               </Button>
             </div>
           </div>
