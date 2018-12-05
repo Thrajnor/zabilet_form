@@ -66,37 +66,41 @@ class Steps extends React.Component {
       return;
     } else if (
       this.state.active === 0 &&
-      this.props.values.fromWhere !== undefined &&
-      this.props.values.toWhere !== undefined &&
-      this.props.errors.fromWhere === undefined &&
-      this.props.errors.toWhere === undefined
+      this.props.values.consentPolicy &&
+      this.props.values.consentRules
     ) {
-      const active = this.state.active + 1;
-      this.setState({ active: active });
-      this.scrollToTop();
-    } else if (this.state.active === 1 && this.props.values.whatHappend !== undefined) {
-      const active = this.state.active + 1;
-      this.setState({ active: active });
-      this.scrollToTop();
-    } else if (this.state.active === 2 && this.props.values.why !== undefined) {
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
     } else if (
-      this.state.active === 3 &&
-      this.props.values.flight !== undefined &&
-      this.props.values.airlane !== undefined &&
-      this.props.errors.flight === undefined &&
-      this.props.errors.airlane === undefined
+      this.state.active === 1 &&
+      this.props.values.fromWhere &&
+      this.props.values.toWhere &&
+      !this.props.errors.fromWhere &&
+      !this.props.errors.toWhere
     ) {
+      const active = this.state.active + 1;
+      this.setState({ active: active });
+      this.scrollToTop();
+    } else if (this.state.active === 2 && this.props.values.whatHappend) {
+      const active = this.state.active + 1;
+      this.setState({ active: active });
+      this.scrollToTop();
+    } else if (this.state.active === 3 && this.props.values.why) {
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
     } else if (
       this.state.active === 4 &&
-      this.props.values.email !== undefined &&
-      this.props.errors.email === undefined
+      this.props.values.flight &&
+      this.props.values.airlane &&
+      !this.props.errors.flight &&
+      !this.props.errors.airlane
     ) {
+      const active = this.state.active + 1;
+      this.setState({ active: active });
+      this.scrollToTop();
+    } else if (this.state.active === 5 && this.props.values.email && !this.props.errors.email) {
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
@@ -139,7 +143,7 @@ class Steps extends React.Component {
   render() {
     const { classes, tabs, direction, color, horizontal } = this.props;
     const flexContainerClasses = classNames({
-      [classes.horizontalDisplay]: horizontal !== undefined
+      [classes.horizontalDisplay]: horizontal
     });
     const visibility = this.state.active === 0 ? 'visibility-hidden' : '';
     const tabButtons = (
@@ -158,33 +162,40 @@ class Steps extends React.Component {
         {tabs.map((prop, key) => {
           const pillsClasses = classNames({
             [classes.pills]: true,
-            [classes.horizontalPills]: horizontal !== undefined,
-            [classes.pillsWithIcons]: prop.tabIcon !== undefined
+            [classes.horizontalPills]: horizontal,
+            [classes.pillsWithIcons]: prop.tabIcon
           });
           let disabled = true;
           // HARDCODE #toRefactor ============================================================================================
+
           if (prop.tabButton === '1') {
             disabled = false;
           } else if (
             prop.tabButton === '2' &&
-            this.props.values.fromWhere !== undefined &&
-            this.props.values.toWhere !== undefined &&
-            this.props.errors.fromWhere === undefined &&
-            this.props.errors.toWhere === undefined
+            this.props.values.consentPolicy &&
+            this.props.values.consentRules
           ) {
             disabled = false;
-          } else if (prop.tabButton === '3' && this.props.values.whatHappend !== undefined) {
+          } else if (
+            prop.tabButton === '3' &&
+            this.props.values.fromWhere &&
+            this.props.values.toWhere &&
+            !this.props.errors.fromWhere &&
+            !this.props.errors.toWhere
+          ) {
             disabled = false;
-          } else if (prop.tabButton === '4' && this.props.values.why !== undefined) {
+          } else if (prop.tabButton === '4' && this.props.values.whatHappend) {
+            disabled = false;
+          } else if (prop.tabButton === '5' && this.props.values.why) {
             disabled = false;
           } else if (
-            prop.tabButton === '5' &&
-            this.props.values.flight !== undefined &&
-            this.props.values.airlane !== undefined &&
-            this.props.values.date !== undefined &&
-            this.props.errors.flight === undefined &&
-            this.props.errors.airlane === undefined &&
-            this.props.errors.date === undefined
+            prop.tabButton === '6' &&
+            this.props.values.flight &&
+            this.props.values.airlane &&
+            this.props.values.date &&
+            !this.props.errors.flight &&
+            !this.props.errors.airlane &&
+            !this.props.errors.date
           ) {
             disabled = false;
           }
@@ -218,34 +229,41 @@ class Steps extends React.Component {
           slideStyle={style}
         >
           {tabs.map((prop, key) => {
+            console.log(this.props.values.consentPolicy);
             let disabled = true;
             // HARDCODE #toRefactor ============================================================================================
             if (
               prop.tabButton === '1' &&
-              this.props.values.fromWhere !== undefined &&
-              this.props.values.toWhere !== undefined &&
-              this.props.errors.fromWhere === undefined &&
-              this.props.errors.toWhere === undefined
+              this.props.values.consentPolicy &&
+              this.props.values.consentRules
             ) {
-              disabled = false;
-            } else if (prop.tabButton === '2' && this.props.values.whatHappend !== undefined) {
-              disabled = false;
-            } else if (prop.tabButton === '3' && this.props.values.why !== undefined) {
               disabled = false;
             } else if (
-              prop.tabButton === '4' &&
-              this.props.values.flight !== undefined &&
-              this.props.values.airlane !== undefined &&
-              this.props.values.date !== undefined &&
-              this.props.errors.flight === undefined &&
-              this.props.errors.airlane === undefined &&
-              this.props.errors.date === undefined
+              prop.tabButton === '2' &&
+              this.props.values.fromWhere &&
+              this.props.values.toWhere &&
+              !this.props.errors.fromWhere &&
+              !this.props.errors.toWhere
             ) {
+              disabled = false;
+            } else if (prop.tabButton === '3' && this.props.values.whatHappend) {
+              disabled = false;
+            } else if (prop.tabButton === '4' && this.props.values.why) {
               disabled = false;
             } else if (
               prop.tabButton === '5' &&
-              this.props.values.email !== undefined &&
-              this.props.errors.email === undefined
+              this.props.values.flight &&
+              this.props.values.airlane &&
+              this.props.values.date &&
+              !this.props.errors.flight &&
+              !this.props.errors.airlane &&
+              !this.props.errors.date
+            ) {
+              disabled = false;
+            } else if (
+              prop.tabButton === '6' &&
+              this.props.values.email &&
+              !this.props.errors.email
             ) {
               disabled = false;
             }
@@ -266,6 +284,7 @@ class Steps extends React.Component {
                       </Button>
                       <Button
                         disabled={this.props.isSubmitting}
+                        onClick={() => this.props.setFieldTouched(this.props.values)}
                         className={[
                           'nextButton',
                           this.props.tabs.length === this.state.active + 1 ? '' : 'display-none'
@@ -294,7 +313,7 @@ class Steps extends React.Component {
         </SwipeableViews>
       </div>
     );
-    return horizontal !== undefined ? (
+    return horizontal ? (
       <GridContainer>
         <GridItem {...horizontal.tabsGrid}>{tabButtons}</GridItem>
         <GridItem {...horizontal.contentGrid}>{tabContent}</GridItem>
