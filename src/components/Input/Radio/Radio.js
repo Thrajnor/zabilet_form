@@ -23,11 +23,11 @@ class Radio extends React.Component {
   // to deactivate input only if it's empty
   disableField = e => {
     if (
-      typeof this.props.values.why !== 'undefined' &&
+      this.props.values.why &&
       // WIPE whyDetails after changing to another radio
       this.props.values.why !== 'inny' &&
       this.props.name === 'why' &&
-      this.props.values.whyDetails !== ''
+      this.props.values.whyDetails
     ) {
       this.props.setFieldValue(this.props.name + 'Details', '', true);
     }
@@ -75,7 +75,7 @@ class Radio extends React.Component {
         });
       }
     } else {
-      if (typeof this.props.values !== 'undefined') {
+      if (this.props.values) {
         if (
           this.props.values[this.props.name] !== this.state.fieldValue &&
           this.state.fieldActive
@@ -177,7 +177,11 @@ class Radio extends React.Component {
             // checked={this.props.checked === true? true : false}
           />
           <span className="label-radio pl-1 ">
-            {this.props.icon} <small className={errorText}>{this.props.label}</small>
+            {this.props.icon}{' '}
+            <small className={errorText}>
+              {this.props.label}
+              {this.props.link ? this.props.link : ''}
+            </small>
           </span>
         </label>
       );
