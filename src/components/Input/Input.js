@@ -47,7 +47,7 @@ class Input extends React.Component {
       form.elements[index + 1].focus();
       event.preventDefault();
       setTimeout(() => {
-        if (this.props.nextPage && typeof this.props.values[this.props.name] !== 'undefined') {
+        if (this.props.nextPage && this.props.values[this.props.name]) {
           this.props.nextPage();
         }
       }, 10);
