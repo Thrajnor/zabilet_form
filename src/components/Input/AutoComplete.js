@@ -36,8 +36,8 @@ class Autocomplete extends Component {
     this.activateField();
     let filteredSuggestions = [];
 
-    if (this.props.cityToWhereHandler) {
-      this.props.cityToWhereHandler('');
+    if (this.props.airportsDetails) {
+      this.props.airportsDetails(this.props.name, { city: '', country: '' });
     }
     // Filter our suggestions that don't contain the user's input
     if (suggestions) {
@@ -148,7 +148,7 @@ class Autocomplete extends Component {
   // Event fired when the user clicks on a suggestion
   onClick = e => {
     const { filteredSuggestions } = this.state;
-    let cityOfValue;
+    let details = {};
     // Update the user input and reset the rest of the state
 
     let value = '';
@@ -161,22 +161,23 @@ class Autocomplete extends Component {
     } else {
       value = e.currentTarget.innerText;
     }
-    if (this.props.cityToWhereHandler) {
+    if (this.props.airportsDetails) {
       if (e.currentTarget.getAttribute('city')) {
-        cityOfValue = e.currentTarget.getAttribute('city');
+        details.city = e.currentTarget.getAttribute('city');
       } else if (e.currentTarget.getAttribute('country')) {
-        cityOfValue = e.currentTarget.getAttribute('country');
+        details.city = e.currentTarget.getAttribute('country');
       } else if (e.currentTarget.getAttribute('name')) {
-        cityOfValue = e.currentTarget.getAttribute('name');
+        details.city = e.currentTarget.getAttribute('name');
       }
-      this.props.cityToWhereHandler(cityOfValue);
+      details.country = e.currentTarget.getAttribute('country');
+      this.props.airportsDetails(this.props.name, details);
     }
     this.setState({
       activeSuggestion: 0,
       filteredSuggestions: [filteredSuggestions[e.currentTarget.getAttribute('index')]],
       showSuggestions: false,
       userInput: value,
-      cityOfValue
+      details
     });
     this.props.setFieldValue(this.props.id, value, true);
   };
@@ -198,7 +199,7 @@ class Autocomplete extends Component {
   onKeyDown = e => {
     const { activeSuggestion, filteredSuggestions } = this.state;
     let value = '';
-    let cityOfValue = '';
+    let details = {};
     // this.props.handleEnterPress(e)
 
     // User pressed the enter key, update the input and close the
@@ -220,26 +221,25 @@ class Autocomplete extends Component {
         value = filteredSuggestions[activeSuggestion];
       }
 
-      if (this.props.cityToWhereHandler) {
+      if (this.props.airportsDetails) {
         if (!filteredSuggestions[activeSuggestion]) {
           return;
         } else if (filteredSuggestions[activeSuggestion].city) {
-          cityOfValue = filteredSuggestions[activeSuggestion].city;
+          details.city = filteredSuggestions[activeSuggestion].city;
         } else if (filteredSuggestions[activeSuggestion].country) {
-          cityOfValue = filteredSuggestions[activeSuggestion].country;
+          details.city = filteredSuggestions[activeSuggestion].country;
         } else if (filteredSuggestions[activeSuggestion].name) {
-          cityOfValue = filteredSuggestions[activeSuggestion].name;
-        } else {
-          cityOfValue = filteredSuggestions[activeSuggestion];
+          details.city = filteredSuggestions[activeSuggestion].name;
         }
-        this.props.cityToWhereHandler(cityOfValue);
+        details.country = filteredSuggestions[activeSuggestion].country;
+        this.props.airportsDetails(this.props.name, details);
       }
       this.setState({
         activeSuggestion: 0,
         filteredSuggestions: [filteredSuggestions[activeSuggestion]],
         showSuggestions: false,
         userInput: value,
-        cityOfValue
+        details
       });
       this.props.setFieldValue(this.props.id, value, true);
     }
