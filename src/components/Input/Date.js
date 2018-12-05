@@ -5,20 +5,6 @@ import windowSize from 'react-window-size';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-let today = new Date();
-if (true) {
-  let dd = today.getDate();
-  let mm = today.getMonth() + 1; //January is 0!
-  let yyyy = today.getFullYear();
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
-  today = yyyy + '-' + mm + '-' + dd;
-}
-
 let ua = window.navigator.userAgent;
 let iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
 let webkit = !!ua.match(/WebKit/i);
@@ -35,10 +21,36 @@ class DateSelect extends React.Component {
     this.disableField = this.disableField.bind(this);
     this.changeValue = this.changeValue.bind(this);
     this.state = {
-      date: today,
-      fieldActive: false
+      date: this.getDate('today'),
+      fieldActive: false,
+      dateObject: new Date()
     };
   }
+
+  getDate = val => {
+    let today = new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //January is 0!
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+    if (val === 'today') {
+      let yyyy = today.getFullYear();
+      return yyyy + '-' + mm + '-' + dd;
+    } else if (val === 'min') {
+      let yyyy = today.getFullYear() - 3; // substract 3 years to get expiration date
+      return yyyy + '-' + mm + '-' + dd;
+    } else if (val === 'minObject') {
+      let yyyy = today.getFullYear() - 3; // substract 3 years to get expiration date
+      let date = yyyy + ' ' + mm + ' ' + dd;
+      return new Date(date);
+    } else {
+      return null;
+    }
+  };
   // to activate the input field while typing
   activateField(e) {
     this.setState({
@@ -52,7 +64,7 @@ class DateSelect extends React.Component {
 
   changeValue(e) {
     let date;
-    if (typeof e.currentTarget === 'undefined') {
+    if (!e.currentTarget) {
       date = e;
       if (true) {
         let dd = date.getDate();
@@ -65,18 +77,20 @@ class DateSelect extends React.Component {
           mm = '0' + mm;
         }
         date = yyyy + '-' + mm + '-' + dd;
+        this.setState({
+          date: date,
+          dateObject: e
+        });
+        this.props.setFieldValue(this.props.name, date, true);
+        this.props.setFieldValue('dateObject', e, true);
       }
-    }
-    if ((isDeskSafari || isFirefox) && this.props.windowWidth > 600) {
-      this.setState({
-        date: date
-      });
-      this.props.setFieldValue(this.props.name, date, true);
     } else {
       this.setState({
-        date: e.currentTarget.value
+        date: e.currentTarget.value,
+        dateObject: e.currentTarget.valueAsDate
       });
       this.props.setFieldValue(this.props.name, e.currentTarget.value, true);
+      this.props.setFieldValue('dateObject', e.currentTarget.valueAsDate, true);
     }
     this.activateField(e);
 
@@ -92,11 +106,7 @@ class DateSelect extends React.Component {
     if (event.keyCode === 13) {
       event.preventDefault();
 
-      if (
-        this.props.nextPage &&
-        typeof this.props.values[this.props.name] !== 'undefined' &&
-        typeof this.props.error === 'undefined'
-      ) {
+      if (this.props.nextPage && !this.props.values[this.props.name] && !this.props.error) {
         this.props.nextPage();
         document.getElementById(this.props.name).blur();
       }
@@ -104,8 +114,8 @@ class DateSelect extends React.Component {
   };
 
   componentDidMount() {
-    this.props.setFieldValue(this.props.name, today, true);
-    this.props.setFieldValue('consent', false, true);
+    this.props.setFieldValue(this.props.name, this.getDate('today'), true);
+    this.props.setFieldValue('dateObject', new Date(), true);
   }
 
   // handleEnter = (event) => {
@@ -130,20 +140,26 @@ class DateSelect extends React.Component {
     let Datepicker;
 
     if ((isDeskSafari || isFirefox) && this.props.windowWidth > 600) {
+      // if ((this.refs.date && this.refs.date.type !== 'date') && this.props.windowWidth > 600) {
       Datepicker = (
         <DatePicker
-          selected={this.state.startDate}
+          selected={this.state.dateObject}
           onKeyDown={this.handleEnter}
-          ref={this.props.name}
-          className={[errorBorder, 'floating-label form-control'].join(' ')}
-          id={this.props.name}
+          minDate={this.getDate('minObject')}
+          maxDate={new Date()}
           onChange={this.changeValue}
-          type={this.props.type || 'date'}
-          name={this.props.name}
-          value={this.state.date || ''}
+          // value={this.state.dateObject || ''}
+          showYearDropdown
+          dateFormat="dd/MM/yyyy"
           onFocus={this.activateField}
           onBlur={this.disableField}
           withPortal={this.props.windowWidth > 600 ? false : true}
+          showDisabledMonthNavigation
+          ref={this.props.name}
+          id={this.props.name}
+          type={this.props.type || 'date'}
+          name={this.props.name}
+          className={[errorBorder, 'floating-label form-control'].join(' ')}
         />
       );
     } else {
@@ -152,14 +168,17 @@ class DateSelect extends React.Component {
           // onKeyDown={this.handleEnter}
           ref={this.props.name}
           className={[errorBorder, 'floating-label form-control'].join(' ')}
+          pattern={'DD/MM/YYYY'}
           id={this.props.name}
+          min={this.getDate('min')}
+          max={this.getDate('today')}
           onChange={this.changeValue}
           type={this.props.type || 'date'}
           name={this.props.name}
           value={this.state.date || ''}
           onFocus={this.activateField}
           onBlur={this.disableField}
-          placeholder="YYYY-MM-DD"
+          placeholder="Podaj datę"
         />
       );
     }
