@@ -11,6 +11,7 @@
     "react": "^16.5.1",
     "react-datepicker": "2.0.0",
     "react-dom": "^16.5.1",
+    "react-ga": "^2.5.6",
     "react-responsive": "^5.0.0",
     "react-scripts": "1.1.5",
     "react-select": "^2.0.0",
