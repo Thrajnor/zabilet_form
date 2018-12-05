@@ -18,6 +18,9 @@ import GridItem from 'components/Grid/GridItem.jsx';
 import Radio from 'components/Input/Radio/Radio';
 import Button from 'components/CustomButtons/Button.jsx';
 
+// Google Analitics
+import ReactGA from 'react-ga';
+
 const styles = {
   loading: {
     fontSize: '3rem',
@@ -52,6 +55,10 @@ class NoCompensation extends React.Component {
   }
   handleErrors = response => {
     if (!response.ok) {
+      ReactGA.event({
+        category: 'Error',
+        action: response.status
+      });
       throw new Error('HTTP error, status = ' + response.status);
     }
     return response.json();
@@ -105,11 +112,19 @@ class NoCompensation extends React.Component {
                 loading: false,
                 error: false
               });
+              ReactGA.event({
+                category: 'Form',
+                action: 'Submitted Betatest'
+              });
               this.setState({ submitBeta: true });
               setSubmitting(false);
               console.log(values);
             })
             .catch(e => {
+              ReactGA.event({
+                category: 'Error',
+                action: e.message
+              });
               This.setState({
                 loading: false,
                 error: e
@@ -203,6 +218,10 @@ class NoCompensation extends React.Component {
                 <div className={'navBase'}>
                   <Button
                     onClick={() => {
+                      ReactGA.event({
+                        category: 'User',
+                        action: 'Reset'
+                      });
                       this.props.ownWillHandler(false);
                     }}
                     className={'prevButton'}
@@ -245,6 +264,10 @@ class NoCompensation extends React.Component {
           <div className={'navBase'}>
             <Button
               onClick={() => {
+                ReactGA.event({
+                  category: 'User',
+                  action: 'Reset'
+                });
                 this.props.ownWillHandler(false);
               }}
               className={['prevButton'].join(' ')}

@@ -1,6 +1,8 @@
 // Formsy.js
 import React from 'react';
 
+import ReactGA from 'react-ga';
+
 class Input extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +16,10 @@ class Input extends React.Component {
   }
   // to activate the input field while typing
   activateField(e) {
+    ReactGA.event({
+      category: 'Input',
+      action: 'Clicked ' + this.props.name
+    });
     this.setState({
       fieldActive: true
     });
@@ -41,6 +47,10 @@ class Input extends React.Component {
 
   handleEnter = event => {
     if (event.keyCode === 13 || event.keyCode === 9) {
+      ReactGA.event({
+        category: 'Input',
+        action: 'Clicked ' + event.key + ' on ' + this.props.name
+      });
       this.props.onChange(event);
       const form = event.target.form;
       const index = Array.prototype.indexOf.call(form, event.target);

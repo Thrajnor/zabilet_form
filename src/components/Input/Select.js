@@ -1,6 +1,7 @@
 // Formsy.js
 import React from 'react';
 import ReactSelect from 'react-select';
+import ReactGA from 'react-ga';
 
 const customStyles = {
   noOptionsMessageCSS: base => ({
@@ -65,9 +66,13 @@ class Select extends React.Component {
   }
 
   changeValue(e) {
+    ReactGA.event({
+      category: this.props.name,
+      action: e.value
+    });
     this.activateField(e);
     this.setState({ selectedOption: e });
-    this.props.setFieldValue(this.props.id, e.value, true);
+    this.props.setFieldValue(this.props.name, e.value, true);
 
     if (e.value !== 'other') {
       this.props.nextPage();

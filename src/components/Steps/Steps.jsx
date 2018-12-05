@@ -21,6 +21,9 @@ import GridContainer from 'components/Grid/GridContainer.jsx';
 import GridItem from 'components/Grid/GridItem.jsx';
 import Button from 'components/CustomButtons/Button.jsx';
 
+// Google Analitics
+import ReactGA from 'react-ga';
+
 import navPillsStyle from 'assets/jss/material-kit-react/components/navPillsStyle.jsx';
 
 const style = {
@@ -63,12 +66,20 @@ class Steps extends React.Component {
       e.target.blur();
     }
     if (this.props.tabs.length <= this.state.active + 1) {
+      ReactGA.event({
+        category: 'Form',
+        action: 'Attempted to submit'
+      });
       return;
     } else if (
       this.state.active === 0 &&
       this.props.values.consentPolicy &&
       this.props.values.consentRules
     ) {
+      ReactGA.event({
+        category: 'Navigation',
+        action: 'Go tab 2'
+      });
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
@@ -79,14 +90,26 @@ class Steps extends React.Component {
       !this.props.errors.fromWhere &&
       !this.props.errors.toWhere
     ) {
+      ReactGA.event({
+        category: 'Navigation',
+        action: 'Go tab 3'
+      });
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
     } else if (this.state.active === 2 && this.props.values.whatHappend) {
+      ReactGA.event({
+        category: 'Navigation',
+        action: 'Go tab 4'
+      });
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
     } else if (this.state.active === 3 && this.props.values.why) {
+      ReactGA.event({
+        category: 'Navigation',
+        action: 'Go tab 5'
+      });
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
@@ -97,10 +120,18 @@ class Steps extends React.Component {
       !this.props.errors.flight &&
       !this.props.errors.airlane
     ) {
+      ReactGA.event({
+        category: 'Navigation',
+        action: 'Go tab 6'
+      });
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
     } else if (this.state.active === 5 && this.props.values.email && !this.props.errors.email) {
+      ReactGA.event({
+        category: 'Navigation',
+        action: 'Go tab 7?'
+      });
       const active = this.state.active + 1;
       this.setState({ active: active });
       this.scrollToTop();
@@ -111,6 +142,10 @@ class Steps extends React.Component {
     if (this.state.active === 0) {
       return;
     }
+    ReactGA.event({
+      category: 'Navigation',
+      action: 'Previous page'
+    });
     const active = this.state.active - 1;
     this.setState({ active: active });
   };
@@ -229,7 +264,6 @@ class Steps extends React.Component {
           slideStyle={style}
         >
           {tabs.map((prop, key) => {
-            console.log(this.props.values.consentPolicy);
             let disabled = true;
             // HARDCODE #toRefactor ============================================================================================
             if (
@@ -284,7 +318,10 @@ class Steps extends React.Component {
                       </Button>
                       <Button
                         disabled={this.props.isSubmitting}
-                        onClick={() => this.props.setFieldTouched(this.props.values)}
+                        onClick={() => {
+                          this.props.setFieldTouched(this.props.values);
+                          this.handleNext();
+                        }}
                         className={[
                           'nextButton',
                           this.props.tabs.length === this.state.active + 1 ? '' : 'display-none'

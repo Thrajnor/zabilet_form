@@ -26,6 +26,9 @@ import RadioGroup from 'components/Input/Radio/RadioGroup';
 import Radio from 'components/Input/Radio/Radio';
 import Button from 'components/CustomButtons/Button.jsx';
 
+// Google Analitics
+import ReactGA from 'react-ga';
+
 const styles = {
   loading: {
     fontSize: '3rem',
@@ -63,6 +66,10 @@ class Form extends React.Component {
   }
   handleErrors = response => {
     if (!response.ok) {
+      ReactGA.event({
+        category: 'Error',
+        action: response.status
+      });
       throw new Error('HTTP error, status = ' + response.status);
     }
     return response.json();
@@ -96,6 +103,10 @@ class Form extends React.Component {
   resetButton = () => (
     <Button
       onClick={() => {
+        ReactGA.event({
+          category: 'User',
+          action: 'Reset'
+        });
         this.props.ownWillHandler(false);
         this.setState({
           didSubmit: false,
@@ -132,11 +143,7 @@ class Form extends React.Component {
           <GridItem xs={12}>
             <Radio
               label={'Oto nasz '}
-              link={
-                <a target="_blank" rel="noopener noreferrer" href="http://zabilet.pl/policy">
-                  Regulamin
-                </a>
-              }
+              link={'Regulamin'}
               name="consentRules"
               type="checkbox"
               values={values}
@@ -150,11 +157,7 @@ class Form extends React.Component {
           <GridItem xs={12}>
             <Radio
               label={'Niżej można znaleźć naszą '}
-              link={
-                <a target="_blank" rel="noopener noreferrer" href="http://zabilet.pl/policy">
-                  Politykę prywatności
-                </a>
-              }
+              link={'Politykę prywatności'}
               name="consentPolicy"
               type="checkbox"
               values={values}
@@ -174,7 +177,7 @@ class Form extends React.Component {
               values={values}
               ga={{
                 category: 'User',
-                action: 'Created an Account'
+                action: "Agreed to beta test's"
               }}
               value={values.consent}
               onChange={handleChange}
@@ -451,21 +454,6 @@ class Form extends React.Component {
     </span>
   );
 
-  betaTesty = () => (
-    <div>
-      <Paper elevation={5} className={['paperSpace'].join(' ')}>
-        <div className="slideContent">
-          <h3 className="justify-content-center">Pomyślnie zapisałeś/aś się na beta testy!</h3>
-          <h5>
-            Gdy nasza aplikacja będzie gotowa sprawdzimy czy na Twojej skrzynce jest więcej biletów,
-            za które należy Ci się odszkodowanie.
-          </h5>
-        </div>
-      </Paper>
-      <div className={'navBase'}>{this.resetButton()}</div>
-    </div>
-  );
-
   mainForm = () => {
     return (
       <Formik
@@ -580,16 +568,22 @@ class Form extends React.Component {
               This.setState({
                 requestID: myJson.request.id,
                 loading: false,
-                error: false
-              });
-              This.setState({
+                error: false,
                 didSubmit: true,
                 userConsent: values.consent
+              });
+              ReactGA.event({
+                category: 'Form',
+                action: 'Submitted MainForm'
               });
               setSubmitting(false);
               resetForm(values);
             })
             .catch(e => {
+              ReactGA.event({
+                category: 'Error',
+                action: e.message
+              });
               This.setState({
                 loading: false,
                 error: e

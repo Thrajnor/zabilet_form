@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
+import ReactGA from 'react-ga';
+
 class Autocomplete extends Component {
   static propTypes = {
     suggestions: PropTypes.instanceOf(Array)
@@ -184,6 +186,10 @@ class Autocomplete extends Component {
 
   handleEnter = event => {
     if (event.keyCode === 13 || event.keyCode === 9) {
+      ReactGA.event({
+        category: 'Input',
+        action: 'Clicked ' + event.key + ' on ' + this.props.name
+      });
       event.preventDefault();
       const form = event.target.form;
       const index = Array.prototype.indexOf.call(form, event.target);
@@ -268,6 +274,10 @@ class Autocomplete extends Component {
 
   // to activate the input field while typing
   activateField() {
+    ReactGA.event({
+      category: 'Input',
+      action: 'Clicked ' + this.props.name
+    });
     this.setState({
       fieldActive: true,
       showSuggestions: true

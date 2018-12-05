@@ -1,6 +1,7 @@
 // Formsy.js
 import React from 'react';
 import Input from 'components/Input/Input';
+import ReactGA from 'react-ga';
 
 class Radio extends React.Component {
   constructor(props) {
@@ -32,6 +33,12 @@ class Radio extends React.Component {
       this.props.setFieldValue(this.props.name + 'Details', '', true);
     }
     if (this.props.type === 'checkbox') {
+      if (this.props.name === 'consent' && e.currentTarget.value) {
+        ReactGA.event({
+          category: 'consentBetaTest',
+          action: 'true'
+        });
+      }
       // checkbox onBlurHandle
       if (!this.props.values[this.props.name]) {
         this.setState({
@@ -41,6 +48,10 @@ class Radio extends React.Component {
         this.activateField(e);
       }
     } else {
+      ReactGA.event({
+        category: this.props.name,
+        action: e.currentTarget.value
+      });
       // Radio onBlurHandle
       if (this.props.values[this.props.name] !== this.state.fieldValue) {
         this.setState({
@@ -180,7 +191,17 @@ class Radio extends React.Component {
             {this.props.icon}{' '}
             <small className={errorText}>
               {this.props.label}
-              {this.props.link ? this.props.link : ''}
+              {this.props.link ? (
+                <ReactGA.OutboundLink
+                  eventLabel="Check Privacy"
+                  to="http://www.zabilet.pl/policy"
+                  target="_blank"
+                >
+                  {this.props.link}
+                </ReactGA.OutboundLink>
+              ) : (
+                ''
+              )}
             </small>
           </span>
         </label>
