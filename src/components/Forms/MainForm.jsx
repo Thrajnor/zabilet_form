@@ -66,9 +66,8 @@ class Form extends React.Component {
   }
   handleErrors = response => {
     if (!response.ok) {
-      ReactGA.event({
-        category: 'Error',
-        action: response.status
+      ReactGA.exception({
+        description: response.message
       });
       throw new Error('HTTP error, status = ' + response.status);
     }
@@ -412,7 +411,7 @@ class Form extends React.Component {
   }) => (
     <span>
       <div className="slideContent">
-        <h4>Super!</h4>
+        <h4>To już ostatni krok!</h4>
         <h6 className="mb-3">
           To już ostatni krok! Podaj nam swój adres email, abyśmy mogli się z Tobą skontaktować.
         </h6>
@@ -556,7 +555,9 @@ class Form extends React.Component {
                   { 360011764713: values.whatHappend },
                   { 360011845134: values.why },
                   { 360011767173: values.whyDetails },
-                  { 360011846354: values.consent }
+                  { 360012245253: values.consent },
+                  { 360012245073: values.consentPolicy },
+                  { 360012245033: values.consentRules }
                 ],
                 is_public: false,
                 comment: { body: body }
@@ -580,9 +581,8 @@ class Form extends React.Component {
               resetForm(values);
             })
             .catch(e => {
-              ReactGA.event({
-                category: 'Error',
-                action: e.message
+              ReactGA.exception({
+                description: e.message
               });
               This.setState({
                 loading: false,

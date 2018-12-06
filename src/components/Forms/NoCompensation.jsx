@@ -55,9 +55,8 @@ class NoCompensation extends React.Component {
   }
   handleErrors = response => {
     if (!response.ok) {
-      ReactGA.event({
-        category: 'Error',
-        action: response.status
+      ReactGA.exception({
+        description: response.message
       });
       throw new Error('HTTP error, status = ' + response.status);
     }
@@ -100,7 +99,7 @@ class NoCompensation extends React.Component {
               request: {
                 requester: { name: values.email, email: values.email },
                 subject: requestSubject,
-                custom_fields: [{ 360011846354: values.consent }],
+                custom_fields: [{ 360012245253: values.consent }],
                 is_public: false,
                 comment: { body: body }
               }
@@ -121,9 +120,8 @@ class NoCompensation extends React.Component {
               console.log(values);
             })
             .catch(e => {
-              ReactGA.event({
-                category: 'Error',
-                action: e.message
+              ReactGA.exception({
+                description: e.message
               });
               This.setState({
                 loading: false,
