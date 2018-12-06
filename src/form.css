@@ -373,6 +373,7 @@ input.valid-border:focus {
 @media only screen and (max-width: 959px) {
   .ml-popup {
     left: 0 !important;
+    /* height: 630px !important; */
   }
 }
 
@@ -391,7 +392,7 @@ input.valid-border:focus {
   }
 
   .ml-popup {
-    height: 630px !important;
+    height: 98vh !important;
     width: 98vw !important;
     top: 50% !important;
     transform: translateY(-50%);
