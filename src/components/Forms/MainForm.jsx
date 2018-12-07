@@ -413,7 +413,7 @@ class Form extends React.Component {
       <div className="slideContent">
         <h4>To już ostatni krok!</h4>
         <h6 className="mb-3">
-          To już ostatni krok! Podaj nam swój adres email, abyśmy mogli się z Tobą skontaktować.
+          Podaj nam swój adres email, abyśmy mogli się z Tobą skontaktować.
         </h6>
         <span>
           <GridContainer spacing={16}>
@@ -756,7 +756,7 @@ class Form extends React.Component {
             <h5>Składanie wniosku przebiegło pomyślnie.</h5>
             <h5>
               Za chwilę otrzymasz maila z podsumowaniem Twojego zgłoszenia o ID:{' '}
-              {this.state.requestID}, a my skontaktujemy się z Tobą wkrótcę.
+              {this.state.requestID}, a my skontaktujemy się z Tobą wkrótce.
             </h5>
             {this.state.userConsent ? (
               <h5>

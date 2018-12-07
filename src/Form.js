@@ -13,7 +13,6 @@ import MainForm from 'components/Forms/MainForm';
 // Google Analitics
 import ReactGA from 'react-ga';
 ReactGA.initialize('UA-130272294-1', {
-  debug: true,
   titleCase: false,
   gaOptions: {
     userId: 123,
