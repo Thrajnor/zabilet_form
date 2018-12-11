@@ -99,7 +99,7 @@ input.valid-border:focus {
 .inner {
   margin-left: auto;
   margin-right: auto;
-  width: 570;
+  width: 100%;
   z-index: 1;
 }
 /* Navigation buttons */
@@ -416,8 +416,6 @@ input.valid-border:focus {
 
   .outer {
     display: table;
-    /* position: absolute; */
-    height: 100% !important;
     width: 100%;
   }
   .middle {

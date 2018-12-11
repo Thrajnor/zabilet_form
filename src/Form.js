@@ -12,14 +12,14 @@ import MainForm from 'components/Forms/MainForm';
 
 // Google Analitics
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-130272294-1', {
-  titleCase: false,
-  gaOptions: {
-    userId: 123,
-    siteSpeedSampleRate: 100
-  }
-});
-ReactGA.pageview(window.location.pathname + window.location.search);
+// ReactGA.initialize('UA-130272294-1', {
+//   titleCase: false,
+//   gaOptions: {
+//     userId: 123,
+//     siteSpeedSampleRate: 100
+//   }
+// });
+// ReactGA.pageview(window.location.pathname + window.location.search);
 
 class Form extends React.Component {
   constructor(props) {
@@ -28,6 +28,18 @@ class Form extends React.Component {
       compensation: 400,
       ownWill: false
     };
+  }
+  componentWillMount() {
+    ReactGA.event({
+      category: 'Form',
+      action: 'Open'
+    });
+  }
+  componentWillUnmount() {
+    ReactGA.event({
+      category: 'Form',
+      action: 'Close'
+    });
   }
 
   ownWillHandler = bool => {

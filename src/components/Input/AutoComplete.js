@@ -153,6 +153,11 @@ class Autocomplete extends Component {
     let details = {};
     // Update the user input and reset the rest of the state
 
+    ReactGA.event({
+      category: this.props.name,
+      action: 'Clicked on suggestion'
+    });
+
     let value = '';
     if (e.currentTarget.getAttribute('name')) {
       value = e.currentTarget.getAttribute('name');
@@ -274,10 +279,6 @@ class Autocomplete extends Component {
 
   // to activate the input field while typing
   activateField() {
-    ReactGA.event({
-      category: 'Input',
-      action: 'Clicked ' + this.props.name
-    });
     this.setState({
       fieldActive: true,
       showSuggestions: true

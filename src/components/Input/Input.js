@@ -16,10 +16,6 @@ class Input extends React.Component {
   }
   // to activate the input field while typing
   activateField(e) {
-    ReactGA.event({
-      category: 'Input',
-      action: 'Clicked ' + this.props.name
-    });
     this.setState({
       fieldActive: true
     });
