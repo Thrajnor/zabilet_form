@@ -35,8 +35,8 @@ class Radio extends React.Component {
     if (this.props.type === 'checkbox') {
       if (this.props.name === 'consent' && e.currentTarget.value) {
         ReactGA.event({
-          category: 'consentBetaTest',
-          action: 'true'
+          category: 'Form Inputs',
+          action: 'Agree to Betatest '
         });
       }
       // checkbox onBlurHandle
@@ -49,8 +49,8 @@ class Radio extends React.Component {
       }
     } else {
       ReactGA.event({
-        category: this.props.name,
-        action: e.currentTarget.value
+        category: 'Form Inputs',
+        action: this.props.name + ' ' + e.currentTarget.value
       });
       // Radio onBlurHandle
       if (this.props.values[this.props.name] !== this.state.fieldValue) {

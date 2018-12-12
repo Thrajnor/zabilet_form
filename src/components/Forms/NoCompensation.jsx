@@ -112,7 +112,7 @@ class NoCompensation extends React.Component {
                 error: false
               });
               ReactGA.event({
-                category: 'Form',
+                category: 'Form Submit',
                 action: 'Submitted Betatest'
               });
               this.setState({ submitBeta: true });
@@ -217,7 +217,7 @@ class NoCompensation extends React.Component {
                   <Button
                     onClick={() => {
                       ReactGA.event({
-                        category: 'User',
+                        category: 'Form Reset',
                         action: 'Reset'
                       });
                       this.props.ownWillHandler(false);

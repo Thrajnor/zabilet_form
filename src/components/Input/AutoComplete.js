@@ -154,8 +154,8 @@ class Autocomplete extends Component {
     // Update the user input and reset the rest of the state
 
     ReactGA.event({
-      category: this.props.name,
-      action: 'Clicked on suggestion'
+      category: 'Form Inputs',
+      action: 'Clicked suggestion in ' + this.props.name
     });
 
     let value = '';
@@ -192,7 +192,7 @@ class Autocomplete extends Component {
   handleEnter = event => {
     if (event.keyCode === 13 || event.keyCode === 9) {
       ReactGA.event({
-        category: 'Input',
+        category: 'Form Inputs',
         action: 'Clicked ' + event.key + ' on ' + this.props.name
       });
       event.preventDefault();

@@ -67,7 +67,7 @@ class Steps extends React.Component {
     }
     if (this.props.tabs.length <= this.state.active + 1) {
       ReactGA.event({
-        category: 'Form',
+        category: 'Form Submit',
         action: 'Attempted to submit'
       });
       return;

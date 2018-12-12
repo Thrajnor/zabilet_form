@@ -56,7 +56,7 @@ class DateSelect extends React.Component {
   // to activate the input field while typing
   activateField(e) {
     ReactGA.event({
-      category: 'Date',
+      category: 'Form Input',
       action: 'Clicked date'
     });
     this.setState({

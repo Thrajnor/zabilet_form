@@ -67,8 +67,8 @@ class Select extends React.Component {
 
   changeValue(e) {
     ReactGA.event({
-      category: this.props.name,
-      action: e.value
+      category: 'Form Inputs',
+      action: this.props.name + ' ' + e.value
     });
     this.activateField(e);
     this.setState({ selectedOption: e });

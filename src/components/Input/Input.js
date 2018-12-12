@@ -44,7 +44,7 @@ class Input extends React.Component {
   handleEnter = event => {
     if (event.keyCode === 13 || event.keyCode === 9) {
       ReactGA.event({
-        category: 'Input',
+        category: 'Form Input',
         action: 'Clicked ' + event.key + ' on ' + this.props.name
       });
       this.props.onChange(event);

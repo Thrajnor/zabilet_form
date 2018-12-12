@@ -103,7 +103,7 @@ class Form extends React.Component {
     <Button
       onClick={() => {
         ReactGA.event({
-          category: 'User',
+          category: 'Form Reset',
           action: 'Reset'
         });
         this.props.ownWillHandler(false);
@@ -174,10 +174,6 @@ class Form extends React.Component {
               name="consent"
               type="checkbox"
               values={values}
-              ga={{
-                category: 'User',
-                action: "Agreed to beta test's"
-              }}
               value={values.consent}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -412,9 +408,7 @@ class Form extends React.Component {
     <span>
       <div className="slideContent">
         <h4>To już ostatni krok!</h4>
-        <h6 className="mb-3">
-          Podaj nam swój adres email, abyśmy mogli się z Tobą skontaktować.
-        </h6>
+        <h6 className="mb-3">Podaj nam swój adres email, abyśmy mogli się z Tobą skontaktować.</h6>
         <span>
           <GridContainer spacing={16}>
             <GridItem xs={12}>
@@ -574,7 +568,7 @@ class Form extends React.Component {
                 userConsent: values.consent
               });
               ReactGA.event({
-                category: 'Form',
+                category: 'Form Submit',
                 action: 'Submitted MainForm'
               });
               setSubmitting(false);
