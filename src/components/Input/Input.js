@@ -1,7 +1,7 @@
 // Formsy.js
 import React from 'react';
 
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 class Input extends React.Component {
   constructor(props) {
@@ -43,9 +43,12 @@ class Input extends React.Component {
 
   handleEnter = event => {
     if (event.keyCode === 13 || event.keyCode === 9) {
-      ReactGA.event({
-        category: 'Form Input',
-        action: 'Clicked ' + event.key + ' on ' + this.props.name
+      // ReactGA.event({
+      //   category: 'Form Input',
+      //   action: 'Clicked ' + event.key + ' on ' + this.props.name
+      // });
+      window.gtag('event', 'Clicked ' + event.key + ' on ' + this.props.name, {
+        event_category: 'Form_Inputs'
       });
       this.props.onChange(event);
       const form = event.target.form;

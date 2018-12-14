@@ -19,7 +19,7 @@ import Radio from 'components/Input/Radio/Radio';
 import Button from 'components/CustomButtons/Button.jsx';
 
 // Google Analitics
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 const styles = {
   loading: {
@@ -55,7 +55,10 @@ class NoCompensation extends React.Component {
   }
   handleErrors = response => {
     if (!response.ok) {
-      ReactGA.exception({
+      // ReactGA.exception({
+      //   description: response.message
+      // });
+      window.gtag('event', 'exception', {
         description: response.message
       });
       throw new Error('HTTP error, status = ' + response.status);
@@ -111,16 +114,22 @@ class NoCompensation extends React.Component {
                 loading: false,
                 error: false
               });
-              ReactGA.event({
-                category: 'Form Submit',
-                action: 'Submitted Betatest'
+              // ReactGA.event({
+              //   category: 'Form Submit',
+              //   action: 'Submitted Betatest'
+              // });
+              window.gtag('event', 'Submitted_BetaTest', {
+                event_category: 'Form'
               });
               this.setState({ submitBeta: true });
               setSubmitting(false);
               console.log(values);
             })
             .catch(e => {
-              ReactGA.exception({
+              // ReactGA.exception({
+              //   description: e.message
+              // });
+              window.gtag('event', 'exception', {
                 description: e.message
               });
               This.setState({
@@ -216,9 +225,12 @@ class NoCompensation extends React.Component {
                 <div className={'navBase'}>
                   <Button
                     onClick={() => {
-                      ReactGA.event({
-                        category: 'Form Reset',
-                        action: 'Reset'
+                      // ReactGA.event({
+                      //   category: 'Form Reset',
+                      //   action: 'Reset'
+                      // });
+                      window.gtag('event', 'Reset_Form', {
+                        event_category: 'Form'
                       });
                       this.props.ownWillHandler(false);
                     }}
@@ -262,9 +274,13 @@ class NoCompensation extends React.Component {
           <div className={'navBase'}>
             <Button
               onClick={() => {
-                ReactGA.event({
-                  category: 'User',
-                  action: 'Reset'
+                // ReactGA.event({
+                //   category: 'User',
+                //   action: 'Reset'
+                // });
+
+                window.gtag('event', 'Reset_Form', {
+                  event_category: 'Form'
                 });
                 this.props.ownWillHandler(false);
               }}

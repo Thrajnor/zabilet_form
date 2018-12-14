@@ -1,7 +1,7 @@
 // Formsy.js
 import React from 'react';
 import ReactSelect from 'react-select';
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 const customStyles = {
   noOptionsMessageCSS: base => ({
@@ -66,9 +66,12 @@ class Select extends React.Component {
   }
 
   changeValue(e) {
-    ReactGA.event({
-      category: 'Form Inputs',
-      action: this.props.name + ' ' + e.value
+    // ReactGA.event({
+    //   category: 'Form Inputs',
+    //   action: this.props.name + ' ' + e.value
+    // });
+    window.gtag('event', this.props.name + '_' + e.value, {
+      event_category: 'Form_Inputs'
     });
     this.activateField(e);
     this.setState({ selectedOption: e });

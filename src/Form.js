@@ -10,17 +10,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import NoCompensation from 'components/Forms/NoCompensation';
 import MainForm from 'components/Forms/MainForm';
 
-// Google Analitics
-import ReactGA from 'react-ga';
-ReactGA.initialize('UA-130272294-1', {
-  titleCase: false,
-  gaOptions: {
-    userId: 123,
-    siteSpeedSampleRate: 100
-  }
-});
-// ReactGA.pageview(window.location.pathname + window.location.search);
-
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -30,15 +19,21 @@ class Form extends React.Component {
     };
   }
   componentWillMount() {
-    ReactGA.event({
-      category: 'Form',
-      action: 'Open'
+    // ReactGA.event({
+    //   category: 'Form',
+    //   action: 'Open'
+    // });
+    window.gtag('event', 'Open_Form', {
+      event_category: 'Form'
     });
   }
   componentWillUnmount() {
-    ReactGA.event({
-      category: 'Form',
-      action: 'Close'
+    // ReactGA.event({
+    //   category: 'Form',
+    //   action: 'Close'
+    // });
+    window.gtag('event', 'Close_Form', {
+      event_category: 'Form'
     });
   }
 

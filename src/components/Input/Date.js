@@ -5,7 +5,7 @@ import windowSize from 'react-window-size';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 let ua = window.navigator.userAgent;
 let iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
@@ -55,10 +55,10 @@ class DateSelect extends React.Component {
   };
   // to activate the input field while typing
   activateField(e) {
-    ReactGA.event({
-      category: 'Form Input',
-      action: 'Clicked date'
-    });
+    // ReactGA.event({
+    //   category: 'Form Input',
+    //   action: 'Clicked date'
+    // });
     this.setState({
       fieldActive: true
     });
@@ -98,6 +98,10 @@ class DateSelect extends React.Component {
       this.props.setFieldValue(this.props.name, e.currentTarget.value, true);
       this.props.setFieldValue('dateObject', e.currentTarget.valueAsDate, true);
     }
+    window.gtag('event', 'Choose_' + this.props.values[this.props.name], {
+      event_category: 'Form_Inputs'
+    });
+
     this.activateField(e);
 
     // if (this.props.nextPage &&

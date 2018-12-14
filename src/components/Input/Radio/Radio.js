@@ -1,7 +1,7 @@
 // Formsy.js
 import React from 'react';
 import Input from 'components/Input/Input';
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 class Radio extends React.Component {
   constructor(props) {
@@ -34,9 +34,19 @@ class Radio extends React.Component {
     }
     if (this.props.type === 'checkbox') {
       if (this.props.name === 'consent' && e.currentTarget.value) {
-        ReactGA.event({
-          category: 'Form Inputs',
-          action: 'Agree to Betatest '
+        // ReactGA.event({
+        //   category: 'Form Inputs',
+        //   action: 'Agree to Betatest '
+        // });
+
+        window.gtag('event', 'BetaTest_CheckBox', {
+          event_category: 'Form_Inputs',
+          value: 1
+        });
+      } else if (this.props.name === 'consent') {
+        window.gtag('event', 'BetaTest_CheckBox', {
+          event_category: 'Form_Inputs',
+          value: 0
         });
       }
       // checkbox onBlurHandle
@@ -48,17 +58,25 @@ class Radio extends React.Component {
         this.activateField(e);
       }
     } else {
-      ReactGA.event({
-        category: 'Form Inputs',
-        action: this.props.name + ' ' + e.currentTarget.value
-      });
+      // ReactGA.event({
+      //   category: 'Form Inputs',
+      //   action:
+      // });
       // Radio onBlurHandle
       if (this.props.values[this.props.name] !== this.state.fieldValue) {
         this.setState({
           fieldActive: false
         });
+        window.gtag('event', this.props.name + '_' + e.currentTarget.value, {
+          event_category: 'Form_Inputs',
+          value: 0
+        });
       } else {
         this.activateField(e);
+        window.gtag('event', this.props.name + '_' + e.currentTarget.value, {
+          event_category: 'Form_Inputs',
+          value: 1
+        });
       }
       this.props.onChange(e);
       this.props.onBlur(e);
@@ -192,13 +210,18 @@ class Radio extends React.Component {
             <small className={errorText}>
               {this.props.label}
               {this.props.link ? (
-                <ReactGA.OutboundLink
-                  eventLabel="Check Privacy"
-                  to="http://www.zabilet.pl/policy"
+                <a
+                  onClick={window.gtag('event', 'Click_Policy', {
+                    event_category: 'outbound',
+                    event_label: 'https://www.zabilet.pl/policy',
+                    transport_type: 'beacon'
+                  })}
+                  href="https://www.zabilet.pl/policy"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {this.props.link}
-                </ReactGA.OutboundLink>
+                </a>
               ) : (
                 ''
               )}

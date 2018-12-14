@@ -27,7 +27,7 @@ import Radio from 'components/Input/Radio/Radio';
 import Button from 'components/CustomButtons/Button.jsx';
 
 // Google Analitics
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 const styles = {
   loading: {
@@ -66,7 +66,10 @@ class Form extends React.Component {
   }
   handleErrors = response => {
     if (!response.ok) {
-      ReactGA.exception({
+      // ReactGA.exception({
+      //   description: response.message
+      // });
+      window.gtag('event', 'exception', {
         description: response.message
       });
       throw new Error('HTTP error, status = ' + response.status);
@@ -102,9 +105,12 @@ class Form extends React.Component {
   resetButton = () => (
     <Button
       onClick={() => {
-        ReactGA.event({
-          category: 'Form Reset',
-          action: 'Reset'
+        // ReactGA.event({
+        //   category: 'Form Reset',
+        //   action: 'Reset'
+        // });
+        window.gtag('event', 'Reset_Form', {
+          event_category: 'Form'
         });
         this.props.ownWillHandler(false);
         this.setState({
@@ -567,15 +573,22 @@ class Form extends React.Component {
                 didSubmit: true,
                 userConsent: values.consent
               });
-              ReactGA.event({
-                category: 'Form Submit',
-                action: 'Submitted MainForm'
+              // ReactGA.event({
+              //   category: 'Form Submit',
+              //   action: 'Submitted MainForm'
+              // });
+              window.gtag('event', 'Submitted_MainForm', {
+                event_category: 'Form'
               });
               setSubmitting(false);
               resetForm(values);
             })
             .catch(e => {
-              ReactGA.exception({
+              // ReactGA.exception({
+              //   description: e.message
+              // });
+
+              window.gtag('event', 'exception', {
                 description: e.message
               });
               This.setState({

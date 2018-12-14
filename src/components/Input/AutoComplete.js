@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -153,9 +153,12 @@ class Autocomplete extends Component {
     let details = {};
     // Update the user input and reset the rest of the state
 
-    ReactGA.event({
-      category: 'Form Inputs',
-      action: 'Clicked suggestion in ' + this.props.name
+    // ReactGA.event({
+    //   category: 'Form Inputs',
+    //   action: 'Clicked suggestion in ' + this.props.name
+    // });
+    window.gtag('event', 'Click_Suggestion_' + this.props.name, {
+      event_category: 'Form_Inputs'
     });
 
     let value = '';
@@ -191,9 +194,13 @@ class Autocomplete extends Component {
 
   handleEnter = event => {
     if (event.keyCode === 13 || event.keyCode === 9) {
-      ReactGA.event({
-        category: 'Form Inputs',
-        action: 'Clicked ' + event.key + ' on ' + this.props.name
+      // ReactGA.event({
+      //   category: 'Form Inputs',
+      //   action: 'Clicked ' + event.key + ' on ' + this.props.name
+      // });
+
+      window.gtag('event', 'Clicked ' + event.key + ' on ' + this.props.name, {
+        event_category: 'Form_Inputs'
       });
       event.preventDefault();
       const form = event.target.form;
