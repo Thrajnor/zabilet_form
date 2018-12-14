@@ -102,7 +102,11 @@ class NoCompensation extends React.Component {
               request: {
                 requester: { name: values.email, email: values.email },
                 subject: requestSubject,
-                custom_fields: [{ 360012245253: values.consent }],
+                custom_fields: [
+                  { 360012245253: values.consent },
+                  { 360012245073: true },
+                  { 360012245033: true }
+                ],
                 is_public: false,
                 comment: { body: body }
               }
@@ -123,7 +127,6 @@ class NoCompensation extends React.Component {
               });
               this.setState({ submitBeta: true });
               setSubmitting(false);
-              console.log(values);
             })
             .catch(e => {
               // ReactGA.exception({
@@ -137,6 +140,15 @@ class NoCompensation extends React.Component {
                 error: e
               });
             });
+          if (window.MyVars.send_to) {
+            window.gtag('event', 'conversion', {
+              send_to: window.MyVars.send_to
+            });
+          } else {
+            window.gtag('event', 'Conversion_Without_Tag', {
+              event_category: 'Form'
+            });
+          }
           this.setState({
             error: false,
             loading: true
@@ -339,7 +351,22 @@ class NoCompensation extends React.Component {
           <h5>
             Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo prosimy o
             napisanie do nas emaila na adres{' '}
-            <a href="mailto:kontakt@zabilet.pl">kontakt@zabilet.pl</a> :(
+            <a
+              onClick={() => {
+                window.gtag('event', 'Go_To_Mail_422_Bad_Json_Sent', {
+                  event_category: 'outbound',
+                  event_label: 'mailto:kontakt@zabilet.pl',
+                  transport_type: 'beacon',
+                  event_callback: function() {
+                    document.location = 'mailto:kontakt@zabilet.pl';
+                  }
+                });
+              }}
+              href="mailto:kontakt@zabilet.pl"
+            >
+              kontakt@zabilet.pl
+            </a>{' '}
+            :(
           </h5>
         </div>
       );
@@ -353,7 +380,23 @@ class NoCompensation extends React.Component {
           </h5>
           <h5>
             Jeśli błąd się powtarza mimo dostępu do internetu proszę skontaktować się z nami pod
-            adresem: <a href="mailto:kontakt@zabilet.pl">kontakt@zabilet.pl</a> :(
+            adresem:{' '}
+            <a
+              onClick={() => {
+                window.gtag('event', 'Go_To_Mail_Cant_Send_Form', {
+                  event_category: 'outbound',
+                  event_label: 'mailto:kontakt@zabilet.pl',
+                  transport_type: 'beacon',
+                  event_callback: function() {
+                    document.location = 'mailto:kontakt@zabilet.pl';
+                  }
+                });
+              }}
+              href="mailto:kontakt@zabilet.pl"
+            >
+              kontakt@zabilet.pl
+            </a>{' '}
+            :(
           </h5>
         </div>
       );
@@ -372,7 +415,17 @@ class NoCompensation extends React.Component {
                       <h5>
                         Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo
                         prosimy o napisanie do nas emaila na adres{' '}
-                        <a href="mailto:kontakt@zabilet.pl">kontakt@zabilet.pl</a> :(
+                        <a 
+                    onClick={() => {
+                      window.gtag('event', 'Go_To_Mail_Error_' + this.state.error && this.state.error.message, {
+                        event_category: 'outbound',
+                        event_label: 'mailto:kontakt@zabilet.pl',
+                        transport_type: 'beacon',
+                        event_callback: function() {
+                          document.location = 'mailto:kontakt@zabilet.pl';
+                        }
+                      });
+                    }} href="mailto:kontakt@zabilet.pl">kontakt@zabilet.pl</a> :(
                       </h5>
                     </div>
                   )}

@@ -529,6 +529,15 @@ class Form extends React.Component {
             couse = ', jednak niestety nastąpiły komplikacje ';
           }
           const body = date + travel + couse + 'i potrzebuje pomocy w uzyskaniu odszkodowania.';
+          if (window.MyVars.send_to) {
+            window.gtag('event', 'conversion', {
+              send_to: window.MyVars.send_to
+            });
+          } else {
+            window.gtag('event', 'Conversion_Without_Tag', {
+              event_category: 'Form'
+            });
+          }
 
           This.setState({
             loading: true,
@@ -708,7 +717,22 @@ class Form extends React.Component {
           <h5>
             Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo prosimy o
             napisanie do nas emaila na adres{' '}
-            <a href="mailto:kontakt@zabilet.pl">kontakt@zabilet.pl</a> :(
+            <a
+              onClick={() => {
+                window.gtag('event', 'Go_To_Mail_422_Bad_Json_Sent', {
+                  event_category: 'outbound',
+                  event_label: 'mailto:kontakt@zabilet.pl',
+                  transport_type: 'beacon',
+                  event_callback: function() {
+                    document.location = 'mailto:kontakt@zabilet.pl';
+                  }
+                });
+              }}
+              href="mailto:kontakt@zabilet.pl"
+            >
+              kontakt@zabilet.pl
+            </a>{' '}
+            :(
           </h5>
         </div>
       );
@@ -722,7 +746,23 @@ class Form extends React.Component {
           </h5>
           <h5>
             Jeśli błąd się powtarza mimo dostępu do internetu proszę skontaktować się z nami pod
-            adresem: <a href="mailto:kontakt@zabilet.pl">kontakt@zabilet.pl</a> :(
+            adresem:{' '}
+            <a
+              onClick={() => {
+                window.gtag('event', 'Go_To_Mail_Cant_Send_Form', {
+                  event_category: 'outbound',
+                  event_label: 'mailto:kontakt@zabilet.pl',
+                  transport_type: 'beacon',
+                  event_callback: function() {
+                    document.location = 'mailto:kontakt@zabilet.pl';
+                  }
+                });
+              }}
+              href="mailto:kontakt@zabilet.pl"
+            >
+              kontakt@zabilet.pl
+            </a>{' '}
+            :(
           </h5>
         </div>
       );
@@ -738,7 +778,26 @@ class Form extends React.Component {
                 <h5>
                   Prosimy spróbować ponownie, jeśli ta informacja znowu się pojawi, bardzo prosimy o
                   napisanie do nas emaila na adres{' '}
-                  <a href="mailto:kontakt@zabilet.pl">kontakt@zabilet.pl</a> :(
+                  <a
+                    onClick={() => {
+                      window.gtag(
+                        'event',
+                        'Go_To_Mail_Error_' + this.state.error && this.state.error.message,
+                        {
+                          event_category: 'outbound',
+                          event_label: 'mailto:kontakt@zabilet.pl',
+                          transport_type: 'beacon',
+                          event_callback: function() {
+                            document.location = 'mailto:kontakt@zabilet.pl';
+                          }
+                        }
+                      );
+                    }}
+                    href="mailto:kontakt@zabilet.pl"
+                  >
+                    kontakt@zabilet.pl
+                  </a>{' '}
+                  :(
                 </h5>
               </div>
             )}
@@ -777,6 +836,16 @@ class Form extends React.Component {
         <div className={'navBase'}>
           {this.resetButton()}
           <a
+            onClick={() => {
+              window.gtag('event', 'Go_To_Zendesk', {
+                event_category: 'outbound',
+                event_label: 'https://zabilet.zendesk.com/hc/pl/requests/',
+                transport_type: 'beacon',
+                event_callback: function() {
+                  document.location = 'https://zabilet.zendesk.com/hc/pl/requests/';
+                }
+              });
+            }}
             target="_blank"
             rel="noopener noreferrer"
             href={'https://zabilet.zendesk.com/hc/pl/requests/' + this.state.requestID}
