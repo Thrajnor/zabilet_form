@@ -211,11 +211,16 @@ class Radio extends React.Component {
               {this.props.label}
               {this.props.link ? (
                 <a
-                  onClick={window.gtag('event', 'Click_Policy', {
-                    event_category: 'outbound',
-                    event_label: 'https://www.zabilet.pl/policy',
-                    transport_type: 'beacon'
-                  })}
+                  onClick={() => {
+                    window.gtag('event', 'Go_To_Policy', {
+                      event_category: 'outbound',
+                      event_label: 'https://www.zabilet.pl/policy',
+                      transport_type: 'beacon',
+                      event_callback: function() {
+                        document.location = 'https://www.zabilet.pl/policy';
+                      }
+                    });
+                  }}
                   href="https://www.zabilet.pl/policy"
                   target="_blank"
                   rel="noopener noreferrer"
